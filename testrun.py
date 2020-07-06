@@ -33,7 +33,8 @@ import setup
 #                 29.0, 29.1, 29.2, 29.3, 29.4, 29.5, 29.6, 29.7, 29.8, 29.9, \
 #                 30.0,31,32,33,35,40,45,50,55,60,70,80,100,120)
 # alpha = (1.23,1.25,1.27)
-alpha = [1.25]
+# alpha = [1.25]
+alpha = [2]
 
 mass = [9.0]
 # model_sets = [1]
@@ -54,8 +55,6 @@ setup.snowglobes(snowglobes_path, output)
 # Loop over turbulence strength
 # for model_set in model_sets:
 for a in alpha:
-    print(a)
-    # print(model_set)
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{a}'
 
     # Setting up output files for time-integrated quantities
@@ -68,7 +67,8 @@ for a in alpha:
         # Root path to FLASH .dat file
         dat_filename = f'stir_ecrates_tab{a}_s{m}_alpha1.25.dat'
         dat_filepath = os.path.join(models_path, f'run_{m}', dat_filename)
-        
+        print(dat_filepath)
+
         # Read in FLASH data
         time, lum, avgE, rmsE = IO.input(dat_filepath)
 
