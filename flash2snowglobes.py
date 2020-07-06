@@ -1,9 +1,10 @@
-### FLASH 2 snowglobes wrapper code
-### Need working installation of snowglobes
-### This will convert FLASH data to necessary input format for snowglobes,
-### run snowglobes, analyze the output, and clean up (aka delete) the unneeded
-### snowglobes IO files
+# FLASH 2 snowglobes wrapper code
+# Need working installation of snowglobes
+# This will convert FLASH data to necessary input format for snowglobes,
+# run snowglobes, analyze the output, and clean up (aka delete) the unneeded
+# snowglobes IO files
 
+import os
 import cleanup
 from convert import convert
 from create_pinched import create_pinched
@@ -11,6 +12,8 @@ import IO
 from neut_analysis import analysis
 import run
 import setup
+
+alpha = [1, 2]  # just reusing "alpha" to distinguish lab/aprox model sets
 
 mass = (9.0,9.25,9.5,9.75,10.0,10.25,10.5,10.75,11.0,11.25,11.5,11.75,12.0,12.25,12.5,12.75,13.0, \
                 13.1,13.2,13.3,13.4,13.5,13.6,13.7,13.8,13.9, \
@@ -31,58 +34,57 @@ mass = (9.0,9.25,9.5,9.75,10.0,10.25,10.5,10.75,11.0,11.25,11.5,11.75,12.0,12.25
                 28.0, 28.1, 28.2, 28.3, 28.4, 28.5, 28.6, 28.7, 28.8, 28.9, \
                 29.0, 29.1, 29.2, 29.3, 29.4, 29.5, 29.6, 29.7, 29.8, 29.9, \
                 30.0,31,32,33,35,40,45,50,55,60,70,80,100,120)
-alpha = (1.23,1.25,1.27)
 
-## snowglobes setup info - event distance in cm, detector and detector material
-## For more info on detector detector configurations see detector_configurations.dat
-dist = 3.08568025e22 ## dist = [cm]
+# snowglobes setup info - event distance in cm, detector and detector material
+# For more info on detector detector configurations see detector_configurations.dat
+dist = 3.08568025e22  # dist = [cm]
 detector = "wc100kt30prct"
 material = "water"
 
-## Provide director paths to snowglobes source and where you want the output
-snowglobes_path = "/mnt/home/mwarren/snowglobes"
+# Provide director paths to snowglobes source and where you want the output
+snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 output = "output"
 
-## Set up snoglobws in working directory
-setup.snowglobes(snowglobes_path,output)
+# Set up snoglobws in working directory
+setup.snowglobes(snowglobes_path, output)
 
+# Loop over turbulence strength
+# for model_set in model_sets:
+for a in alpha:
+    models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{a}'
 
-## Loop over turbulence strength
-for a in alpha[0:1]:
-    print(a)
+    # Setting up output files for time-integrated quantities
+    totfile = IO.total_files(a, output)
 
-    ## Setting up output files for time-integrated quantities
-    totfile = IO.total_files(a,output)
+    # Loop over progenitor mass
+    for m in mass:
+        print(a, m)
 
-    ## Loop over progenitor mass
-    for m in mass[0:1]:
-        print(a,m)
+        # Root path to FLASH .dat file
+        dat_filename = f'stir_ecrates_tab{a}_s{m}_alpha1.25.dat'
+        dat_filepath = os.path.join(models_path, f'run_{m}', dat_filename)
+        print(dat_filepath)
 
-        ## Root path to FLASH .dat file
-        datafile = "/mnt/research/SNAPhU/STIR/run_sukhbold/run_14may19_a"+str(a) \
-                    +"/run_"+str(m)+"/stir2_14may19_s"+str(m)+"_alpha"+str(a)+".dat"
+        # Read in FLASH data
+        time, lum, avgE, rmsE = IO.input(dat_filepath)
 
-        ## Read in FLASH data
-        time,lum,avgE,rmsE = IO.input(datafile)
+        # Convert FLASH data to fluxes that snowglobes needs
+        timebins, energy, Fnu = convert(time, lum, avgE, rmsE, dist)
 
+        # Create "pinched" input files for snowglobes
+        create_pinched(a, m, timebins, energy, Fnu)
 
-        ## Convert FLASH data to fluxes that snowglobes needs
-        timebins,energy,Fnu = convert(time,lum,avgE,rmsE,dist)
+        # Run snowglobes
+        run.snowglobes(a, m, timebins, material, detector)
 
-        ## Create "pinched" input files for snowglobes
-        create_pinched(a,m,timebins,energy,Fnu)
+        #  Analysis on snowglobes output
+        analysis(a, m, timebins, output, detector, totfile)
 
-        ## Run snowglobes
-        run.snowglobes(a,m,timebins,material,detector)
+        # Cleanup snowglobes output
+        cleanup.mass(a, m)
 
-        ##  Analysis on snowglobes output
-        analysis(a,m,timebins,output,detector,totfile)
-
-        ## Cleanup snowglobes output
-        cleanup.mass(a,m)
-
-    ## Close files for time-integrated quantities
+    # Close files for time-integrated quantities
     cleanup.alpha(totfile)
 
-## Clean up working directory
+# Clean up working directory
 cleanup.final()
