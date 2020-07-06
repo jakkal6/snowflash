@@ -4,6 +4,7 @@
 # run snowglobes, analyze the output, and clean up (aka delete) the unneeded
 # snowglobes IO files
 
+import os
 import cleanup
 from convert import convert
 from create_pinched import create_pinched
@@ -46,7 +47,6 @@ material = "water"
 # Provide director paths to snowglobes source and where you want the output
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 output = "output"
-models_path = '/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab1'
 
 # Set up snoglobws in working directory
 setup.snowglobes(snowglobes_path, output)
@@ -56,6 +56,7 @@ setup.snowglobes(snowglobes_path, output)
 for a in alpha:
     print(a)
     # print(model_set)
+    models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{a}'
 
     # Setting up output files for time-integrated quantities
     totfile = IO.total_files(a, output)
@@ -65,11 +66,11 @@ for a in alpha:
         print(a, m)
 
         # Root path to FLASH .dat file
-        datafile = "/mnt/research/SNAPhU/STIR/run_sukhbold/run_14may19_a" + str(a) \
-                   + "/run_" + str(m) + "/stir2_14may19_s" + str(m) + "_alpha" + str(a) + ".dat"
-
+        dat_filename = f'stir_ecrates_tab{a}_s{m}_alpha1.25.dat'
+        dat_filepath = os.path.join(models_path, f'run_{m}', dat_filename)
+        
         # Read in FLASH data
-        time, lum, avgE, rmsE = IO.input(datafile)
+        time, lum, avgE, rmsE = IO.input(dat_filepath)
 
         # Convert FLASH data to fluxes that snowglobes needs
         timebins, energy, Fnu = convert(time, lum, avgE, rmsE, dist)
