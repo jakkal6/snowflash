@@ -32,12 +32,9 @@ import setup
 #                 28.0, 28.1, 28.2, 28.3, 28.4, 28.5, 28.6, 28.7, 28.8, 28.9, \
 #                 29.0, 29.1, 29.2, 29.3, 29.4, 29.5, 29.6, 29.7, 29.8, 29.9, \
 #                 30.0,31,32,33,35,40,45,50,55,60,70,80,100,120)
-# alpha = (1.23,1.25,1.27)
-# alpha = [1.25]
-alpha = [2]
 
-mass = [9.0]
-# model_sets = [1]
+alpha = [1]
+mass = [9.0, 9.25]
 
 # snowglobes setup info - event distance in cm, detector and detector material
 # For more info on detector detector configurations see detector_configurations.dat
@@ -61,7 +58,7 @@ for a in alpha:
     totfile = IO.total_files(a, output)
 
     # Loop over progenitor mass
-    for m in mass[0:1]:
+    for m in mass:
         print(a, m)
 
         # Root path to FLASH .dat file
