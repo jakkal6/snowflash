@@ -85,7 +85,7 @@ for a in alpha:
 
         # Cleanup snowglobes output
         print('=== Cleaning up model ===')
-        cleanup.mass(a, m)
+        cleanup.mass()
 
     # Close files for time-integrated quantities
     print('=== Cleaning up alpha ===')
