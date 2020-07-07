@@ -11,8 +11,8 @@ def analysis(a,m,timebins,output,detector,nomix_tot):
         Output: None"""
 
         nomix_time = open(output+"/nomix_analysis_a"+str(a)+"_m"+str(m)+".dat","w")
-        nomix_time.write("Time \t Avg Total \t Avg IBD \t Avg ES \t Avg nu_e-O16 \t Avg anu_e-O16 \t Avg NC \
-                \t Tot Total \t Tot IBD \t Tot ES \t Tot nu_e-O16 \t Tot anu_e-O16 \t Tot NC \n")
+        nomix_time.write("Time \t Avg_Total \t Avg_IBD \t Avg_ES \t Avg_nu_e-O16 \t Avg_anu_e-O16 \t Avg_NC \
+                \t Tot_Total \t Tot_IBD \t Tot_ES \t Tot_nu_e-O16 \t Tot_anu_e-O16 \t Tot_NC \n")
 
         time = np.loadtxt('./fluxes/pinched_a'+str(a)+'_m'+str(m)+'_key.dat',skiprows=1,usecols=(1),unpack=True)
 
