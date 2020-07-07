@@ -72,19 +72,25 @@ for a in alpha:
         timebins, energy, Fnu = convert(time, lum, avgE, rmsE, dist)
 
         # Create "pinched" input files for snowglobes
+        print('=== Creating input files ===')
         create_pinched(a, m, timebins, energy, Fnu)
 
         # Run snowglobes
+        print('=== Running snowglobes ===')
         run.snowglobes(a, m, timebins, material, detector)
 
         #  Analysis on snowglobes output
+        print('=== Analysing output ===')
         analysis(a, m, timebins, output, detector, totfile)
 
         # Cleanup snowglobes output
-        cleanup.mass(a, m)
+        print('=== Cleaning up model ===')
+        cleanup.mass()
 
     # Close files for time-integrated quantities
+    print('=== Cleaning up alpha ===')
     cleanup.alpha(totfile)
 
 # Clean up working directory
+print('=== Final cleanup ===')
 cleanup.final()
