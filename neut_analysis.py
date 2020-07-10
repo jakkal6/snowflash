@@ -16,7 +16,7 @@ def analysis(a,m,timebins,output,detector,nomix_tot):
 
         time = np.loadtxt('./fluxes/pinched_a'+str(a)+'_m'+str(m)+'_key.dat',skiprows=1,usecols=(1),unpack=True)
 
-        nomix_ibd = np.zeros(200)
+        nomix_ibd = np.zeros(200)  # hold time-integrated counts for each energy bin
         nomix_es = np.zeros(200)
         nomix_eo16 = np.zeros(200)
         nomix_ao16 = np.zeros(200)
@@ -34,9 +34,9 @@ def analysis(a,m,timebins,output,detector,nomix_tot):
             taunc1 = np.genfromtxt('./out/pinched_a'+str(a)+'_m'+str(m)+'_'+str(i)+'_nc_nutau_O16_'+str(detector)+'_events_smeared.dat',skip_footer = 2, usecols=(1), unpack=True)
             taubarnc1 = np.genfromtxt('./out/pinched_a'+str(a)+'_m'+str(m)+'_'+str(i)+'_nc_nutaubar_O16_'+str(detector)+'_events_smeared.dat',skip_footer = 2, usecols=(1), unpack=True)
 
-            nomix_en = en1
+            nomix_en = en1  # energy bins?
             tot1 = ibd1 + es1 + eo161+ao161+enc1+anc1+munc1+mubarnc1+taunc1+taubarnc1
-            nomix_total += tot1
+            nomix_total += tot1  # add to time-integration
             nomix_ibd += ibd1
             nomix_es += es1
             nomix_eo16 += eo161
