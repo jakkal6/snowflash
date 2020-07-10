@@ -34,7 +34,7 @@ def analysis(a,m,timebins,output,detector,nomix_tot):
             taunc1 = np.genfromtxt('./out/pinched_a'+str(a)+'_m'+str(m)+'_'+str(i)+'_nc_nutau_O16_'+str(detector)+'_events_smeared.dat',skip_footer = 2, usecols=(1), unpack=True)
             taubarnc1 = np.genfromtxt('./out/pinched_a'+str(a)+'_m'+str(m)+'_'+str(i)+'_nc_nutaubar_O16_'+str(detector)+'_events_smeared.dat',skip_footer = 2, usecols=(1), unpack=True)
 
-            nomix_en = en1  # energy bins?
+            nomix_en = en1  # energy bins [GeV]
             tot1 = ibd1 + es1 + eo161+ao161+enc1+anc1+munc1+mubarnc1+taunc1+taubarnc1
             nomix_total += tot1  # add to time-integration
             nomix_ibd += ibd1
@@ -93,6 +93,13 @@ def analysis(a,m,timebins,output,detector,nomix_tot):
         nomix_avg_ao16 = sum(nomix_ao16*nomix_en*1000)/sum(nomix_ao16)
         nomix_avg_nc = sum(nomix_nc*nomix_en*1000)/sum(nomix_nc)
         nomix_tot.write(str(m)+"\t"+str(nomix_avg_tot)+"\t"+str(nomix_avg_ibd)+"\t"+str(nomix_avg_es)+"\t"+str(nomix_avg_eo16)+"\t"+str(nomix_avg_ao16)+"\t"+str(nomix_avg_nc)+"\n")
+
+
+def load_energy_bins(channel, i, a, m, detector):
+    """Load array of energy bins from a snowglobes output file
+    """
+    filepath = channel_dat_filepath(channel=channel, i=i, a=a, m=m, detector=detector)
+    return np.genfromtxt(filepath, skip_footer=2, usecols=[0], unpack=True)
 
 
 def channel_dat_filepath(channel, i, a, m, detector):
