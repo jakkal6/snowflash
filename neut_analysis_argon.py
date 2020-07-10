@@ -93,3 +93,9 @@ def analysis(a,m,timebins,output,detector,nomix_tot):
         nomix_avg_ao16 = sum(nomix_ao16*nomix_en*1000)/sum(nomix_ao16)
         nomix_avg_nc = sum(nomix_nc*nomix_en*1000)/sum(nomix_nc)
         nomix_tot.write(str(m)+"\t"+str(nomix_avg_tot)+"\t"+str(nomix_avg_ibd)+"\t"+str(nomix_avg_es)+"\t"+str(nomix_avg_eo16)+"\t"+str(nomix_avg_ao16)+"\t"+str(nomix_avg_nc)+"\n")
+
+
+def channel_dat_filepath(channel, i, a, m, detector):
+    """Return filepath to snowglobes output file
+    """
+    return f'./out/pinched_a{a}_m{m}_{i}_{channel}_{detector}_events_smeared.dat'
