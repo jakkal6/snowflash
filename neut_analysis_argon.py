@@ -95,6 +95,13 @@ def analysis(a,m,timebins,output,detector,nomix_tot):
         nomix_tot.write(str(m)+"\t"+str(nomix_avg_tot)+"\t"+str(nomix_avg_ibd)+"\t"+str(nomix_avg_es)+"\t"+str(nomix_avg_eo16)+"\t"+str(nomix_avg_ao16)+"\t"+str(nomix_avg_nc)+"\n")
 
 
+def load_channel_dat(channel, i, a, m, detector):
+    """Load array of detection counts per energy bin
+    """
+    filepath = channel_dat_filepath(channel=channel, i=i, a=a, m=m, detector=detector)
+    return np.genfromtxt(filepath, skip_footer=2, usecols=[1], unpack=True)
+
+
 def load_energy_bins(channel, i, a, m, detector):
     """Load array of energy bins from a snowglobes output file
     """
