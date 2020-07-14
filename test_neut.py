@@ -1,8 +1,9 @@
 import numpy as np
 import os
 
-def analysis(a,m,output,detector,nomix_tot):
-        """Does analysis on snowglobes output and writes out to ascii files in output \n
+
+def analysis(a, m, output, detector, nomix_tot):
+    """Does analysis on snowglobes output and writes out to ascii files in output \n
         Kinda a mess since it's hacked in from historical scripts \n
         Currently calculating mean energy and total counts for each detector channel \n
         for each timestep and calculating time-integrated mean energies \n
@@ -11,59 +12,70 @@ def analysis(a,m,output,detector,nomix_tot):
         nomix_tot file for time-integrated quantities \n
         Output: None"""
 
-        groups = {'IBD': ['ibd'],
-                  'ES': ['nue_e'],
-                  'nu_e_O16': ['nue_O16'],
-                  'anu_e_O16': ['nuebar_O16'],
-                  'NC': ['nc_nue_O16', 'nc_nuebar_O16',
-                         'nc_numu_O16', 'nc_numubar_O16',
-                         'nc_nutau_O16', 'nc_nutaubar_O16']
-                  }
-        channels = get_all_channels(groups)
+    groups = {'IBD': ['ibd'],
+              'ES': ['nue_e'],
+              'nu_e_O16': ['nue_O16'],
+              'anu_e_O16': ['nuebar_O16'],
+              'NC': ['nc_nue_O16', 'nc_nuebar_O16',
+                     'nc_numu_O16', 'nc_numubar_O16',
+                     'nc_nutau_O16', 'nc_nutaubar_O16']
+              }
+    channels = get_all_channels(groups)
 
-        time_filepath = os.path.join('./fluxes/', f'pinched_a{a}_m{m}_key.dat')
-        time = np.loadtxt(time_filepath, skiprows=1, usecols=[1], unpack=True)
-        n_time = len(time)
+    time_filepath = os.path.join('./fluxes/', f'pinched_a{a}_m{m}_key.dat')
+    time = np.loadtxt(time_filepath, skiprows=1, usecols=[1], unpack=True)
+    n_time = len(time)
 
-        energy_bins = load_energy_bins(channel=channels[0], i=1,
-                                       a=a, m=m, detector=detector)
-        n_bins = len(energy_bins)
+    energy_bins = load_energy_bins(channel=channels[0], i=1,
+                                   a=a, m=m, detector=detector)
+    n_bins = len(energy_bins)
 
-        integrated_counts = {}  # total time-integrated group counts
-        for group in groups:
-            integrated_counts[group] = np.zeros(n_bins)
+    integrated_counts = {'All': np.zeros(n_bins)}
+    time_totals = {'All': np.zeros(n_time)}
+    time_avg = {'All': np.zeros(n_time)}
 
-        # TODO: create empty time-arrays
+    for group in groups:
+        integrated_counts[group] = np.zeros(n_bins)
+        time_totals[group] = np.zeros(n_time)
+        time_avg[group] = np.zeros(n_time)
 
-        for i in range(1, n_time+1):
-            # arrays of channel counts per energy bin
-            channel_counts = load_channel_counts(channels, i=i, a=a, m=m, detector=detector)
+    for i in range(1, n_time + 1):
+        # arrays of channel counts per energy bin
+        channel_counts = load_channel_counts(channels,
+                                             i=i, a=a, m=m,
+                                             detector=detector)
 
-            # arrays of group counts per energy bin
-            group_counts = get_group_counts(channel_counts, groups=groups, n_bins=n_bins)
+        # arrays of group counts per energy bin
+        group_counts = get_group_counts(channel_counts,
+                                        groups=groups,
+                                        n_bins=n_bins)
 
-            # add to time-integrated counts
-            for group in integrated_counts:
-                integrated_counts[group] += group_counts[group]
+        # add to time-integrated counts
+        for group in integrated_counts:
+            integrated_counts[group] += group_counts[group]
 
-            # total group counts over all energy bins
-            group_totals = get_totals(group_counts)
+        # total group counts over all energy bins
+        group_totals = get_totals(group_counts)
 
-            # average energy over all energy_bins
-            group_avg = get_avg(group_counts, group_totals=group_totals,
-                                energy_bins=energy_bins)
+        # average energy over all energy_bins
+        group_avg = get_avg(group_counts=group_counts,
+                            group_totals=group_totals,
+                            energy_bins=energy_bins)
 
-            # TODO: insert totals, avg to time arrays
+        for group in group_totals:
+            time_totals[group][i-1] = group_totals[group]
+            time_avg[group][i-1] = group_avg[group]
 
-        # TODO:
-        #  - put time-arrays into dataframe
-        #  - save dataframe
-        integrated_totals = get_totals(integrated_counts)
-        integrated_avg = get_avg(group_counts=integrated_counts,
-                                 group_totals=integrated_totals,
-                                 energy_bins=energy_bins)
+    # TODO:
+    #  - put time-arrays into dataframe
+    #  - save dataframe
+    integrated_totals = get_totals(integrated_counts)
+    integrated_avg = get_avg(group_counts=integrated_counts,
+                             group_totals=integrated_totals,
+                             energy_bins=energy_bins)
 
-        return integrated_avg, integrated_totals
+    return integrated_avg, integrated_totals, time_totals, time_avg
+
 
 def get_all_channels(groups):
     """Extract list of channels from dict of channel groups
@@ -88,12 +100,16 @@ def load_channel_counts(channels, i, a, m, detector):
 def get_group_counts(channel_counts, groups, n_bins):
     """Sum channel counts by group
     """
-    group_counts = {}
+    group_counts = {'All': np.zeros(n_bins)}
+
     for group, sub_channels in groups.items():
-        group_counts[group] = np.zeros(n_bins)
+        counts = np.zeros(n_bins)
 
         for chan in sub_channels:
-            group_counts[group] += channel_counts[chan]
+            counts += channel_counts[chan]
+
+        group_counts['All'] += counts
+        group_counts[group] = counts
 
     return group_counts
 
