@@ -13,9 +13,10 @@ from neut_analysis import analysis
 import run
 import setup
 
-alpha = [1, 2]  # just reusing "alpha" to distinguish lab/aprox model sets
+alpha = [1, 2]  # just repurposing "alpha" to distinguish model sets
 
-mass = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75, 11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0,
+mass = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
+        11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0,
         13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9,
         14.0, 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 14.7, 14.8, 14.9,
         15.0, 15.1, 15.2, 15.3, 15.4, 15.5, 15.6, 15.7, 15.8, 15.9,
@@ -110,7 +111,7 @@ for a in alpha:
         print('=== Analysing output ===')
         analysis(a=a, m=m, detector=detector,
                  channel_groups=channel_groups,
-                 tot_file=totfile, output=output)
+                 integrated_file=totfile, output=output)
 
         # Cleanup snowglobes output
         print('=== Cleaning up model ===')

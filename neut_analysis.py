@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 
-def analysis(a, m, output, detector, channel_groups, tot_file):
+def analysis(a, m, output, detector, channel_groups, integrated_file):
     """Does analysis on snowglobes output and writes out to ascii files in output \n
         Kinda a mess since it's hacked in from historical scripts \n
         Currently calculating mean energy and total counts for each detector channel \n
@@ -67,8 +67,10 @@ def analysis(a, m, output, detector, channel_groups, tot_file):
                              group_totals=integrated_totals,
                              energy_bins=energy_bins)
 
-    # nomix_tot.write(str(m)+"\t"+str(nomix_avg_tot)+"\t"+str(nomix_avg_ibd)+"\t"+str(nomix_avg_es)+"\t"+str(nomix_avg_eo16)+"\t"+str(nomix_avg_ao16)+"\t"+str(nomix_avg_nc)+"\n")
-    # return time_avg, time_totals, integrated_avg, integrated_totals
+    write_to_integrated_file(m=m,
+                             integrated_avg=integrated_avg,
+                             integrated_totals=integrated_totals,
+                             integrated_file=integrated_file)
 
 
 # ===========================================================
@@ -187,3 +189,22 @@ def save_time_table(table, detector, a, m, output):
 
     with open(filepath, 'w') as f:
         f.write(string)
+
+
+# ===========================================================
+#                   integrated data
+# ===========================================================
+def write_to_integrated_file(m, integrated_avg, integrated_totals, integrated_file):
+    """Write line to time-integrated dat file
+    """
+    line = f'{m}\t'
+
+    for group, value in integrated_avg.items():
+        line += f'{value}\t'
+
+    for group, value in integrated_totals.items():
+        line += f'{value}\t'
+
+    line += '\n'
+
+    integrated_file.write(line)
