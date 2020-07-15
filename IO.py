@@ -1,13 +1,29 @@
+import os
 import numpy as np
 
-def total_files(a,output):
+
+def total_files(a, output, detector, channel_groups):
     """Opens file to write out time-integrated quantities \n
     Input: alpha value, output path directory \n
     Output: file for time-integrated quantities to be used in analysis"""
+    header = 'Mass\t'
 
-    nomix_tot = open(output+"/nomix_analysis_a"+str(a)+".dat","w")
-    nomix_tot.write("Mass \t Total \t IBD \t ES \t nu_e-O16 \t anu_e-O16 \t NC \n")
+    header += 'Avg_Total\t'
+    for group in channel_groups:
+        header += f'Avg_{group}\t'
+
+    header += 'Tot_Total\t'
+    for group in channel_groups:
+        header += f'Tot_{group}\t'
+
+    header += '\n'
+
+    filepath = os.path.join(output, f'{detector}_analysis_a{a}.dat')
+    nomix_tot = open(filepath, "w")
+    nomix_tot.write(header)
+
     return nomix_tot
+
 
 def input(datafile):
     """Read in FLASH data from .dat file \n
