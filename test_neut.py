@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import pandas as pd
 
 
 def analysis(a, m, output, detector, nomix_tot):
@@ -40,24 +41,19 @@ def analysis(a, m, output, detector, nomix_tot):
         time_avg[group] = np.zeros(n_time)
 
     for i in range(1, n_time + 1):
-        # arrays of channel counts per energy bin
-        channel_counts = load_channel_counts(channels,
+        channel_counts = load_channel_counts(channels=channels,
                                              i=i, a=a, m=m,
                                              detector=detector)
 
-        # arrays of group counts per energy bin
         group_counts = get_group_counts(channel_counts,
                                         groups=groups,
                                         n_bins=n_bins)
 
-        # add to time-integrated counts
         for group in integrated_counts:
             integrated_counts[group] += group_counts[group]
 
-        # total group counts over all energy bins
         group_totals = get_totals(group_counts)
 
-        # average energy over all energy_bins
         group_avg = get_avg(group_counts=group_counts,
                             group_totals=group_totals,
                             energy_bins=energy_bins)
@@ -66,17 +62,24 @@ def analysis(a, m, output, detector, nomix_tot):
             time_totals[group][i-1] = group_totals[group]
             time_avg[group][i-1] = group_avg[group]
 
-    # TODO:
-    #  - put time-arrays into dataframe
-    #  - save dataframe
+    time_table = create_time_table(timesteps=time,
+                                   time_totals=time_totals,
+                                   time_avg=time_avg)
+
+    save_time_table(table=time_table, detector=detector,
+                    a=a, m=m, output=output)
+
+    # TODO: write integrated row
+
     integrated_totals = get_totals(integrated_counts)
     integrated_avg = get_avg(group_counts=integrated_counts,
                              group_totals=integrated_totals,
                              energy_bins=energy_bins)
 
-    return integrated_avg, integrated_totals, time_totals, time_avg
 
-
+# ===========================================================
+#                   Raw channel counts
+# ===========================================================
 def get_all_channels(groups):
     """Extract list of channels from dict of channel groups
     """
@@ -97,6 +100,30 @@ def load_channel_counts(channels, i, a, m, detector):
     return channel_counts
 
 
+def load_channel_dat(channel, i, a, m, detector):
+    """Load array of detection counts per energy bin
+    """
+    filepath = channel_dat_filepath(channel=channel, i=i, a=a, m=m, detector=detector)
+    return np.genfromtxt(filepath, skip_footer=2, usecols=[1], unpack=True)
+
+
+def channel_dat_filepath(channel, i, a, m, detector):
+    """Return filepath to snowglobes output file
+    """
+    return f'./out/pinched_a{a}_m{m}_{i}_{channel}_{detector}_events_smeared.dat'
+
+
+def load_energy_bins(channel, i, a, m, detector):
+    """Load array of energy bins (MeV) from a snowglobes output file
+    """
+    filepath = channel_dat_filepath(channel=channel, i=i, a=a, m=m, detector=detector)
+    energy_bins = np.genfromtxt(filepath, skip_footer=2, usecols=[0], unpack=True)
+    return energy_bins * 1000
+
+
+# ===========================================================
+#                   Group counts/averages
+# ===========================================================
 def get_group_counts(channel_counts, groups, n_bins):
     """Sum channel counts by group
     """
@@ -140,22 +167,29 @@ def get_avg(group_counts, group_totals, energy_bins):
     return group_avg
 
 
-def load_channel_dat(channel, i, a, m, detector):
-    """Load array of detection counts per energy bin
+# ===========================================================
+#                   Time-dependent data
+# ===========================================================
+def create_time_table(timesteps, time_totals, time_avg):
+    """Construct a DataFrame from time-dependent arrays of mean energies/total counts
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, a=a, m=m, detector=detector)
-    return np.genfromtxt(filepath, skip_footer=2, usecols=[1], unpack=True)
+    table = pd.DataFrame()
+    table['Time'] = timesteps
+
+    for group in time_avg:
+        table[f'Avg_{group}'] = time_avg[group]
+
+    for group in time_totals:
+        table[f'Tot_{group}'] = time_totals[group]
+
+    return table
 
 
-def load_energy_bins(channel, i, a, m, detector):
-    """Load array of energy bins (MeV) from a snowglobes output file
+def save_time_table(table, detector, a, m, output):
+    """Save time-dependent table to file
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, a=a, m=m, detector=detector)
-    energy_bins = np.genfromtxt(filepath, skip_footer=2, usecols=[0], unpack=True)
-    return energy_bins * 1000
+    filepath = os.path.join(output, f"{detector}_analysis_a{a}_m{m}.dat")
+    string = table.to_string(index=False, justify='left')
 
-
-def channel_dat_filepath(channel, i, a, m, detector):
-    """Return filepath to snowglobes output file
-    """
-    return f'./out/pinched_a{a}_m{m}_{i}_{channel}_{detector}_events_smeared.dat'
+    with open(filepath, 'w') as f:
+        f.write(string)
