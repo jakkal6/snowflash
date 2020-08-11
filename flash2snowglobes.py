@@ -13,7 +13,7 @@ from neut_analysis import analysis
 import run
 import setup
 
-alpha = [1, 2]  # just repurposing "alpha" to distinguish model sets
+alpha = [1, 2, 3]  # just repurposing "alpha" to distinguish model sets
 
 mass = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
         11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0,
@@ -39,12 +39,19 @@ mass = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
 # snowglobes setup info - event distance in cm, detector and detector material
 # For more info on detector detector configurations see detector_configurations.dat
 dist = 3.08568025e22  # dist = [cm]
-# detector = "wc100kt30prct"
-detector = "icecube"
-material = "water"
-# detector = "ar40kt"
-# material = "argon"
 
+# detector = "wc100kt30prct"
+# detector = "icecube"
+detector = "ar40kt"
+
+materials = {'wc100kt30prct': 'water',
+             'icecube': 'water',
+             'ar40kt': 'argon',
+             }
+material = materials[detector]
+
+
+# Setup detection channels
 channel_groups = None
 
 if material == 'water':
