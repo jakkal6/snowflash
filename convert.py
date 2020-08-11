@@ -77,9 +77,9 @@ def convert(time,lum,avgE,rmsE,dist):
     energy = np.zeros(501)
     for i in range(len(timebins)):
         E_nu = 0.0
-        lum_nue = lum[0][i]*dt[i]*1.e52
-        lum_nubar = lum[1][i]*dt[i]*1.e52
-        lum_nux = lum[2][i]*dt[i]*1.e52
+        lum_nue = lum[0][i]*dt[i]*1.e51
+        lum_nubar = lum[1][i]*dt[i]*1.e51
+        lum_nux = lum[2][i]*dt[i]*1.e51
         for j in range(501):
             energy[j] = E_nu
             if avgE[0][i] > 0.0:
