@@ -2,7 +2,7 @@ from . import snow_tools
 from . import config
 
 
-class SnowGlobes:
+class SnowGlobesData:
     def __init__(self,
                  model_sets=('aprox', 'lab', 'noWeakRates'),
                  alphas=(1, 2, 3),
