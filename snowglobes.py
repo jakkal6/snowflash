@@ -50,10 +50,11 @@ class SnowGlobesData:
     def load_mass_tables(self):
         """Load time-dependent tables for all individual mass models
         """
-        tables = dict.fromkeys(self.model_sets, {})
+        tables = dict.fromkeys(self.model_sets)
 
         for i, alpha in enumerate(self.alphas):
             model_set = self.model_sets[i]
+            tables[model_set] = {}
 
             for j, mass in enumerate(self.mass_list):
                 print(f'\rLoading mass tables, {model_set}: {j+1}/{self.n_mass}', end='')
