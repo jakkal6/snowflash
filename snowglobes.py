@@ -22,6 +22,8 @@ class SnowGlobesData:
         self.detector = detector
         self.model_sets = model_sets
         self.alphas = alphas
+
+        self.channels = config.channels[detector]
         self.mass_list = config.mass_list
         self.n_mass = len(self.mass_list)
 
