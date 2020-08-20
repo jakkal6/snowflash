@@ -1,5 +1,5 @@
-from plotRoutines import snow_tools
-from plotRoutines.config import mass_list
+from . import snow_tools
+from . import config
 
 
 class SnowGlobes:
@@ -22,6 +22,7 @@ class SnowGlobes:
         self.model_sets = model_sets
         self.alphas = alphas
         self.summary_tables = None
+        self.mass_list = config.mass_list
 
     # ===============================================================
     #                      Load Tables

@@ -18,7 +18,7 @@ def load_summary_table(alpha, detector):
     detector : str
     """
     filename = f'{detector}_analysis_a{alpha}.dat'
-    filepath = os.path.join('SnowglobesData', filename)
+    filepath = os.path.join('../SnowglobesData', filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
@@ -32,5 +32,5 @@ def load_mass_table(mass, alpha, detector):
     detector : str
     """
     filename = f'{detector}_analysis_a{alpha}_m{mass}.dat'
-    filepath = os.path.join('SnowglobesData', 'output', filename)
+    filepath = os.path.join('../SnowglobesData', 'output', filename)
     return pd.read_csv(filepath, delim_whitespace=True)
