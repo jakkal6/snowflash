@@ -4,7 +4,7 @@ from . import config
 
 class SnowGlobesData:
     def __init__(self,
-                 model_sets=('aprox', 'lab', 'noWeakRates'),
+                 model_sets=('LMP', 'LMP+N50', 'SNA'),
                  alphas=(1, 2, 3),
                  detector='ar40kt'):
         """Collection of SnowGlobes data
