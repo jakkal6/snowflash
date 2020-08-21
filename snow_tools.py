@@ -56,7 +56,7 @@ def time_integrate(mass_tables, n_bins, channels):
     mass_tables : {mass: pd.DataFrame}
         collection of time-binned mass model tables
     n_bins : int
-        no. of time bins to integrate over
+        no. of time bins to integrate over. Currently each bin is 5 ms
     channels : [str]
         list of channel labels
     """

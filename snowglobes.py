@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+
+# snowglobes
 from . import snow_tools
 from . import config
 
@@ -70,3 +73,27 @@ class SnowGlobesData:
 
         self.mass_tables = tables
 
+    # ===============================================================
+    #                      Plotting
+    # ===============================================================
+    def plot_summary(self, column,
+                     marker='.', xscale='log', yscale='linear'):
+        """Plot quantity from summary table
+        """
+        fig, ax = plt.subplots()
+
+        for model_set, table in self.summary_tables.items():
+            ax.plot(table['Mass'], table[column],
+                    marker=marker, ls='none', label=model_set)
+
+        ylabel = {
+            'Tot': 'counts',
+            'Avg': 'avg energy (MeV)',
+        }.get(column[:3])
+        ax.set_ylabel(ylabel)
+        ax.set_xlabel('ZAMS Mass (Msun)')
+        ax.legend()
+        ax.set_xscale(xscale)
+        ax.set_yscale(yscale)
+
+        return fig, ax
