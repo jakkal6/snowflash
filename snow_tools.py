@@ -39,7 +39,7 @@ def load_mass_table(mass, alpha, detector):
     """
     path = data_path()
     filename = f'{detector}_analysis_a{alpha}_m{mass}.dat'
-    filepath = os.path.join(path, 'output', filename)
+    filepath = os.path.join(path, 'mass_tables', filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
