@@ -48,7 +48,7 @@ def check_ax(ax, figsize):
     return fig, ax
 
 
-def set_ax_all(ax, y_var=None, x_var=None, y_scale=None, x_scale=None,
+def set_ax_all(ax, x_var=None, y_var=None, x_scale=None, y_scale=None,
                x_label=None, y_label=None, x_lims=None, y_lims=None,
                legend=False, legend_loc=None, title=False, title_str=None):
     """Set all ax properties
@@ -56,10 +56,10 @@ def set_ax_all(ax, y_var=None, x_var=None, y_scale=None, x_scale=None,
     parameters
     ----------
     ax : pyplot Axis
-    y_var : str
     x_var : str
-    y_scale : str
+    y_var : str
     x_scale : str
+    y_scale : str
     x_label : str
     y_label : str
     x_lims : [min, max]
@@ -76,21 +76,21 @@ def set_ax_all(ax, y_var=None, x_var=None, y_scale=None, x_scale=None,
     set_ax_title(ax, string=title_str, title=title)
 
 
-def set_ax_scales(ax, y_var=None, x_var=None, y_scale=None, x_scale=None):
+def set_ax_scales(ax, x_var=None, y_var=None, x_scale=None, y_scale=None):
     """Set axis scales (linear, log)
 
     parameters
     ----------
     ax : pyplot Axis
-    y_var : str
     x_var : str
-    y_scale : str
+    y_var : str
     x_scale : str
+    y_scale : str
     """
     if x_scale is None:
         x_scale = config.ax_scales.get(x_var, 'linear')
     if y_scale is None:
-        y_scale = config.ax_scales.get(y_var, 'log')
+        y_scale = config.ax_scales.get(y_var, 'linear')
 
     ax.set_xscale(x_scale)
     ax.set_yscale(y_scale)
