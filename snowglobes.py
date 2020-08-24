@@ -22,6 +22,8 @@ class SnowGlobesData:
             filename IDs that correspond to the model_sets
         detector : str
             Type of neutrino detector used in snowglobes
+        load_data : bool
+            immediately load all data
         """
         self.detector = detector
         self.model_sets = model_sets
@@ -78,19 +80,35 @@ class SnowGlobesData:
     #                      Plotting
     # ===============================================================
     def plot_summary(self, column,
-                     marker='.', xscale='log', yscale='linear'):
+                     marker='.', x_scale='log', y_scale='linear'):
         """Plot quantity from summary table
+
+        parameters
+        ----------
+        column : str
+            which column to plot from summary_tables
+        marker : str
+        y_scale : str
+        x_scale : str
         """
         fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
                                          column=column, marker=marker,
-                                         xscale=xscale, yscale=yscale)
+                                         x_scale=x_scale, y_scale=y_scale)
         return fig, ax
 
     def plot_time(self, column, mass,
-                  yscale='log', xfactor=1.0):
+                  x_scale='linear', y_scale='log'):
         """Plot time-dependent quantity from mass tables
+
+        parameters
+        ----------
+        column : str
+            which column to plot from mass_tables
+        mass : float or int
+        y_scale : str
+        x_scale : str
         """
         fig, ax = snow_plot.plot_time(mass_tables=self.mass_tables,
                                       column=column, mass=mass,
-                                      yscale=yscale, xfactor=xfactor)
+                                      x_scale=x_scale, y_scale=y_scale)
         return fig, ax
