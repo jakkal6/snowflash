@@ -97,3 +97,26 @@ class SnowGlobesData:
         ax.set_yscale(yscale)
 
         return fig, ax
+
+    def plot_time(self, column, mass,
+                  yscale='log', xfactor=1.0):
+        """Plot time-dependent quantity from mass tables
+        """
+        fig, ax = plt.subplots()
+
+        for model_set in self.model_sets:
+            table = self.mass_tables[model_set][mass]
+            ax.step(table['Time']*xfactor, table[column],
+                    where='post', label=model_set)
+
+        ylabel = {
+            'Tot': 'counts',
+            'Avg': 'avg energy (MeV)',
+        }.get(column[:3])
+        ax.set_ylabel(ylabel)
+        ax.set_xlabel('Time (s)')
+        ax.set_xscale('symlog', linthreshx=0.1)
+        ax.set_yscale(yscale)
+        ax.legend()
+
+        return fig, ax
