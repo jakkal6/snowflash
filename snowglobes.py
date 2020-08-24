@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 
 # snowglobes
 from . import snow_tools
+from . import snow_plot
 from . import config
 
 
@@ -80,43 +81,16 @@ class SnowGlobesData:
                      marker='.', xscale='log', yscale='linear'):
         """Plot quantity from summary table
         """
-        fig, ax = plt.subplots()
-
-        for model_set, table in self.summary_tables.items():
-            ax.plot(table['Mass'], table[column],
-                    marker=marker, ls='none', label=model_set)
-
-        ylabel = {
-            'Tot': 'counts',
-            'Avg': 'avg energy (MeV)',
-        }.get(column[:3])
-        ax.set_ylabel(ylabel)
-        ax.set_xlabel('ZAMS Mass (Msun)')
-        ax.legend()
-        ax.set_xscale(xscale)
-        ax.set_yscale(yscale)
-
+        fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
+                                         column=column, marker=marker,
+                                         xscale=xscale, yscale=yscale)
         return fig, ax
 
     def plot_time(self, column, mass,
                   yscale='log', xfactor=1.0):
         """Plot time-dependent quantity from mass tables
         """
-        fig, ax = plt.subplots()
-
-        for model_set in self.model_sets:
-            table = self.mass_tables[model_set][mass]
-            ax.step(table['Time']*xfactor, table[column],
-                    where='post', label=model_set)
-
-        ylabel = {
-            'Tot': 'counts',
-            'Avg': 'avg energy (MeV)',
-        }.get(column[:3])
-        ax.set_ylabel(ylabel)
-        ax.set_xlabel('Time (s)')
-        ax.set_xscale('symlog', linthreshx=0.1)
-        ax.set_yscale(yscale)
-        ax.legend()
-
+        fig, ax = snow_plot.plot_time(mass_tables=self.mass_tables,
+                                      column=column, mass=mass,
+                                      yscale=yscale, xfactor=xfactor)
         return fig, ax
