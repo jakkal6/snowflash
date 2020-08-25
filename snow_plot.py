@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 
 # snowglobes
 from . import plot_tools
+from . import config
 
 
 def plot_summary(tables, column,
@@ -22,7 +23,8 @@ def plot_summary(tables, column,
 
     for model_set, table in tables.items():
         ax.plot(table['Mass'], table[column],
-                marker=marker, ls='none', label=model_set)
+                marker=marker, ls='none', label=model_set,
+                color=config.colors.get(model_set))
 
     plot_tools.set_ax_all(ax=ax, x_var='Mass', y_var=column[:3],
                           x_scale=x_scale, y_scale=y_scale,
@@ -50,7 +52,8 @@ def plot_time(mass_tables, column, mass,
     for model_set, tables in mass_tables.items():
         table = tables[mass]
         ax.step(table['Time'], table[column],
-                where='post', label=model_set)
+                where='post', label=model_set,
+                color=config.colors.get(model_set))
 
     plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=column[:3],
                           x_scale=x_scale, y_scale=y_scale,
