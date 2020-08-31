@@ -10,7 +10,7 @@ Tools for handling snowglobes data
 # ===============================================================
 #                      Load Tables
 # ===============================================================
-def load_summary_table(alpha, detector):
+def load_summary_table(alpha, detector, time_integral=30):
     """Load time-integrated summary table containing all mass models
 
     Returns : pd.DataFrame
@@ -19,9 +19,11 @@ def load_summary_table(alpha, detector):
     ----------
     alpha : int
     detector : str
+    time_integral : int
+        time integrated over post-bounce (milliseconds)
     """
     path = data_path()
-    filename = f'{detector}_analysis_a{alpha}.dat'
+    filename = f'{detector}_analysis_{time_integral}ms_a{alpha}.dat'
     filepath = os.path.join(path, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 
