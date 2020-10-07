@@ -81,7 +81,7 @@ class SnowGlobesData:
     # ===============================================================
     def plot_summary(self, column,
                      marker='.', x_scale='log', y_scale='linear',
-                     legend=True, figsize=None):
+                     legend=True, figsize=None, ax=None):
         """Plot quantity from summary table
 
         parameters
@@ -93,15 +93,17 @@ class SnowGlobesData:
         x_scale : str
         legend : bool
         figsize : (width, length)
+        ax : Axis
         """
         fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
                                          column=column, marker=marker,
                                          x_scale=x_scale, y_scale=y_scale,
-                                         figsize=figsize, legend=legend)
+                                         figsize=figsize, legend=legend,
+                                         ax=ax)
         return fig, ax
 
     def plot_time(self, column, mass,
-                  x_scale='linear', y_scale='log'):
+                  x_scale='linear', y_scale='log', ax=None):
         """Plot time-dependent quantity from mass tables
 
         parameters
@@ -111,8 +113,10 @@ class SnowGlobesData:
         mass : float or int
         y_scale : str
         x_scale : str
+        ax : Axis
         """
         fig, ax = snow_plot.plot_time(mass_tables=self.mass_tables,
                                       column=column, mass=mass,
-                                      x_scale=x_scale, y_scale=y_scale)
+                                      x_scale=x_scale, y_scale=y_scale,
+                                      ax=ax)
         return fig, ax
