@@ -80,7 +80,8 @@ class SnowGlobesData:
     #                      Plotting
     # ===============================================================
     def plot_summary(self, column,
-                     marker='.', x_scale='log', y_scale='linear'):
+                     marker='.', x_scale='log', y_scale='linear',
+                     legend=True, figsize=None):
         """Plot quantity from summary table
 
         parameters
@@ -90,10 +91,13 @@ class SnowGlobesData:
         marker : str
         y_scale : str
         x_scale : str
+        legend : bool
+        figsize : (width, length)
         """
         fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
                                          column=column, marker=marker,
-                                         x_scale=x_scale, y_scale=y_scale)
+                                         x_scale=x_scale, y_scale=y_scale,
+                                         figsize=figsize, legend=legend)
         return fig, ax
 
     def plot_time(self, column, mass,

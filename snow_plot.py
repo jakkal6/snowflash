@@ -6,7 +6,8 @@ from . import config
 
 
 def plot_summary(tables, column,
-                 marker='.', x_scale='log', y_scale='linear'):
+                 marker='.', x_scale='log', y_scale='linear',
+                 legend=True, figsize=None):
     """Plot quantity from summary table
 
     parameters
@@ -18,8 +19,10 @@ def plot_summary(tables, column,
     marker : str
     x_scale : str
     y_scale : str
+    legend : bool
+    figsize : (width, height)
     """
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=figsize)
 
     for model_set, table in tables.items():
         ax.plot(table['Mass'], table[column],
@@ -28,13 +31,15 @@ def plot_summary(tables, column,
 
     plot_tools.set_ax_all(ax=ax, x_var='Mass', y_var=column[:3],
                           x_scale=x_scale, y_scale=y_scale,
-                          legend=True)
+                          legend=legend)
 
+    plt.tight_layout()
     return fig, ax
 
 
 def plot_time(mass_tables, column, mass,
-              x_scale=None, y_scale='log'):
+              x_scale=None, y_scale='log',
+              legend=True):
     """Plot time-dependent quantity from mass tables
 
     parameters
@@ -46,6 +51,7 @@ def plot_time(mass_tables, column, mass,
     mass : float or int
     y_scale : str
     x_scale : str
+    legend : bool
     """
     fig, ax = plt.subplots()
 
@@ -57,6 +63,6 @@ def plot_time(mass_tables, column, mass,
 
     plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=column[:3],
                           x_scale=x_scale, y_scale=y_scale,
-                          legend=True)
+                          legend=legend)
 
     return fig, ax

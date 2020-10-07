@@ -44,7 +44,7 @@ ax_labels = {
     'Mass': r'ZAMS Mass ($\mathrm{M}_\odot$)',
     'Time': 'Time post-bounce (s)',
     'Avg': r'${\langle E \rangle}_\mathrm{tot}$ (MeV)',
-    'Tot': r'$N_\mathrm{tot}$',
+    'Tot': r'$\mathrm{N_{tot}}$',
 }
 
 ax_lims = {
