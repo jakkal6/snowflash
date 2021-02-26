@@ -45,6 +45,15 @@ def load_mass_table(mass, alpha, detector):
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
+def load_prog_table():
+    """Load progenitor data table
+
+    Returns : pd.DataFrame
+    """
+    filepath = prog_path()
+    return pd.read_csv(filepath, delim_whitespace=True)
+
+
 # ===============================================================
 #                      Analysis
 # ===============================================================
@@ -118,3 +127,11 @@ def data_path():
     path = ecrate_path()
     return os.path.join(path, 'plotRoutines', 'SnowglobesData')
 
+
+def prog_path():
+    """Return path to progenitor table
+
+    Returns : str
+    """
+    path = ecrate_path()
+    return os.path.join(path, 'plotRoutines', 'data', 'progenitor_table.dat')

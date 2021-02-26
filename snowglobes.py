@@ -35,10 +35,12 @@ class SnowGlobesData:
 
         self.summary_tables = None
         self.mass_tables = None
+        self.prog_table = None
 
         if load_data:
             self.load_summary_tables()
             self.load_mass_tables()
+            self.prog_table = snow_tools.load_prog_table()
 
     # ===============================================================
     #                      Load Tables
