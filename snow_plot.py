@@ -6,8 +6,8 @@ from . import config
 
 
 def plot_summary(tables, column, prog_table,
-                 x_var='mass',
-                 x_scale='log', y_scale='linear',
+                 x_var='m_fe',
+                 x_scale=None, y_scale='linear',
                  marker='.',
                  ax=None,
                  legend=True,
