@@ -5,9 +5,13 @@ from . import plot_tools
 from . import config
 
 
-def plot_summary(tables, column,
-                 marker='.', x_scale='log', y_scale='linear',
-                 ax=None, legend=True, figsize=None):
+def plot_summary(tables, column, prog_table,
+                 x_var='mass',
+                 x_scale='log', y_scale='linear',
+                 marker='.',
+                 ax=None,
+                 legend=True,
+                 figsize=None):
     """Plot quantity from summary table
 
     parameters
@@ -16,9 +20,11 @@ def plot_summary(tables, column,
         collection of summary_tables to plot
     column : str
         which column to plot
-    marker : str
+    prog_table : pd.DataFrame
+    x_var : str
     x_scale : str
     y_scale : str
+    marker : str
     ax : Axis
     legend : bool
     figsize : (width, height)
@@ -26,7 +32,7 @@ def plot_summary(tables, column,
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
 
     for model_set, table in tables.items():
-        ax.plot(table['Mass'], table[column],
+        ax.plot(prog_table[x_var], table[column],
                 marker=marker, ls='none', label=model_set,
                 color=config.colors.get(model_set))
 
