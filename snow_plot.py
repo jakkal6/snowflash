@@ -36,7 +36,7 @@ def plot_summary(tables, column, prog_table,
                 marker=marker, ls='none', label=model_set,
                 color=config.colors.get(model_set))
 
-    plot_tools.set_ax_all(ax=ax, x_var='Mass', y_var=column[:3],
+    plot_tools.set_ax_all(ax=ax, x_var=x_var, y_var=column[:3],
                           x_scale=x_scale, y_scale=y_scale,
                           legend=legend)
 

@@ -38,13 +38,15 @@ colors = {
 }
 
 ax_scales = {
+    'mass': 'log',
 }
 
 ax_labels = {
-    'Mass': r'ZAMS Mass ($\mathrm{M}_\odot$)',
+    'mass': r'ZAMS Mass ($\mathrm{M}_\odot$)',
     'Time': 'Time post-bounce (s)',
     'Avg': r'${\langle E \rangle}_\mathrm{tot}$ (MeV)',
     'Tot': r'$\mathrm{N_{tot}}$',
+    'm_fe': r'Iron core mass ($\mathrm{M}_\odot$)',
 }
 
 ax_lims = {

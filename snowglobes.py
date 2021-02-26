@@ -84,7 +84,7 @@ class SnowGlobesData:
     def plot_summary(self, column,
                      x_var='mass',
                      marker='.',
-                     x_scale='log',
+                     x_scale=None,
                      y_scale='linear',
                      legend=True,
                      figsize=None,
