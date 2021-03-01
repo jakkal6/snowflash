@@ -1,0 +1,10 @@
+temp/
+cache/
+
+# misc.
+.idea
+__pycache__
+*.pyc
+.DS_Store
+.vscode/
+*.code-workspace
