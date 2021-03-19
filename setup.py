@@ -25,7 +25,7 @@ def copy_snowglobes(snowglobes_path):
 
     # copy snowglobes dirs
     for folder in ['channels',
-                   'background',
+                   'backgrounds',
                    'bin',
                    'smear',
                    'xscns',
