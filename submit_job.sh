@@ -16,11 +16,10 @@ module load HDF5/1.10
 module load GSL
 
 conda activate flashbang
-cd /mnt/gs18/scratch/users/john7457/flash2snowglobes
+cd "${SCRATCH}/flash2snowglobes" || exit
 #cd ${HOME}/flash2snowglobes
 
-#python flash2snowglobes.py
-python flash2snowglobes_old.py
+python flash2snowglobes.py
  
-scontrol show job $SLURM_JOB_ID     ### write job information to output file
+scontrol show job "${SLURM_JOB_ID}"     ### write job information to output file
 
