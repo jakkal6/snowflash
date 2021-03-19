@@ -1,13 +1,12 @@
 import os
 import shutil
 
-def snowglobes(snowglobes,output):
-    """Copies snowglobes installation into working directory \n
-    Couldn't find a way around this without going into the snowglobes code \n
-    and altering directory paths \n
-    Input: snowglobes: directory path to snowglobes installation \n
-           output: directory path where you want the output written \n
-    Output: None"""
+
+def snowglobes(snowglobes):
+    """Copies snowglobes installation into working directory
+    Couldn't find a way around this without going into the snowglobes code
+    and altering directory paths
+    Input: snowglobes: directory path to snowglobes installation"""
 
     path1 = "./"
     if not os.path.isdir(path1):

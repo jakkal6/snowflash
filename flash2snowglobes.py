@@ -17,6 +17,7 @@ import setup
 
 alpha = [1, 2, 3]  # just repurposing "alpha" to distinguish model sets
 
+# mass = (12.0, 20.0, 40)
 mass = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
         11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0,
         13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9,
@@ -82,7 +83,7 @@ snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 output = "output"
 
 # Set up snoglobws in working directory
-setup.snowglobes(snowglobes_path, output)
+setup.snowglobes(snowglobes_path)
 
 # Loop over turbulence strength
 # for model_set in model_sets:
