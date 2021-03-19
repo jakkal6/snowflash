@@ -83,7 +83,7 @@ snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 output = "output"
 
 # Set up snoglobws in working directory
-setup.snowglobes(snowglobes_path)
+setup.copy_snowglobes(snowglobes_path)
 
 # Loop over turbulence strength
 # for model_set in model_sets:

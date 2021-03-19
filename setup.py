@@ -2,7 +2,7 @@ import os
 import shutil
 
 
-def snowglobes(snowglobes_path):
+def copy_snowglobes(snowglobes_path):
     """Copies snowglobes installation into working directory
     Couldn't find a way around this without going into the snowglobes code
     and altering directory paths
