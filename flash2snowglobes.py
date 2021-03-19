@@ -5,10 +5,12 @@
 # snowglobes IO files
 
 import os
+import IO
+from astropy import units
+
 import cleanup
 from convert import convert
 from create_pinched import create_pinched
-import IO
 from neut_analysis import analysis
 import run
 import setup
@@ -38,7 +40,7 @@ mass = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
 
 # snowglobes setup info - event distance in cm, detector and detector material
 # For more info on detector detector configurations see detector_configurations.dat
-dist = 3.08568025e22  # dist = [cm]
+dist = 10 * units.kpc.to(units.cm)
 
 # detector = "wc100kt30prct"
 # detector = "icecube"
