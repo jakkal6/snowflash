@@ -82,11 +82,9 @@ elif material == 'argon':
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 output = "output"
 
-# Set up snoglobws in working directory
+print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(snowglobes_path)
 
-# Loop over turbulence strength
-# for model_set in model_sets:
 for a in alpha:
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{a}'
 
@@ -96,15 +94,13 @@ for a in alpha:
 
     # Loop over progenitor mass
     for m in mass:
-        print(a, m)
-
-        # Root path to FLASH .dat file
+        # path to FLASH .dat file
         dat_filename = f'stir_ecrates_tab{a}_s{m}_alpha1.25.dat'
         dat_filepath = os.path.join(models_path, f'run_{m}', dat_filename)
         print(dat_filepath)
 
         # Read in FLASH data
-        time, lum, avgE, rmsE = IO.input(dat_filepath)
+        time, lum, avgE, rmsE = IO.flash_input(dat_filepath)
 
         # Convert FLASH data to fluxes that snowglobes needs
         timebins, energy, Fnu = convert(time, lum, avgE, rmsE, dist)

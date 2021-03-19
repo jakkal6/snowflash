@@ -25,7 +25,7 @@ def total_files(a, output, detector, channel_groups):
     return nomix_tot
 
 
-def input(datafile):
+def flash_input(datafile):
     """Read in FLASH data from .dat file \n
     Currently using data from bounce to 1s post-bounce, with check that \n
     shock radius doesn't leave domain. \n
