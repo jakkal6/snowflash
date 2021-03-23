@@ -4,7 +4,7 @@ from astropy import units
 
 
 def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
-    """Convert FLASH data to fluxes and units needed by snowglobes
+    """Calculate pinched neutrino fluxes at Earth for snowglobes input
 
     Returns: timebins, e_bins, fluxes
         timebins: time steps for snowglobes calculations in seconds
@@ -16,26 +16,21 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
     time : [n_timesteps]
         timesteps from FLASH smulation [s]
     lum : [timesteps, flavor]
-        list of luminosities from FLASH [1e51 erg/s]
+        list of luminosities from FLASH [GeV/s]
     avg : [timesteps, flavor]
-        average energies from FLASH [MeV]
+        average energies from FLASH [GeV]
     rms : [timesteps, flavor]
-        rms neutrino energies from FLASH [MeV]
+        rms neutrino energies from FLASH [GeV]
     dist : float
         event distance [cm]
     timebins : []
         time bins to sample over [leftside]
     e_bins : []
-        neutrino energy bins to sample [MeV]
+        neutrino energy bins to sample [GeV]
     """
-    flavors = ['e', 'b', 'x']  # nu_e, nu_ebar, nu_x
+    flavors = ['e', 'a', 'x']  # nu_e, nu_ebar, nu_x
 
     alpha = get_alpha(avg=avg, rms=rms)
-
-    # Convert to GeV
-    e_bins = np.array(e_bins) / 1000
-    avg = np.array(avg) / 1000
-    lum = np.array(lum) * units.erg.to(units.GeV)
 
     dt = np.diff(timebins)[0]
     estep = np.diff(e_bins)[0]
@@ -57,7 +52,7 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
     lum_to_flux = 1 / (4 * np.pi * dist**2)
 
     for flav in flavors:
-        lum_f = binned['lum'][flav] * dt * 1e51
+        lum_f = binned['lum'][flav] * dt
         avg_f = binned['avg'][flav]
         alpha_f = binned['alpha'][flav]
 
@@ -65,7 +60,7 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
             phi = get_phi(e_bin, avg_f, alpha_f)
             fluxes[flav][:, i] = lum_to_flux * (lum_f / avg_f) * phi * estep
 
-    return fluxes, binned
+    return fluxes
 
 
 def get_phi(e_bin, e_avg, alpha):
