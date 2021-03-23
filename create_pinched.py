@@ -27,21 +27,20 @@ def write_pinched(tab, mass, timebins, e_bins, fluxes):
     path = './fluxes'
     key_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_key.dat')
 
-    keyfile_str = keyfile_table_str(timebins=timebins, dt=dt)
+    keyfile_str = key_table_str(timebins=timebins, dt=dt)
     with open(key_filepath, 'w') as keyfile:
         keyfile.write(keyfile_str)
 
     for i in range(len(timebins)):
         out_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_{i+1}.dat')
-        table = format_table(time_i=i, e_bins=e_bins, fluxes=fluxes)
-        out_str = table.to_string(justify='left', index=False)
+        table_str = flux_table_str(time_i=i, e_bins=e_bins, fluxes=fluxes)
 
         with open(out_filepath, 'w') as outfile:
-            outfile.write(out_str)
+            outfile.write(table_str)
 
 
-def keyfile_table_str(timebins, dt):
-    """Return formatted table string for keyfile
+def key_table_str(timebins, dt):
+    """Return formatted string of key table
 
     Returns : str
 
@@ -60,8 +59,8 @@ def keyfile_table_str(timebins, dt):
     return table_str
 
 
-def format_table(time_i, e_bins, fluxes):
-    """Format fluxes into table
+def flux_table_str(time_i, e_bins, fluxes):
+    """Return formatted string of flux table for given timestep
 
     Returns: pd.DataFrame
 
@@ -85,4 +84,6 @@ def format_table(time_i, e_bins, fluxes):
     for flavor, key in flavor_map.items():
         table[flavor] = fluxes[key][time_i]
 
-    return table
+    table_str = table.to_string(justify='left', index=False)
+
+    return table_str
