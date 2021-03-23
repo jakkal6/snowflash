@@ -27,18 +27,37 @@ def write_pinched(tab, mass, timebins, e_bins, fluxes):
     path = './fluxes'
     key_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_key.dat')
 
+    keyfile_str = keyfile_table_str(timebins=timebins, dt=dt)
     with open(key_filepath, 'w') as keyfile:
-        keyfile.write("### i \t time(s) \t dt(s) \n")
+        keyfile.write(keyfile_str)
 
-        for i in range(len(timebins)):
-            keyfile.write(str(i+1) + "\t" + str(timebins[i]) + "\t" + str(dt) +"\n")
+    for i in range(len(timebins)):
+        out_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_{i+1}.dat')
+        table = format_table(time_i=i, e_bins=e_bins, fluxes=fluxes)
+        out_str = table.to_string(justify='left', index=False)
 
-            out_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_{i+1}.dat')
-            table = format_table(time_i=i, e_bins=e_bins, fluxes=fluxes)
-            out_str = table.to_string(justify='left', index=False)
+        with open(out_filepath, 'w') as outfile:
+            outfile.write(out_str)
 
-            with open(out_filepath, 'w') as outfile:
-                outfile.write(out_str)
+
+def keyfile_table_str(timebins, dt):
+    """Return formatted table string for keyfile
+
+    Returns : str
+
+    Parameters
+    ----------
+    timebins : []
+    dt : float
+    """
+    table = pd.DataFrame()
+    table['# i'] = np.arange(len(timebins)) + 1
+    table['time[s]'] = timebins
+    table['dt[s]'] = dt
+
+    table_str = table.to_string(justify='left', index=False)
+
+    return table_str
 
 
 def format_table(time_i, e_bins, fluxes):
@@ -61,7 +80,7 @@ def format_table(time_i, e_bins, fluxes):
                   'taubar': 'x',
                   }
     table = pd.DataFrame()
-    table['E_nu'] = e_bins
+    table['# E_nu'] = e_bins
 
     for flavor, key in flavor_map.items():
         table[flavor] = fluxes[key][time_i]
