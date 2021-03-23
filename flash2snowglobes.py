@@ -44,6 +44,16 @@ masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
 # For more info on detector detector configurations see detector_configurations.dat
 dist = 10 * units.kpc.to(units.cm)
 
+# time bins [s]
+t_start = 0.0
+t_end = 1.0
+dt = 0.005
+
+# energy bins [GeV]
+e_start = 0.0
+e_end = 0.1
+e_step = 0.0002
+
 # detector = "wc100kt30prct"
 # detector = "icecube"
 detector = "ar40kt"
@@ -105,8 +115,8 @@ for tab in tabs:
         time, lum, avg, rms = IO.flash_input(dat_filepath)
 
         # Convert FLASH data to fluxes that snowglobes needs
-        timebins = convert.get_bins(x0=0, x1=1.0, dx=0.005, endpoint=False)
-        e_bins = convert.get_bins(x0=0, x1=0.1, dx=0.0002, endpoint=True)
+        timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)
+        e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
         # calculate pinched neutrino fluxes versus energy & time bins
         fluxes = convert.get_fluxes(time=time,
