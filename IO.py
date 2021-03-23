@@ -25,43 +25,79 @@ def total_files(a, output, detector, channel_groups):
     return nomix_tot
 
 
-def flash_input(datafile):
-    """Read in FLASH data from .dat file \n
-    Currently using data from bounce to 1s post-bounce, with check that \n
-    shock radius doesn't leave domain. \n
-    Input: path to FLASH data file \n
-    Output: time, list of luminosities, list of average energies, \n
-    list of rms energies
-    Lists indexed by flavor: 1: electron, 2: anti electron, 3: nux"""
+def flash_input(dat_filepath):
+    """Read in FLASH data from .dat file
+    Currently using data from bounce_iunce to 1s post-bounce_iunce, with check that
+    shock radius doesn't leave domain.
 
-    time,rad,lum_nue,lum_nubar,lum_nux,avgE_nue,avgE_nubar,avgE_nux,rms_nue,rms_nubar,rms_nux \
-            = np.loadtxt(datafile,usecols=(0,11,33,34,35,36,37,38,39,40,41), unpack=True)
+    Returns : time, lum, avg, rms
+        shape (n_steps, flavors)
+        flavors: 0: electron, 1: anti electron, 2: nux
 
-    for i in range(len(time)):
-        t = time[i]
-        if rad[i] > 0.0:
-            bo = i
-            break
-    for j in range (1,len(time)):
-        t = time[j]
-        e = len(time)-1
-        if rad[j] > 1.29e9:
-            e = j
-            break
-        if time[j] - time[bo] > 1.0:
-            e = j
-            break
-    time = time[bo:e]-time[bo]
-    rad = rad[bo:e]
-    lum_nue = lum_nue[bo:e]
-    lum_nubar = lum_nubar[bo:e]
-    lum_nux = lum_nux[bo:e]
-    avgE_nue = avgE_nue[bo:e]
-    avgE_nubar = avgE_nubar[bo:e]
-    avgE_nux = avgE_nux[bo:e]
-    rms_nue = rms_nue[bo:e]
-    rms_nubar = rms_nubar[bo:e]
-    rms_nux = rms_nux[bo:e]
+    Parameters
+    ----------
+    dat_filepath : path to FLASH data file
+    """
+    cols = [0, 11, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
-    return time,[lum_nue,lum_nubar,lum_nux],[avgE_nue,avgE_nubar,avgE_nux], \
-            [rms_nue,rms_nubar,rms_nux]
+    dat = np.loadtxt(dat_filepath, usecols=cols)
+
+    time = dat[:, 0]
+    rshock = dat[:, 1]
+
+    start_i, bounce_i, end_i = get_slice_idxs(time=time, rshock=rshock)
+    bounce_time = dat[bounce_i, 0]
+    sliced = dat[start_i:end_i]
+
+    time = sliced[:, 0] - bounce_time
+    lum = sliced[:, 2:5]
+    avg = sliced[:, 5:8]
+    rms = sliced[:, 8:11]
+
+    return time, lum, avg, rms
+
+
+def get_slice_idxs(time, rshock,
+                   rshock_max=1.29e9,
+                   time_start=-0.0,
+                   time_max=1.0
+                   ):
+    """Get start/end indexes
+
+    Parameters
+    ----------
+    time : []
+    rshock : []
+    rshock_max : float
+    time_start : float
+    time_max : float
+    """
+    n_steps = len(time)
+    start_i = 0
+    bounce_i = 0
+    end_i = n_steps - 1
+
+    # find bounce idx
+    for i in range(n_steps):
+        if rshock[i] > 0.0:
+            bounce_i = i
+            break
+
+    bounce_time = time[bounce_i]
+
+    # find starting time before bounce
+    for i in range(n_steps):
+        if time[i] > bounce_time + time_start:
+            start_i = i - 1
+            break
+
+    # find end idx
+    for i in range(start_i, n_steps):
+        if rshock[i] > rshock_max:
+            end_i = i
+            break
+        elif time[i] - bounce_time > time_max:
+            end_i = i + 1
+            break
+
+    return start_i, bounce_i, end_i

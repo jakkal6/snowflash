@@ -1,99 +1,126 @@
 import numpy as np
-from scipy.interpolate import interp1d
 from scipy import special
-
-def phi(E_nu,E_nu0,alpha):
-    """Used to calculate flux for snowglobes input \n
-    Input: E_nu: neutrino energy in GeV \n
-           E_nu0: neutrino average energy in GeV \n
-           alpha: pinch parameter \n
-    Output: phi for flux calculation"""
-    N = ((alpha+1.)**(alpha+1.))/(E_nu0*special.gamma(alpha+1.))
-    R = N*((E_nu/E_nu0)**(alpha))*np.exp(-1.*(alpha+1.)*E_nu/E_nu0)
-
-    return R
+from astropy import units
 
 
-def convert(time,lum,avgE,rmsE,dist):
-    """Convert FLASH data to fluxes and units needed by snowglobes \n
-    Input: time: in seconds from FLASH smulation \n
-           lum: list of luminosities from FLASH \n
-           avgE: list of average energies from FLASH \n
-           rmsE: list of rms energies from FLASH \n
-           dist: event distance in cm \n
-    Output: timebins: time steps for snowglobes calculations in seconds \n
-            energy: neutrino energy binning for snowglobes in GeV \n
-            Fnu: list of fluxes for snowglobes in GeV/s/cm^2 \n
-                    1: electron, 2: anti electron, 3: nux"""
+def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
+    """Convert FLASH data to fluxes and units needed by snowglobes
 
-    estep = 0.0002
+    Returns: timebins, e_bins, fluxes
+        timebins: time steps for snowglobes calculations in seconds
+        energy: neutrino energy binning for snowglobes in GeV
+        Fnu: list of fluxes for snowglobes in GeV/s/cm^2
 
-    alpha = [[],[],[]]
-    for i in range(len(time)):
-        alpha[0].append((rmsE[0][i]*rmsE[0][i] - 2.0*avgE[0][i]*avgE[0][i])/(avgE[0][i]*avgE[0][i] - rmsE[0][i]*rmsE[0][i]))
-        alpha[1].append((rmsE[1][i]*rmsE[1][i] - 2.0*avgE[1][i]*avgE[1][i])/(avgE[1][i]*avgE[1][i] - rmsE[1][i]*rmsE[1][i]))
-        alpha[2].append((rmsE[2][i]*rmsE[2][i] - 2.0*avgE[2][i]*avgE[2][i])/(avgE[2][i]*avgE[2][i] - rmsE[2][i]*rmsE[2][i]))
+    Parameters
+    ----------
+    time : [n_timesteps]
+        timesteps from FLASH smulation [s]
+    lum : [timesteps, flavor]
+        list of luminosities from FLASH [1e51 erg/s]
+    avg : [timesteps, flavor]
+        average energies from FLASH [MeV]
+    rms : [timesteps, flavor]
+        rms neutrino energies from FLASH [MeV]
+    dist : float
+        event distance [cm]
+    timebins : []
+        time bins to sample over [leftside]
+    e_bins : []
+        neutrino energy bins to sample [MeV]
+    """
+    flavors = ['e', 'b', 'x']  # nu_e, nu_ebar, nu_x
 
-    ## Convert to GeV
-    avgE = np.array(avgE)/1000.0
-    avgE = avgE.tolist()
+    alpha = get_alpha(avg=avg, rms=rms)
 
-    ## Convert to GeV/s
-    lum = np.array(lum)*624.15
-    lum[2] /= 4.
-    lum = lum.tolist()
+    # Convert to GeV
+    e_bins = np.array(e_bins) / 1000
+    avg = np.array(avg) / 1000
+    lum = np.array(lum) * units.erg.to(units.GeV)
 
-    t_start = time[0]
-    t_end = time[-1]
-    t_step = 0.005 ##np.log10(t_end/t_start)/float(ntimebins)
-    ntimebins = int((t_end-t_start)/t_step)+1
-    timebins = []
-    tot_dt = 0.0
-    dt = []
-    for i in range(ntimebins):
-        t = t_start+float(i)*t_step ##*10.0**(float(i)*t_step)
-        timebins.append(t)
-        dt.append(t_step) ##*(10.0**(float(i+0.5)*t_step)-10.0**(float(i-0.5)*t_step)))
-        tot_dt += dt[i]
+    dt = np.diff(timebins)[0]
+    estep = np.diff(e_bins)[0]
 
-    f = interp1d(time,alpha[0])
-    alpha[0] = f(timebins)
-    f = interp1d(time,avgE[0])
-    avgE[0] = f(timebins)
-    f = interp1d(time,lum[0])
-    lum[0] = f(timebins)
+    # TODO: move later e.g. create_pinched
+    lum[:, 2] /= 4.  # divide nu_x equally between mu, tau, mu_bar, tau_bar
 
-    alpha[1] = np.interp(timebins,time,alpha[1])
-    avgE[1] = np.interp(timebins,time,avgE[1])
-    lum[1] = np.interp(timebins,time,lum[1])
+    # interpolate onto bins
+    bin_centres = timebins + 0.5*dt
+    binned = {}
 
-    alpha[2] = np.interp(timebins,time,alpha[2])
-    avgE[2] = np.interp(timebins,time,avgE[2])
-    lum[2] = np.interp(timebins,time,lum[2])
+    for key, quant in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
+        binned[key] = {}
+        for i, flav in enumerate(flavors):
+            binned[key][flav] = np.interp(bin_centres, time, quant[:, i])
 
-    F_nue = [np.zeros(501) for i in range(len(timebins))]
-    F_nubar = [np.zeros(501) for i in range(len(timebins))]
-    F_nux = [np.zeros(501) for i in range(len(timebins))]
-    energy = np.zeros(501)
-    for i in range(len(timebins)):
-        E_nu = 0.0
-        lum_nue = lum[0][i]*dt[i]*1.e51
-        lum_nubar = lum[1][i]*dt[i]*1.e51
-        lum_nux = lum[2][i]*dt[i]*1.e51
-        for j in range(501):
-            energy[j] = E_nu
-            if avgE[0][i] > 0.0:
-                F_nue[i][j] += 1./(4.*3.14*dist*dist)*lum_nue/avgE[0][i]*phi(E_nu,avgE[0][i],alpha[0][i])*estep
-            else:
-                F_nue[i][j] += 0.0
-            if avgE[1][i] > 0.0:
-                F_nubar[i][j] += 1./(4.*3.14*dist*dist)*lum_nubar/avgE[1][i]*phi(E_nu,avgE[1][i],alpha[1][i])*estep
-            else:
-                F_nubar[i][j] += 0.0
-            if avgE[2][i] > 0.0:
-                F_nux[i][j] += 1./(4.*3.14*dist*dist)*lum_nux/avgE[2][i]*phi(E_nu,avgE[2][i],alpha[2][i])*estep
-            else:
-                F_nux[i][j] += 0.0
-            E_nu += estep
+    fluxes = {f: np.zeros([len(timebins), len(e_bins)]) for f in flavors}
 
-    return timebins,energy,[F_nue,F_nubar,F_nux]
+    lum_to_flux = 1 / (4 * np.pi * dist**2)
+
+    for flav in flavors:
+        lum_f = binned['lum'][flav] * dt * 1e51
+        avg_f = binned['avg'][flav]
+        alpha_f = binned['alpha'][flav]
+
+        for i, e_bin in enumerate(e_bins):
+            phi = get_phi(e_bin, avg_f, alpha_f)
+            fluxes[flav][:, i] = lum_to_flux * (lum_f / avg_f) * phi * estep
+
+    return fluxes, binned
+
+
+def get_phi(e_bin, e_avg, alpha):
+    """Calculate phi parameter
+
+    Returns : [timesteps]
+        phi parameter for flux calculation
+
+    Parameters
+    ----------
+    e_bin : float
+        neutrino energy bin [GeV]
+    e_avg : [timesteps]
+        average neutrino energy [GeV]
+    alpha : [timesteps]
+        pinch parameter
+    """
+    n = ((alpha + 1) ** (alpha + 1)) / (e_avg * special.gamma(alpha + 1))
+    phi = n * ((e_bin / e_avg)**alpha) * np.exp(-(alpha + 1) * e_bin / e_avg)
+
+    return phi
+
+
+def get_bins(x0, x1, dx, endpoint):
+    """Divide x into dx-spaced bins
+
+    Returns: []
+
+    Parameters
+    ----------
+    x0 : float
+        lower boundary
+    x1 : float
+        upper boundary
+    dx : float
+        bin size
+    endpoint : bool
+        whether to include endpoint
+    """
+    n_bins = int((x1 - x0) / dx)
+
+    if endpoint:
+        n_bins += 1
+
+    return np.linspace(x0, x1, num=n_bins, endpoint=endpoint)
+
+
+def get_alpha(avg, rms):
+    """Calculate pinch parameter from average and RMS neutrino energies
+
+    Returns: [timesteps]
+
+    Parameters
+    ----------
+    avg : [timesteps]
+    rms : [timesteps]
+    """
+    return (rms*rms - 2.0*avg*avg) / (avg*avg - rms*rms)
