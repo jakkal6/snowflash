@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from astropy import units
 
 
 def total_files(a, output, detector, channel_groups):
@@ -25,14 +26,13 @@ def total_files(a, output, detector, channel_groups):
     return nomix_tot
 
 
+# TODO: add args time_start, time_end
 def flash_input(dat_filepath):
     """Read in FLASH data from .dat file
-    Currently using data from bounce_iunce to 1s post-bounce_iunce, with check that
-    shock radius doesn't leave domain.
 
-    Returns : time, lum, avg, rms
+    Returns : time [s], lum [GeV/s], avg [GeV], rms [GeV]
         shape (n_steps, flavors)
-        flavors: 0: electron, 1: anti electron, 2: nux
+        flavors: 0: electron, 1: anti-electron, 2: nux
 
     Parameters
     ----------
@@ -50,9 +50,9 @@ def flash_input(dat_filepath):
     sliced = dat[start_i:end_i]
 
     time = sliced[:, 0] - bounce_time
-    lum = sliced[:, 2:5]
-    avg = sliced[:, 5:8]
-    rms = sliced[:, 8:11]
+    lum = sliced[:, 2:5] * 1e51 * units.erg.to(units.GeV)  # GeV/s
+    avg = sliced[:, 5:8] / 1000  # GeV
+    rms = sliced[:, 8:11] / 1000  # GeV
 
     return time, lum, avg, rms
 
