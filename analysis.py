@@ -14,7 +14,7 @@ def analyze_output(a, m, output, detector, channel_groups, integrated_file):
         Output: None"""
     channels = get_all_channels(channel_groups)
 
-    time_filepath = os.path.join('./fluxes/', f'pinched_a{a}_m{m}_key.dat')
+    time_filepath = os.path.join('./fluxes/', f'pinched_tab{a}_m{m}_key.dat')
     time = np.loadtxt(time_filepath, skiprows=1, usecols=[1], unpack=True)
     n_time = len(time)
 
@@ -106,7 +106,7 @@ def load_channel_dat(channel, i, a, m, detector):
 def channel_dat_filepath(channel, i, a, m, detector):
     """Return filepath to snowglobes output file
     """
-    return f'./out/pinched_a{a}_m{m}_{i}_{channel}_{detector}_events_smeared.dat'
+    return f'./out/pinched_tab{a}_m{m}_{i}_{channel}_{detector}_events_smeared.dat'
 
 
 def load_energy_bins(channel, i, a, m, detector):
@@ -184,7 +184,7 @@ def create_time_table(timesteps, time_totals, time_avg):
 def save_time_table(table, detector, a, m, output):
     """Save time-dependent table to file
     """
-    filepath = os.path.join(output, f"{detector}_analysis_a{a}_m{m}.dat")
+    filepath = os.path.join(output, f"{detector}_analysis_tab{a}_m{m}.dat")
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:
@@ -236,8 +236,7 @@ def open_tot_file(tab, output, detector, channel_groups):
         header += f'Tot_{group}\t'
 
     header += '\n'
-    # TODO: replacee `a` with `tab`
-    filepath = os.path.join(output, f'{detector}_analysis_a{tab}.dat')
+    filepath = os.path.join(output, f'{detector}_analysis_tab{tab}.dat')
     tot_file = open(filepath, "w")
     tot_file.write(header)
 

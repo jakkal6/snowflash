@@ -27,14 +27,14 @@ def write_fluxes(tab, mass, timebins, e_bins, fluxes):
 
     # write key table
     keyfile_str = key_table_str(timebins=timebins, dt=dt)
-    key_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_key.dat')
+    key_filepath = os.path.join(path, f'pinched_tab{tab}_m{mass}_key.dat')
 
     with open(key_filepath, 'w') as keyfile:
         keyfile.write(keyfile_str)
 
     # write flux files
     for i in range(len(timebins)):
-        out_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_{i+1}.dat')
+        out_filepath = os.path.join(path, f'pinched_tab{tab}_m{mass}_{i+1}.dat')
         table_str = flux_table_str(time_i=i, e_bins=e_bins, fluxes=fluxes)
 
         with open(out_filepath, 'w') as outfile:

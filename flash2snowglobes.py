@@ -15,7 +15,6 @@ import analysis
 import run_snowglobes
 import setup
 
-# TODO: rename alpha to tab
 tabs = [1, 2, 3]  # model set (table) IDs
 
 # masses = (12.0, 20.0, 40)
