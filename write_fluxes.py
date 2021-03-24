@@ -23,14 +23,16 @@ def write_fluxes(tab, mass, timebins, e_bins, fluxes):
         neutrino fluxes over all time and energy bins [GeV/s/cm^2]
     """
     dt = np.diff(timebins)[0]
-
     path = './fluxes'
+
+    # write key table
+    keyfile_str = key_table_str(timebins=timebins, dt=dt)
     key_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_key.dat')
 
-    keyfile_str = key_table_str(timebins=timebins, dt=dt)
     with open(key_filepath, 'w') as keyfile:
         keyfile.write(keyfile_str)
 
+    # write flux files
     for i in range(len(timebins)):
         out_filepath = os.path.join(path, f'pinched_a{tab}_m{mass}_{i+1}.dat')
         table_str = flux_table_str(time_i=i, e_bins=e_bins, fluxes=fluxes)

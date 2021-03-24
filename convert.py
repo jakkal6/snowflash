@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import special
-from astropy import units
 
 
 def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
