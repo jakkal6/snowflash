@@ -1,6 +1,7 @@
 import os
 
-def snowglobes(a,m,timebins,material,detector):
+
+def run(a,m,timebins,material,detector):
     """Runs snowglobes on generated 'pinched' files \n
     Input: alpha value, mass value, \n
         timebins: time bins of snowglobes data \n

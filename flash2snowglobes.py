@@ -12,7 +12,7 @@ import cleanup
 import convert
 import write_fluxes
 import analysis
-import run
+import run_snowglobes
 import setup
 
 # TODO: rename alpha to tab
@@ -139,7 +139,7 @@ for tab in tabs:
 
         # Run snowglobes
         print('=== Running snowglobes ===')
-        run.snowglobes(tab, mass, timebins, material, detector)
+        run_snowglobes.run(tab, mass, timebins, material, detector)
 
         #  Analysis on snowglobes output
         print('=== Analysing output ===')
