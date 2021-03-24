@@ -139,7 +139,11 @@ for tab in tabs:
 
         # Run snowglobes
         print('=== Running snowglobes ===')
-        run_snowglobes.run(tab, mass, timebins, material, detector)
+        run_snowglobes.run(tab=tab,
+                           mass=mass,
+                           timebins=timebins,
+                           material=material,
+                           detector=detector)
 
         #  Analysis on snowglobes output
         print('=== Analysing output ===')
