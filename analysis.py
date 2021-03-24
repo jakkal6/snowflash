@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 
-def analysis(a, m, output, detector, channel_groups, integrated_file):
+def analyze_output(a, m, output, detector, channel_groups, integrated_file):
     """Does analysis on snowglobes output and writes out to ascii files in output \n
         Kinda a mess since it's hacked in from historical scripts \n
         Currently calculating mean energy and total counts for each detector channel \n

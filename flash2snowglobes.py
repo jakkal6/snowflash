@@ -11,7 +11,7 @@ from astropy import units
 import cleanup
 import convert
 import write_fluxes
-import neut_analysis
+import analysis
 import run
 import setup
 
@@ -101,10 +101,10 @@ for tab in tabs:
     # models_path = f'/home/zac/projects/codes/BANG/runs/run_ecrates_tab{tab}'
 
     # Open output files for time-integrated quantities
-    totfile = neut_analysis.open_tot_file(tab=tab,
-                                          output=output,
-                                          detector=detector,
-                                          channel_groups=channel_groups)
+    totfile = analysis.open_tot_file(tab=tab,
+                                     output=output,
+                                     detector=detector,
+                                     channel_groups=channel_groups)
 
     # Loop over progenitor mass
     for mass in masses:
@@ -143,9 +143,11 @@ for tab in tabs:
 
         #  Analysis on snowglobes output
         print('=== Analysing output ===')
-        neut_analysis.analysis(a=tab, m=mass, detector=detector,
-                               channel_groups=channel_groups,
-                               integrated_file=totfile, output=output)
+        analysis.analyze_output(a=tab,
+                                m=mass,
+                                detector=detector,
+                                channel_groups=channel_groups,
+                                integrated_file=totfile, output=output)
 
         # Cleanup snowglobes output
         print('=== Cleaning up model ===')
