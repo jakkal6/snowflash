@@ -208,3 +208,37 @@ def write_to_integrated_file(m, integrated_avg, integrated_totals, integrated_fi
     line += '\n'
 
     integrated_file.write(line)
+
+
+def open_tot_file(tab, output, detector, channel_groups):
+    """Opens file to write out time-integrated quantities
+
+    Returns : open file
+        for writing time-integrated quantities
+
+    Parameters
+    ----------
+    tab : int
+    output : str
+        output directory
+    detector : str
+        name of detector, e.g. 'ar40kt'
+    channel_groups : {}
+    """
+    header = 'Mass\t'
+
+    header += 'Avg_Total\t'
+    for group in channel_groups:
+        header += f'Avg_{group}\t'
+
+    header += 'Tot_Total\t'
+    for group in channel_groups:
+        header += f'Tot_{group}\t'
+
+    header += '\n'
+    # TODO: replacee `a` with `tab`
+    filepath = os.path.join(output, f'{detector}_analysis_a{tab}.dat')
+    tot_file = open(filepath, "w")
+    tot_file.write(header)
+
+    return tot_file

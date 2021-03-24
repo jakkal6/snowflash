@@ -10,8 +10,8 @@ from astropy import units
 
 import cleanup
 import convert
-from write_fluxes import write_fluxes
-from neut_analysis import analysis
+import write_fluxes
+import neut_analysis
 import run
 import setup
 
@@ -101,10 +101,10 @@ for tab in tabs:
     # models_path = f'/home/zac/projects/codes/BANG/runs/run_ecrates_tab{tab}'
 
     # Open output files for time-integrated quantities
-    totfile = read_flash.open_tot_file(tab=tab,
-                                       output=output,
-                                       detector=detector,
-                                       channel_groups=channel_groups)
+    totfile = neut_analysis.open_tot_file(tab=tab,
+                                          output=output,
+                                          detector=detector,
+                                          channel_groups=channel_groups)
 
     # Loop over progenitor mass
     for mass in masses:
@@ -131,11 +131,11 @@ for tab in tabs:
 
         # Write pinched flux files for input to snowglobes
         print('=== Writing input files ===')
-        write_fluxes(tab=tab,
-                     mass=mass,
-                     timebins=timebins,
-                     e_bins=e_bins,
-                     fluxes=fluxes)
+        write_fluxes.write_fluxes(tab=tab,
+                                  mass=mass,
+                                  timebins=timebins,
+                                  e_bins=e_bins,
+                                  fluxes=fluxes)
 
         # Run snowglobes
         print('=== Running snowglobes ===')
@@ -143,9 +143,9 @@ for tab in tabs:
 
         #  Analysis on snowglobes output
         print('=== Analysing output ===')
-        analysis(a=tab, m=mass, detector=detector,
-                 channel_groups=channel_groups,
-                 integrated_file=totfile, output=output)
+        neut_analysis.analysis(a=tab, m=mass, detector=detector,
+                               channel_groups=channel_groups,
+                               integrated_file=totfile, output=output)
 
         # Cleanup snowglobes output
         print('=== Cleaning up model ===')
