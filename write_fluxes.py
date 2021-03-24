@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 
-def write_pinched(tab, mass, timebins, e_bins, fluxes):
+def write_fluxes(tab, mass, timebins, e_bins, fluxes):
     """Writes input files for snowglobes in fluxes directory
 
     Creates key file to indicate how file index is related to time

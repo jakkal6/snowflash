@@ -3,10 +3,20 @@ import numpy as np
 from astropy import units
 
 
-def total_files(a, output, detector, channel_groups):
-    """Opens file to write out time-integrated quantities \n
-    Input: alpha value, output path directory \n
-    Output: file for time-integrated quantities to be used in analysis"""
+def open_tot_file(tab, output, detector, channel_groups):
+    """Opens file to write out time-integrated quantities
+    Returns : open file
+        for writing time-integrated quantities
+
+    Parameters
+    ----------
+    tab : int
+    output : str
+        output directory
+    detector : str
+        name of detector, e.g. 'ar40kt'
+    channel_groups : {}
+    """
     header = 'Mass\t'
 
     header += 'Avg_Total\t'
@@ -18,12 +28,12 @@ def total_files(a, output, detector, channel_groups):
         header += f'Tot_{group}\t'
 
     header += '\n'
+    # TODO: replacee `a` with `tab`
+    filepath = os.path.join(output, f'{detector}_analysis_a{tab}.dat')
+    tot_file = open(filepath, "w")
+    tot_file.write(header)
 
-    filepath = os.path.join(output, f'{detector}_analysis_a{a}.dat')
-    nomix_tot = open(filepath, "w")
-    nomix_tot.write(header)
-
-    return nomix_tot
+    return tot_file
 
 
 # TODO: add args time_start, time_end

@@ -10,7 +10,7 @@ from astropy import units
 
 import cleanup
 import convert
-from create_pinched import write_pinched
+from write_fluxes import write_fluxes
 from neut_analysis import analysis
 import run
 import setup
@@ -100,9 +100,11 @@ for tab in tabs:
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{tab}'
     # models_path = f'/home/zac/projects/codes/BANG/runs/run_ecrates_tab{tab}'
 
-    # Setting up output files for time-integrated quantities
-    totfile = IO.total_files(a=tab, output=output, detector=detector,
-                             channel_groups=channel_groups)
+    # Open output files for time-integrated quantities
+    totfile = IO.open_tot_file(tab=tab,
+                               output=output,
+                               detector=detector,
+                               channel_groups=channel_groups)
 
     # Loop over progenitor mass
     for mass in masses:
@@ -129,11 +131,11 @@ for tab in tabs:
 
         # Write pinched flux files for input to snowglobes
         print('=== Writing input files ===')
-        write_pinched(tab=tab,
-                      mass=mass,
-                      timebins=timebins,
-                      e_bins=e_bins,
-                      fluxes=fluxes)
+        write_fluxes(tab=tab,
+                     mass=mass,
+                     timebins=timebins,
+                     e_bins=e_bins,
+                     fluxes=fluxes)
 
         # Run snowglobes
         print('=== Running snowglobes ===')
