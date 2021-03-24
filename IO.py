@@ -64,6 +64,8 @@ def flash_input(dat_filepath):
     avg = sliced[:, 5:8] / 1000  # GeV
     rms = sliced[:, 8:11] / 1000  # GeV
 
+    lum[:, 2] /= 4.  # divide nu_x equally between mu, tau, mu_bar, tau_bar
+
     return time, lum, avg, rms
 
 

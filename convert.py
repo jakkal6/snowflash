@@ -34,9 +34,6 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
     dt = np.diff(timebins)[0]
     estep = np.diff(e_bins)[0]
 
-    # TODO: move later e.g. create_pinched
-    lum[:, 2] /= 4.  # divide nu_x equally between mu, tau, mu_bar, tau_bar
-
     # interpolate onto bins
     bin_centres = timebins + 0.5*dt
     binned = {}
