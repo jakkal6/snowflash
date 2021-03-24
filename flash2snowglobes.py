@@ -5,7 +5,7 @@
 # snowglobes IO files
 
 import os
-import IO
+import read_flash
 from astropy import units
 
 import cleanup
@@ -101,10 +101,10 @@ for tab in tabs:
     # models_path = f'/home/zac/projects/codes/BANG/runs/run_ecrates_tab{tab}'
 
     # Open output files for time-integrated quantities
-    totfile = IO.open_tot_file(tab=tab,
-                               output=output,
-                               detector=detector,
-                               channel_groups=channel_groups)
+    totfile = read_flash.open_tot_file(tab=tab,
+                                       output=output,
+                                       detector=detector,
+                                       channel_groups=channel_groups)
 
     # Loop over progenitor mass
     for mass in masses:
@@ -114,7 +114,7 @@ for tab in tabs:
         print(dat_filepath)
 
         # Read in FLASH data
-        time, lum, avg, rms = IO.flash_input(dat_filepath)
+        time, lum, avg, rms = read_flash.flash_input(dat_filepath)
 
         # Convert FLASH data to fluxes that snowglobes needs
         timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)
