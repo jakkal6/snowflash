@@ -44,14 +44,14 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
     lum_to_flux = 1 / (4 * np.pi * dist**2)
     fluxes = {f: np.zeros([len(timebins), len(e_bins)]) for f in flavors}
 
-    for flav in flavors:
-        lum_f = integrated['lum'][flav]
-        mean_avg = integrated['avg'][flav] / t_binsize
-        mean_alpha = integrated['alpha'][flav] / t_binsize
+    for i, flav in enumerate(flavors):
+        lum_f = integrated['lum'][:, i]
+        mean_avg = integrated['avg'][:, i] / t_binsize
+        mean_alpha = integrated['alpha'][:, i] / t_binsize
 
-        for i, e_bin in enumerate(e_bins):
+        for j, e_bin in enumerate(e_bins):
             phi = get_phi(e_bin, mean_avg, mean_alpha)
-            fluxes[flav][:, i] = lum_to_flux * (lum_f / mean_avg) * phi * e_binsize
+            fluxes[flav][:, j] = lum_to_flux * (lum_f / mean_avg) * phi * e_binsize
 
     return fluxes
 
