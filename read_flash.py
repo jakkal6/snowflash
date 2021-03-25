@@ -23,12 +23,12 @@ def flash_input(dat_filepath, t_start, t_end):
     time = dat[:, 0]
     rshock = dat[:, 1]
 
-    start_i, bounce_i, end_i = get_slice_idxs(time=time,
+    i_start, i_bounce, i_end = get_slice_idxs(time=time,
                                               rshock=rshock,
                                               t_start=t_start,
                                               t_end=t_end)
-    bounce_time = dat[bounce_i, 0]
-    sliced = dat[start_i:end_i]
+    bounce_time = dat[i_bounce, 0]
+    sliced = dat[i_start:i_end]
 
     time = sliced[:, 0] - bounce_time
     lum = sliced[:, 2:5] * 1e51 * units.erg.to(units.GeV)  # GeV/s
@@ -45,6 +45,8 @@ def get_slice_idxs(time, rshock,
                    t_end=1.0):
     """Get indexes of time slice that includes start/end times
 
+    Returns: i_start, i_bounce, i_end
+    
     Parameters
     ----------
     time : []
@@ -52,29 +54,10 @@ def get_slice_idxs(time, rshock,
     t_start : float
     t_end : float
     """
-    n_steps = len(time)
-    start_i = 0
-    bounce_i = 0
-    end_i = n_steps - 1
+    i_bounce = np.searchsorted(rshock, 1)  # first non-zero rshock
+    bounce_time = time[i_bounce]
 
-    # find bounce idx
-    for i in range(n_steps):
-        if rshock[i] > 0.0:
-            bounce_i = i
-            break
+    i_start = np.searchsorted(time, bounce_time + t_start) - 1
+    i_end = np.searchsorted(time, bounce_time + t_end) + 1
 
-    bounce_time = time[bounce_i]
-
-    # find starting time before bounce
-    for i in range(n_steps):
-        if time[i] > bounce_time + t_start:
-            start_i = i - 1
-            break
-
-    # find end idx
-    for i in range(start_i, n_steps):
-        if time[i] - bounce_time > t_end:
-            end_i = i + 1
-            break
-
-    return start_i, bounce_i, end_i
+    return i_start, i_bounce, i_end
