@@ -13,6 +13,6 @@ def run(tab, mass, timebins, material, detector):
     detector : str
     """
     for n in range(len(timebins)):
-        input_file = f'pinched_a{tab}_m{mass}_{n+1}'
+        input_file = f'pinched_tab{tab}_m{mass}_{n+1}'
         run_str = f'./supernova.pl {input_file} {material} {detector}'
         os.system(run_str)
