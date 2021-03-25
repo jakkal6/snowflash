@@ -12,7 +12,7 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
 
     Parameters
     ----------
-    time : [n_timesteps]
+    time : [timesteps]
         timesteps from FLASH smulation [s]
     lum : [timesteps, flavor]
         list of luminosities from FLASH [GeV/s]
@@ -35,13 +35,12 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
     estep = np.diff(e_bins)[0]
 
     # interpolate onto bins
-    bin_centres = timebins + 0.5*dt
-    binned = {}
-
-    for key, quant in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
-        binned[key] = {}
-        for i, flav in enumerate(flavors):
-            binned[key][flav] = np.interp(bin_centres, time, quant[:, i])
+    binned = get_binned(time=time,
+                        alpha=alpha,
+                        avg=avg,
+                        lum=lum,
+                        timebins=timebins,
+                        flavors=flavors)
 
     fluxes = {f: np.zeros([len(timebins), len(e_bins)]) for f in flavors}
 
@@ -57,6 +56,32 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
             fluxes[flav][:, i] = lum_to_flux * (lum_f / avg_f) * phi * estep
 
     return fluxes
+
+
+def get_binned(time, alpha, avg, lum, timebins, flavors):
+    """Interpolate quantities onto timebins
+
+    Returns: {var: [timebins]}
+
+    Parameters
+    ----------
+    time : [timesteps]
+    alpha : [timesteps, flavor]
+    avg : [timesteps, flavor]
+    lum : [timesteps, flavor]
+    timebins : []
+    flavors : [str]
+    """
+    dt = np.diff(timebins)[0]
+    bin_centres = timebins + 0.5*dt
+    binned = {}
+
+    for key, quant in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
+        binned[key] = {}
+        for i, flav in enumerate(flavors):
+            binned[key][flav] = np.interp(bin_centres, time, quant[:, i])
+
+    return binned
 
 
 def get_phi(e_bin, e_avg, alpha):
