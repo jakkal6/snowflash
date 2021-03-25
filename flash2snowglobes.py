@@ -44,7 +44,7 @@ masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
 dist = 10 * units.kpc.to(units.cm)
 
 # time bins [s]
-t_start = 0.0
+t_start = 0.0  # relative to bounce
 t_end = 1.0
 dt = 0.005
 
@@ -113,7 +113,9 @@ for tab in tabs:
         print(dat_filepath)
 
         # Read in FLASH data
-        time, lum, avg, rms = read_flash.flash_input(dat_filepath)
+        time, lum, avg, rms = read_flash.flash_input(dat_filepath=dat_filepath,
+                                                     t_start=t_start,
+                                                     t_end=t_end)
 
         # Convert FLASH data to fluxes that snowglobes needs
         timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)

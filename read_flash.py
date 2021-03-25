@@ -3,8 +3,7 @@ import numpy as np
 from astropy import units
 
 
-# TODO: add args time_start, time_end
-def flash_input(dat_filepath):
+def flash_input(dat_filepath, t_start, t_end):
     """Read in FLASH data from .dat file
 
     Returns : time [s], lum [GeV/s], avg [GeV], rms [GeV]
@@ -14,6 +13,8 @@ def flash_input(dat_filepath):
     Parameters
     ----------
     dat_filepath : path to FLASH data file
+    t_start : float
+    t_end : float
     """
     cols = [0, 11, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
@@ -22,7 +23,10 @@ def flash_input(dat_filepath):
     time = dat[:, 0]
     rshock = dat[:, 1]
 
-    start_i, bounce_i, end_i = get_slice_idxs(time=time, rshock=rshock)
+    start_i, bounce_i, end_i = get_slice_idxs(time=time,
+                                              rshock=rshock,
+                                              t_start=t_start,
+                                              t_end=t_end)
     bounce_time = dat[bounce_i, 0]
     sliced = dat[start_i:end_i]
 
@@ -37,19 +41,16 @@ def flash_input(dat_filepath):
 
 
 def get_slice_idxs(time, rshock,
-                   rshock_max=1.29e9,
-                   time_start=-0.0,
-                   time_max=1.0
-                   ):
-    """Get start/end indexes
+                   t_start=0.0,
+                   t_end=1.0):
+    """Get indexes of time slice that includes start/end times
 
     Parameters
     ----------
     time : []
     rshock : []
-    rshock_max : float
-    time_start : float
-    time_max : float
+    t_start : float
+    t_end : float
     """
     n_steps = len(time)
     start_i = 0
@@ -66,16 +67,13 @@ def get_slice_idxs(time, rshock,
 
     # find starting time before bounce
     for i in range(n_steps):
-        if time[i] > bounce_time + time_start:
+        if time[i] > bounce_time + t_start:
             start_i = i - 1
             break
 
     # find end idx
     for i in range(start_i, n_steps):
-        if rshock[i] > rshock_max:
-            end_i = i
-            break
-        elif time[i] - bounce_time > time_max:
+        if time[i] - bounce_time > t_end:
             end_i = i + 1
             break
 
