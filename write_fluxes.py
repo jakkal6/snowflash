@@ -52,7 +52,7 @@ def get_key_table(timebins, dt):
     dt : float
     """
     table = pd.DataFrame()
-    table['# i'] = np.arange(len(timebins)) + 1
+    table['i'] = np.arange(len(timebins)) + 1
     table['time[s]'] = timebins
     table['dt[s]'] = dt
 
@@ -79,7 +79,7 @@ def get_flux_table(time_i, e_bins, fluxes):
                   'taubar': 'x',
                   }
     table = pd.DataFrame()
-    table['# E_nu'] = e_bins
+    table['E_nu'] = e_bins
 
     for flavor, key in flavor_map.items():
         table[flavor] = fluxes[key][time_i]
