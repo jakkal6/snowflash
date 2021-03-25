@@ -1,5 +1,6 @@
 import numpy as np
-from scipy import special
+from scipy.special import gamma
+from scipy.integrate import trapz
 
 
 def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
@@ -31,35 +32,32 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
 
     alpha = get_alpha(avg=avg, rms=rms)
 
-    dt = np.diff(timebins)[0]
-    estep = np.diff(e_bins)[0]
+    integrated = integrate_bins(time=time,
+                                alpha=alpha,
+                                avg=avg,
+                                lum=lum,
+                                timebins=timebins,
+                                flavors=flavors)
 
-    # interpolate onto bins
-    binned = get_binned(time=time,
-                        alpha=alpha,
-                        avg=avg,
-                        lum=lum,
-                        timebins=timebins,
-                        flavors=flavors)
-
+    t_binsize = np.diff(timebins)[0]
+    e_binsize = np.diff(e_bins)[0]
+    lum_to_flux = 1 / (4 * np.pi * dist**2)
     fluxes = {f: np.zeros([len(timebins), len(e_bins)]) for f in flavors}
 
-    lum_to_flux = 1 / (4 * np.pi * dist**2)
-
     for flav in flavors:
-        lum_f = binned['lum'][flav] * dt
-        avg_f = binned['avg'][flav]
-        alpha_f = binned['alpha'][flav]
+        lum_f = integrated['lum'][flav]
+        mean_avg = integrated['avg'][flav] / t_binsize
+        mean_alpha = integrated['alpha'][flav] / t_binsize
 
         for i, e_bin in enumerate(e_bins):
-            phi = get_phi(e_bin, avg_f, alpha_f)
-            fluxes[flav][:, i] = lum_to_flux * (lum_f / avg_f) * phi * estep
+            phi = get_phi(e_bin, mean_avg, mean_alpha)
+            fluxes[flav][:, i] = lum_to_flux * (lum_f / mean_avg) * phi * e_binsize
 
     return fluxes
 
 
-def get_binned(time, alpha, avg, lum, timebins, flavors):
-    """Interpolate quantities onto timebins
+def integrate_bins(time, alpha, avg, lum, timebins, flavors):
+    """Integrate quantities into timebins
 
     Returns: {var: [timebins]}
 
@@ -73,15 +71,24 @@ def get_binned(time, alpha, avg, lum, timebins, flavors):
     flavors : [str]
     """
     dt = np.diff(timebins)[0]
-    bin_centres = timebins + 0.5*dt
-    binned = {}
+    n_bins = len(timebins)
+    n_flavors = len(flavors)
+
+    full_timebins = np.append(timebins, timebins[-1] + dt)
+    i_bins = np.searchsorted(time, full_timebins)
+
+    integrated = {}
 
     for key, quant in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
-        binned[key] = {}
-        for i, flav in enumerate(flavors):
-            binned[key][flav] = np.interp(bin_centres, time, quant[:, i])
+        integrated[key] = np.zeros([n_bins, n_flavors])
 
-    return binned
+        for i in range(n_bins):
+            i_left, i_right = i_bins[i:i+2]
+            integrated[key][i] = trapz(y=quant[i_left:i_right],
+                                       x=time[i_left:i_right],
+                                       axis=0)
+
+    return integrated
 
 
 def get_phi(e_bin, e_avg, alpha):
@@ -99,7 +106,7 @@ def get_phi(e_bin, e_avg, alpha):
     alpha : [timesteps]
         pinch parameter
     """
-    n = ((alpha + 1) ** (alpha + 1)) / (e_avg * special.gamma(alpha + 1))
+    n = ((alpha + 1) ** (alpha + 1)) / (e_avg * gamma(alpha + 1))
     phi = n * ((e_bin / e_avg)**alpha) * np.exp(-(alpha + 1) * e_bin / e_avg)
 
     return phi
