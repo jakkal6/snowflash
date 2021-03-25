@@ -35,10 +35,10 @@ def write_fluxes(tab, mass, timebins, e_bins, fluxes):
     # write flux files
     for i in range(len(timebins)):
         out_filepath = os.path.join(path, f'pinched_tab{tab}_m{mass}_{i+1}.dat')
-        table_str = flux_table_str(time_i=i, e_bins=e_bins, fluxes=fluxes)
+        table = get_flux_table(time_i=i, e_bins=e_bins, fluxes=fluxes)
 
         with open(out_filepath, 'w') as outfile:
-            outfile.write(table_str)
+            table.to_string(outfile, header=None, index=False)
 
 
 def key_table_str(timebins, dt):
@@ -61,8 +61,8 @@ def key_table_str(timebins, dt):
     return table_str
 
 
-def flux_table_str(time_i, e_bins, fluxes):
-    """Return formatted string of flux table for given timestep
+def get_flux_table(time_i, e_bins, fluxes):
+    """Return flux table for given timestep
 
     Returns: pd.DataFrame
 
@@ -86,6 +86,4 @@ def flux_table_str(time_i, e_bins, fluxes):
     for flavor, key in flavor_map.items():
         table[flavor] = fluxes[key][time_i]
 
-    table_str = table.to_string(justify='left', index=False)
-
-    return table_str
+    return table
