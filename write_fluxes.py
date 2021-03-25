@@ -26,11 +26,11 @@ def write_fluxes(tab, mass, timebins, e_bins, fluxes):
     path = './fluxes'
 
     # write key table
-    keyfile_str = key_table_str(timebins=timebins, dt=dt)
+    key_table = get_key_table(timebins=timebins, dt=dt)
     key_filepath = os.path.join(path, f'pinched_tab{tab}_m{mass}_key.dat')
 
     with open(key_filepath, 'w') as keyfile:
-        keyfile.write(keyfile_str)
+        key_table.to_string(keyfile, index=False)
 
     # write flux files
     for i in range(len(timebins)):
@@ -41,10 +41,10 @@ def write_fluxes(tab, mass, timebins, e_bins, fluxes):
             table.to_string(outfile, header=None, index=False)
 
 
-def key_table_str(timebins, dt):
-    """Return formatted string of key table
+def get_key_table(timebins, dt):
+    """Return key table
 
-    Returns : str
+    Returns : pd.DataFrame
 
     Parameters
     ----------
@@ -56,9 +56,7 @@ def key_table_str(timebins, dt):
     table['time[s]'] = timebins
     table['dt[s]'] = dt
 
-    table_str = table.to_string(justify='left', index=False)
-
-    return table_str
+    return table
 
 
 def get_flux_table(time_i, e_bins, fluxes):
