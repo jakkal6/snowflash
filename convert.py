@@ -91,7 +91,7 @@ def integrate_bins(time, alpha, avg, lum, timebins, flavors):
     return integrated
 
 
-def get_phi(e_bin, e_avg, alpha):
+def get_phi(e_bin, avg, alpha):
     """Calculate phi parameter
 
     Returns : [timesteps]
@@ -101,13 +101,13 @@ def get_phi(e_bin, e_avg, alpha):
     ----------
     e_bin : float
         neutrino energy bin [GeV]
-    e_avg : [timesteps]
+    avg : [timesteps]
         average neutrino energy [GeV]
     alpha : [timesteps]
         pinch parameter
     """
-    n = ((alpha + 1) ** (alpha + 1)) / (e_avg * gamma(alpha + 1))
-    phi = n * ((e_bin / e_avg)**alpha) * np.exp(-(alpha + 1) * e_bin / e_avg)
+    n = ((alpha + 1) ** (alpha + 1)) / (avg * gamma(alpha + 1))
+    phi = n * ((e_bin / avg)**alpha) * np.exp(-(alpha + 1) * e_bin / avg)
 
     return phi
 
