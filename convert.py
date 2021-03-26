@@ -3,8 +3,8 @@ from scipy.special import gamma
 from scipy.integrate import trapz
 
 
-def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
-    """Calculate pinched neutrino fluxes at Earth for snowglobes input
+def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
+    """Calculate pinched neutrino fluences at Earth for snowglobes input
 
     Returns: timebins, e_bins, fluxes
         timebins: time steps for snowglobes calculations in seconds
@@ -42,7 +42,7 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
     t_binsize = np.diff(timebins)[0]
     e_binsize = np.diff(e_bins)[0]
     lum_to_flux = 1 / (4 * np.pi * dist**2)
-    fluxes = {f: np.zeros([len(timebins), len(e_bins)]) for f in flavors}
+    fluences = {f: np.zeros([len(timebins), len(e_bins)]) for f in flavors}
 
     for i, flav in enumerate(flavors):
         lum_f = integrated['lum'][:, i]
@@ -51,9 +51,9 @@ def get_fluxes(time, lum, avg, rms, dist, timebins, e_bins):
 
         for j, e_bin in enumerate(e_bins):
             phi = get_phi(e_bin, mean_avg, mean_alpha)
-            fluxes[flav][:, j] = lum_to_flux * (lum_f / mean_avg) * phi * e_binsize
+            fluences[flav][:, j] = lum_to_flux * (lum_f / mean_avg) * phi * e_binsize
 
-    return fluxes
+    return fluences
 
 
 def integrate_bins(time, alpha, avg, lum, timebins, flavors):

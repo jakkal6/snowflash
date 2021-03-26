@@ -10,7 +10,7 @@ from astropy import units
 
 import cleanup
 import convert
-import write_fluxes
+import write_files
 import analysis
 import run_snowglobes
 import setup
@@ -117,26 +117,26 @@ for tab in tabs:
                                                      t_start=t_start,
                                                      t_end=t_end)
 
-        # Convert FLASH data to fluxes that snowglobes needs
+        # Convert FLASH data to fluences that snowglobes needs
         timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)
         e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
-        # calculate pinched neutrino fluxes versus energy & time bins
-        fluxes = convert.get_fluxes(time=time,
-                                    lum=lum,
-                                    avg=avg,
-                                    rms=rms,
-                                    dist=dist,
-                                    timebins=timebins,
-                                    e_bins=e_bins)
+        # calculate pinched neutrino fluences versus energy & time bins
+        fluences = convert.get_fluences(time=time,
+                                        lum=lum,
+                                        avg=avg,
+                                        rms=rms,
+                                        dist=dist,
+                                        timebins=timebins,
+                                        e_bins=e_bins)
 
-        # Write pinched flux files for input to snowglobes
+        # Write pinched fluence files for input to snowglobes
         print('=== Writing input files ===')
-        write_fluxes.write_fluxes(tab=tab,
-                                  mass=mass,
-                                  timebins=timebins,
-                                  e_bins=e_bins,
-                                  fluxes=fluxes)
+        write_files.write_fluence_files(tab=tab,
+                                        mass=mass,
+                                        timebins=timebins,
+                                        e_bins=e_bins,
+                                        fluences=fluences)
 
         # Run snowglobes
         print('=== Running snowglobes ===')
