@@ -81,14 +81,46 @@ def integrate_bins(time, alpha, avg, lum, timebins, flavors):
 
     for key, quant in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
         integrated[key] = np.zeros([n_bins, n_flavors])
+        y_edges = interpolate_bin_edges(time=time, timebins=timebins, y=quant)
 
         for i in range(n_bins):
             i_left, i_right = i_bins[i:i+2]
-            integrated[key][i] = trapz(y=quant[i_left:i_right],
-                                       x=time[i_left:i_right],
-                                       axis=0)
+            x = np.array(time[i_left-1:i_right+1])
+            y = np.array(quant[i_left-1:i_right+1])
+
+            x[[0, -1]] = full_timebins[[i, i+1]]
+            y[[0, -1]] = y_edges[[i, i+1]]
+
+            integrated[key][i] = trapz(y=y, x=x, axis=0)
 
     return integrated
+
+
+def interpolate_bin_edges(time, timebins, y):
+    """Interpolate values at bin edges
+
+    Returns: [timebins, flavors]
+
+    Parameters
+    ----------
+    time : []
+    timebins : []
+    y : []
+    """
+    dt = np.diff(timebins)[0]
+    full_timebins = np.append(timebins, timebins[-1] + dt)
+    i_bins = np.searchsorted(time, full_timebins)
+
+    y0 = y[i_bins-1].transpose()
+    y1 = y[i_bins].transpose()
+
+    x = full_timebins
+    x0 = time[i_bins-1]
+    x1 = time[i_bins]
+
+    y_out = (y0*(x1 - x) + y1*(x - x0)) / (x1 - x0)
+
+    return y_out.transpose()
 
 
 def get_phi(e_bin, avg, alpha):
