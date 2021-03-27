@@ -79,15 +79,16 @@ def integrate_bins(time, alpha, avg, lum, timebins, flavors):
 
     integrated = {}
 
-    for key, quant in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
+    for key, var in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
         integrated[key] = np.zeros([n_bins, n_flavors])
-        y_edges = interpolate_bin_edges(time=time, timebins=timebins, y=quant)
+        y_edges = interpolate_bin_edges(time=time, timebins=timebins, y=var)
 
         for i in range(n_bins):
             i_left, i_right = i_bins[i:i+2]
             x = np.array(time[i_left-1:i_right+1])
-            y = np.array(quant[i_left-1:i_right+1])
+            y = np.array(var[i_left-1:i_right+1])
 
+            # replace endpoints with exact timebin points
             x[[0, -1]] = full_timebins[[i, i+1]]
             y[[0, -1]] = y_edges[[i, i+1]]
 
