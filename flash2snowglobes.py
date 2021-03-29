@@ -113,15 +113,14 @@ for tab in tabs:
         print(dat_filepath)
 
         # Read in FLASH data
-        time, lum, avg, rms = read_flash.flash_input(dat_filepath=dat_filepath,
-                                                     t_start=t_start,
-                                                     t_end=t_end)
+        time, lum, avg, rms = read_flash.read_datfile(dat_filepath=dat_filepath,
+                                                      t_start=t_start,
+                                                      t_end=t_end)
 
-        # Convert FLASH data to fluences that snowglobes needs
+        # Convert FLASH data to pinched-spectrum neutrino fluences at Earth
         timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)
         e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
-        # calculate pinched neutrino fluences versus energy & time bins
         fluences = convert.get_fluences(time=time,
                                         lum=lum,
                                         avg=avg,
@@ -130,7 +129,7 @@ for tab in tabs:
                                         timebins=timebins,
                                         e_bins=e_bins)
 
-        # Write pinched fluence files for input to snowglobes
+        # Write pinched fluence files for snowglobes input
         print('=== Writing input files ===')
         write_files.write_fluence_files(tab=tab,
                                         mass=mass,

@@ -35,7 +35,6 @@ def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
 
     n_timebins = len(timebins)
     n_ebins = len(e_bins)
-    n_flavors = len(flavors)
 
     dt = np.diff(timebins)[0]
     full_timebins = np.append(timebins, timebins[-1] + dt)

@@ -3,7 +3,7 @@ import numpy as np
 from astropy import units
 
 
-def flash_input(dat_filepath, t_start, t_end):
+def read_datfile(dat_filepath, t_start, t_end):
     """Read in FLASH data from .dat file
 
     Returns : time [s], lum [GeV/s], avg [GeV], rms [GeV]
@@ -14,7 +14,9 @@ def flash_input(dat_filepath, t_start, t_end):
     ----------
     dat_filepath : path to FLASH data file
     t_start : float
+        start of time slice (relative to bounce)
     t_end : float
+        end of time slice (relative to bounce)
     """
     cols = [0, 11, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
