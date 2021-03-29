@@ -12,10 +12,7 @@ Note on docstrings:
 def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
     """Calculate pinched neutrino fluences at Earth for snowglobes input
 
-    Returns: timebins, e_bins, fluxes
-        timebins: time steps for snowglobes calculations in seconds
-        energy: neutrino energy binning for snowglobes in GeV
-        Fnu: list of fluxes for snowglobes in GeV/s/cm^2
+    Returns: fluences : {flav: [timebins, e_bins]}
 
     Parameters
     ----------
@@ -36,58 +33,34 @@ def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
     """
     flavors = ['e', 'a', 'x']  # nu_e, nu_ebar, nu_x
 
-    integrated = integrate_bins(time=time,
-                                avg=avg,
-                                lum=lum,
-                                timebins=timebins,
-                                flavors=flavors)
-
-    t_binsize = np.diff(timebins)[0]
-    e_binsize = np.diff(e_bins)[0]
-    lum_to_flux = 1 / (4 * np.pi * dist**2)
-    fluences = {f: np.zeros([len(timebins), len(e_bins)]) for f in flavors}
-
-    for i, flav in enumerate(flavors):
-        lum_f = integrated['lum'][:, i]
-        mean_avg = integrated['avg'][:, i] / t_binsize
-        mean_alpha = integrated['alpha'][:, i] / t_binsize
-
-        for j, e_bin in enumerate(e_bins):
-            phi = get_phi(e_bin, mean_avg, mean_alpha)
-            fluences[flav][:, j] = lum_to_flux * (lum_f / mean_avg) * phi * e_binsize
-
-    return fluences
-
-
-def integrate_bins(time, avg, lum, rms, timebins, flavors):
-    """Integrate quantities into timebins
-
-    Returns: {var: [timebins]}
-
-    Parameters
-    ----------
-    time : [timesteps]
-    avg : [timesteps, flavors]
-    lum : [timesteps, flavors]
-    rms : [timesteps, flavors]
-    timebins : []
-    flavors : [str]
-    """
-    dt = np.diff(timebins)[0]
-    n_bins = len(timebins)
+    n_timebins = len(timebins)
+    n_ebins = len(e_bins)
     n_flavors = len(flavors)
 
+    dt = np.diff(timebins)[0]
     full_timebins = np.append(timebins, timebins[-1] + dt)
 
-    integrated = {}
+    fluences = {f: np.zeros([n_timebins, n_ebins]) for f in flavors}
 
-    for key, var in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
-        integrated[key] = np.zeros([n_bins, n_flavors])
+    for i in range(n_timebins):
+        bin_edges = full_timebins[[i, i+1]]
 
-        for i in range(n_bins):
-            integrated[key][i] = trapz(y=y, x=x, axis=0)
+        t_sliced, y_sliced = slice_timebin(bin_edges=bin_edges,
+                                           time=time,
+                                           y_vars={'lum': lum, 'avg': avg, 'rms': rms})
 
-    return integrated
+        flux_spectrum = get_flux_spectrum(e_bins,
+                                          lum=y_sliced['lum'],
+                                          avg=y_sliced['avg'],
+                                          rms=y_sliced['rms'],
+                                          dist=dist)
+
+        fluence = trapz(flux_spectrum, x=t_sliced, axis=0)
+
+        for j, flav in enumerate(flavors):
+            fluences[flav][i, :] = fluence[j, :]
+
+    return fluences
 
 
 def slice_timebin(bin_edges, time, y_vars):
@@ -120,7 +93,7 @@ def slice_timebin(bin_edges, time, y_vars):
 def get_flux_spectrum(e_bins, lum, avg, rms, dist):
     """Calculate pinched flux spectrum
 
-    Returns: [e_bins, timesteps, flavors]
+    Returns: [timesteps, flavors, e_bins]
         neutrino flux at Earth (neutrinos per second) for each energy bin
         at each timepoint
 
@@ -136,13 +109,13 @@ def get_flux_spectrum(e_bins, lum, avg, rms, dist):
     n_time, n_flavors = lum.shape
     e_binsize = np.diff(e_bins)[0]
 
-    flux_spectrum = np.zeros([n_ebins, n_time, n_flavors])
+    flux_spectrum = np.zeros([n_time, n_flavors, n_ebins])
     alpha = get_alpha(avg=avg, rms=rms)
     lum_to_flux = 1 / (4 * np.pi * dist**2)
 
     for i, e_bin in enumerate(e_bins):
         phi = get_phi(e_bin=e_bin, avg=avg, alpha=alpha)
-        flux_spectrum[i, :, :] = lum_to_flux * (lum / avg) * phi * e_binsize
+        flux_spectrum[:, :, i] = lum_to_flux * (lum / avg) * phi * e_binsize
 
     return flux_spectrum
 
