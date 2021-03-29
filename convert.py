@@ -75,55 +75,71 @@ def integrate_bins(time, alpha, avg, lum, timebins, flavors):
     n_flavors = len(flavors)
 
     full_timebins = np.append(timebins, timebins[-1] + dt)
-    i_bins = np.searchsorted(time, full_timebins)
 
     integrated = {}
 
     for key, var in {'alpha': alpha, 'avg': avg, 'lum': lum}.items():
         integrated[key] = np.zeros([n_bins, n_flavors])
-        y_edges = interpolate_bin_edges(time=time, timebins=timebins, y=var)
 
         for i in range(n_bins):
-            i_left, i_right = i_bins[i:i+2]
-            x = np.array(time[i_left-1:i_right+1])
-            y = np.array(var[i_left-1:i_right+1])
 
-            # replace endpoints with exact timebin points
-            x[[0, -1]] = full_timebins[[i, i+1]]
-            y[[0, -1]] = y_edges[[i, i+1]]
 
             integrated[key][i] = trapz(y=y, x=x, axis=0)
 
     return integrated
 
 
-def split_timebin():
-    """Split raw timesteps into a signle timebin
+def slice_timebin(bin_edges, time, y_vars):
+    """Slice raw timesteps into a single timebin
+
+    Returns: time, y_vars
+
+    Parameters
+    ----------
+    bin_edges : [t_left, t_right]
+    time: [timesteps]
+    y_vars: {var: [timesteps, flavors]}
     """
-    pass
+    i_left, i_right = np.searchsorted(time, bin_edges)
+
+    t_sliced = np.array(time[i_left-1:i_right+1])
+    t_sliced[[0, -1]] = bin_edges  # replace endpoints with bin edges
+
+    y_sliced = {}
+    for var, values in y_vars.items():
+        y_sliced[var] = np.array(values[i_left-1:i_right+1])
+
+        # replace endpoints with exact bin edges
+        y_edges = interpolate_time(t=bin_edges, time=time, y_var=values)
+        y_sliced[var][[0, -1]] = y_edges
+
+    return t_sliced, y_sliced
 
 
-def interpolate_bin_edges(time, bin_edges, y):
-    """Interpolate values at bin edges
+def interpolate_time(t, time, y_var):
+    """Linearly-interpolate values at given time points
 
     Returns: [timebins, flavors]
 
     Parameters
     ----------
+    t : []
+        time points to interpolate to
     time : []
-    bin_edges : []
-    y : []
+        original time points
+    y_var : []
+        data values at original time points
     """
-    i_bins = np.searchsorted(time, bin_edges)
+    i_right = np.searchsorted(time, t)  # index of nearest point to the right
+    i_left = i_right - 1
 
-    y0 = y[i_bins-1].transpose()
-    y1 = y[i_bins].transpose()
+    y0 = y_var[i_left].transpose()
+    y1 = y_var[i_right].transpose()
 
-    x = bin_edges
-    x0 = time[i_bins-1]
-    x1 = time[i_bins]
+    t0 = time[i_left]
+    t1 = time[i_right]
 
-    y_out = (y0*(x1 - x) + y1*(x - x0)) / (x1 - x0)
+    y_out = (y0*(t1 - t) + y1*(t - t0)) / (t1 - t0)
 
     return y_out.transpose()
 
