@@ -2,6 +2,12 @@ import numpy as np
 from scipy.special import gamma
 from scipy.integrate import trapz
 
+"""
+Note on docstrings:
+    array parameters are specified by shape.
+    e.g. [timesteps, flavors] --> array of shape [len(timesteps), len(flavors)]
+"""
+
 
 def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
     """Calculate pinched neutrino fluences at Earth for snowglobes input
@@ -15,25 +21,22 @@ def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
     ----------
     time : [timesteps]
         timesteps from FLASH smulation [s]
-    lum : [timesteps, flavor]
+    lum : [timesteps, flavors]
         list of luminosities from FLASH [GeV/s]
-    avg : [timesteps, flavor]
+    avg : [timesteps, flavors]
         average energies from FLASH [GeV]
-    rms : [timesteps, flavor]
+    rms : [timesteps, flavors]
         rms neutrino energies from FLASH [GeV]
     dist : float
         event distance [cm]
-    timebins : []
+    timebins : [timebins]
         time bins to sample over [leftside]
-    e_bins : []
+    e_bins : [e_bins]
         neutrino energy bins to sample [GeV]
     """
     flavors = ['e', 'a', 'x']  # nu_e, nu_ebar, nu_x
 
-    alpha = get_alpha(avg=avg, rms=rms)
-
     integrated = integrate_bins(time=time,
-                                alpha=alpha,
                                 avg=avg,
                                 lum=lum,
                                 timebins=timebins,
@@ -56,7 +59,7 @@ def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
     return fluences
 
 
-def integrate_bins(time, alpha, avg, lum, timebins, flavors):
+def integrate_bins(time, avg, lum, rms, timebins, flavors):
     """Integrate quantities into timebins
 
     Returns: {var: [timebins]}
@@ -64,9 +67,9 @@ def integrate_bins(time, alpha, avg, lum, timebins, flavors):
     Parameters
     ----------
     time : [timesteps]
-    alpha : [timesteps, flavor]
-    avg : [timesteps, flavor]
-    lum : [timesteps, flavor]
+    avg : [timesteps, flavors]
+    lum : [timesteps, flavors]
+    rms : [timesteps, flavors]
     timebins : []
     flavors : [str]
     """
@@ -82,8 +85,6 @@ def integrate_bins(time, alpha, avg, lum, timebins, flavors):
         integrated[key] = np.zeros([n_bins, n_flavors])
 
         for i in range(n_bins):
-
-
             integrated[key][i] = trapz(y=y, x=x, axis=0)
 
     return integrated
@@ -116,6 +117,36 @@ def slice_timebin(bin_edges, time, y_vars):
     return t_sliced, y_sliced
 
 
+def get_flux_spectrum(e_bins, lum, avg, rms, dist):
+    """Calculate pinched flux spectrum
+
+    Returns: [e_bins, timesteps, flavors]
+        neutrino flux at Earth (neutrinos per second) for each energy bin
+        at each timepoint
+
+    Parameters
+    ----------
+    e_bins : [e_bins]
+    lum : [timesteps, flavors]
+    avg : [timesteps, flavors]
+    rms : [timesteps, flavors]
+    dist : float
+    """
+    n_ebins = len(e_bins)
+    n_time, n_flavors = lum.shape
+    e_binsize = np.diff(e_bins)[0]
+
+    flux_spectrum = np.zeros([n_ebins, n_time, n_flavors])
+    alpha = get_alpha(avg=avg, rms=rms)
+    lum_to_flux = 1 / (4 * np.pi * dist**2)
+
+    for i, e_bin in enumerate(e_bins):
+        phi = get_phi(e_bin=e_bin, avg=avg, alpha=alpha)
+        flux_spectrum[i, :, :] = lum_to_flux * (lum / avg) * phi * e_binsize
+
+    return flux_spectrum
+
+
 def interpolate_time(t, time, y_var):
     """Linearly-interpolate values at given time points
 
@@ -125,9 +156,9 @@ def interpolate_time(t, time, y_var):
     ----------
     t : []
         time points to interpolate to
-    time : []
+    time : [timesteps]
         original time points
-    y_var : []
+    y_var : [timesteps]
         data values at original time points
     """
     i_right = np.searchsorted(time, t)  # index of nearest point to the right
