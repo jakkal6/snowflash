@@ -44,7 +44,7 @@ masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
 dist = 10 * units.kpc.to(units.cm)
 
 # time bins [s]
-t_start = 0.0  # relative to bounce
+t_start = -0.05  # relative to bounce
 t_end = 1.0
 dt = 0.005
 
