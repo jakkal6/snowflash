@@ -97,7 +97,13 @@ def integrate_bins(time, alpha, avg, lum, timebins, flavors):
     return integrated
 
 
-def interpolate_bin_edges(time, timebins, y):
+def split_timebin():
+    """Split raw timesteps into a signle timebin
+    """
+    pass
+
+
+def interpolate_bin_edges(time, bin_edges, y):
     """Interpolate values at bin edges
 
     Returns: [timebins, flavors]
@@ -105,17 +111,15 @@ def interpolate_bin_edges(time, timebins, y):
     Parameters
     ----------
     time : []
-    timebins : []
+    bin_edges : []
     y : []
     """
-    dt = np.diff(timebins)[0]
-    full_timebins = np.append(timebins, timebins[-1] + dt)
-    i_bins = np.searchsorted(time, full_timebins)
+    i_bins = np.searchsorted(time, bin_edges)
 
     y0 = y[i_bins-1].transpose()
     y1 = y[i_bins].transpose()
 
-    x = full_timebins
+    x = bin_edges
     x0 = time[i_bins-1]
     x1 = time[i_bins]
 
@@ -125,7 +129,7 @@ def interpolate_bin_edges(time, timebins, y):
 
 
 def get_phi(e_bin, avg, alpha):
-    """Calculate phi parameter
+    """Calculate phi spectral parameter
 
     Returns : [timesteps]
         phi parameter for flux calculation
