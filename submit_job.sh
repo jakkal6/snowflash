@@ -6,8 +6,9 @@
 #SBATCH --cpus-per-task=1     # number of CPUs (or cores) per task (same as -c)
 #SBATCH --mem-per-cpu=250M    # memory required per allocated CPU (or core) - amount of memory (in bytes)
 #SBATCH --job-name snow1      # you can give your job a name for easier identification (same as -J)
-#SBATCH --mail-user=zacjohn@msu.edu 
+#SBATCH --mail-user=zacjohn@msu.edu
 #SBATCH --mail-type=BEGIN,END
+#SBATCH --account=snaphu
 ########## Command Lines to Run ##########
  
 module purge

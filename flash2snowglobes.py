@@ -88,7 +88,7 @@ elif material == 'argon':
                              'nc_nutau_Ar40', 'nc_nutaubar_Ar40']
                       }
 
-# Provide director paths to snowglobes source and where you want the output
+# Provide paths to snowglobes source and output directory
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 output = "output"
 
@@ -105,14 +105,11 @@ for tab in tabs:
                                      detector=detector,
                                      channel_groups=channel_groups)
 
-    # Loop over progenitor mass
     for mass in masses:
-        # path to FLASH .dat file
         dat_filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'
         dat_filepath = os.path.join(models_path, f'run_{mass}', dat_filename)
-        print(dat_filepath)
+        print(f'Reading: {dat_filepath}')
 
-        # Read in FLASH data
         time, lum, avg, rms = read_flash.read_datfile(dat_filepath=dat_filepath,
                                                       t_start=t_start,
                                                       t_end=t_end)
