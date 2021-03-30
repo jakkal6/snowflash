@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 
-def analyze_output(a, m, output, detector, channel_groups, integrated_file):
+def analyze_output(a, m, output, detector, channel_groups):
     """Does analysis on snowglobes output and writes out to ascii files in output \n
         Kinda a mess since it's hacked in from historical scripts \n
         Currently calculating mean energy and total counts for each detector channel \n
@@ -22,12 +22,10 @@ def analyze_output(a, m, output, detector, channel_groups, integrated_file):
                                    a=a, m=m, detector=detector)
     n_bins = len(energy_bins)
 
-    integrated_counts = {'Total': np.zeros(n_bins)}
     time_totals = {'Total': np.zeros(n_time)}
     time_avg = {'Total': np.zeros(n_time)}
 
     for group in channel_groups:
-        integrated_counts[group] = np.zeros(n_bins)
         time_totals[group] = np.zeros(n_time)
         time_avg[group] = np.zeros(n_time)
 
@@ -40,11 +38,7 @@ def analyze_output(a, m, output, detector, channel_groups, integrated_file):
                                         groups=channel_groups,
                                         n_bins=n_bins)
 
-        for group in integrated_counts:
-            integrated_counts[group] += group_counts[group]
-
         group_totals = get_totals(group_counts)
-
         group_avg = get_avg(group_counts=group_counts,
                             group_totals=group_totals,
                             energy_bins=energy_bins)
@@ -59,18 +53,6 @@ def analyze_output(a, m, output, detector, channel_groups, integrated_file):
 
     save_time_table(table=time_table, detector=detector,
                     a=a, m=m, output=output)
-
-    # TODO: write integrated row
-
-    integrated_totals = get_totals(integrated_counts)
-    integrated_avg = get_avg(group_counts=integrated_counts,
-                             group_totals=integrated_totals,
-                             energy_bins=energy_bins)
-
-    write_to_integrated_file(m=m,
-                             integrated_avg=integrated_avg,
-                             integrated_totals=integrated_totals,
-                             integrated_file=integrated_file)
 
 
 # ===========================================================

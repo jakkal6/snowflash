@@ -151,13 +151,13 @@ for tab in tabs:
                            material=material,
                            detector=detector)
 
-        #  Analysis on snowglobes output
-        # print('=== Analysing output ===')
-        # analysis.analyze_output(a=tab,
-        #                         m=mass,
-        #                         detector=detector,
-        #                         channel_groups=channel_groups,
-        #                         integrated_file=totfile, output=output)
+        #  Extract snowglobes output
+        print('=== Analysing output ===')
+        analysis.analyze_output(a=tab,
+                                m=mass,
+                                detector=detector,
+                                channel_groups=channel_groups,
+                                output=output)
 
         # Cleanup snowglobes output
         print('=== Cleaning up model ===')
