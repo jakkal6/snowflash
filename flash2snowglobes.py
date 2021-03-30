@@ -14,6 +14,7 @@ import write_files
 import analysis
 import run_snowglobes
 import setup
+import mixing
 
 tabs = [1, 2, 3]  # model set (table) IDs
 
@@ -52,6 +53,10 @@ dt = 0.005
 e_start = 0.0
 e_end = 0.1
 e_step = 0.0002
+
+mix_ordering = 'none'
+# mix_ordering = 'normal'
+# mix_ordering = 'inverted'
 
 # detector = "wc100kt30prct"
 # detector = "icecube"
@@ -126,13 +131,17 @@ for tab in tabs:
                                         timebins=timebins,
                                         e_bins=e_bins)
 
+        # Apply MSW neutrino mixing
+        fluences_mixed = mixing.mix_fluences(fluences=fluences,
+                                             ordering=mix_ordering)
+
         # Write pinched fluence files for snowglobes input
         print('=== Writing input files ===')
         write_files.write_fluence_files(tab=tab,
                                         mass=mass,
                                         timebins=timebins,
                                         e_bins=e_bins,
-                                        fluences=fluences)
+                                        fluences_mixed=fluences_mixed)
 
         # Run snowglobes
         print('=== Running snowglobes ===')

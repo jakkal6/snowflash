@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 
-def write_fluence_files(tab, mass, timebins, e_bins, fluences):
+def write_fluence_files(tab, mass, timebins, e_bins, fluences_mixed):
     """Writes input files for snowglobes in fluxes directory
 
     Creates key file to indicate how file index is related to time
@@ -19,7 +19,7 @@ def write_fluence_files(tab, mass, timebins, e_bins, fluences):
         time bins (leftside) for fluences [s]
     e_bins : []
         energy bins (leftside) for neutrino spectra [GeV]
-    fluences : {flavor: [timebins, e_bins]}
+    fluences_mixed : {flavor: [timebins, e_bins]}
         neutrino fluences over all time and energy bins [GeV/s/cm^2]
     """
     dt = np.diff(timebins)[0]
@@ -35,7 +35,9 @@ def write_fluence_files(tab, mass, timebins, e_bins, fluences):
     # write fluence files
     for i in range(len(timebins)):
         out_filepath = os.path.join(path, f'pinched_tab{tab}_m{mass}_{i+1}.dat')
-        table = format_fluence_table(time_i=i, e_bins=e_bins, fluences=fluences)
+        table = format_fluence_table(time_i=i,
+                                     e_bins=e_bins,
+                                     fluences_mixed=fluences_mixed)
 
         with open(out_filepath, 'w') as outfile:
             table.to_string(outfile, header=None, index=False)
@@ -59,7 +61,7 @@ def get_key_table(timebins, dt):
     return table
 
 
-def format_fluence_table(time_i, e_bins, fluences):
+def format_fluence_table(time_i, e_bins, fluences_mixed):
     """Return fluence table for given timestep
 
     Returns: pd.DataFrame
@@ -69,19 +71,19 @@ def format_fluence_table(time_i, e_bins, fluences):
     time_i : int
         timestep index
     e_bins : []
-    fluences : {flavor: [timebins, e_bins]}
+    fluences_mixed : {flavor: [timebins, e_bins]}
     """
     flavor_map = {'e': 'e',
                   'mu': 'x',
                   'tau': 'x',
                   'ebar': 'a',
-                  'mubar': 'x',
-                  'taubar': 'x',
+                  'mubar': 'ax',
+                  'taubar': 'ax',
                   }
     table = pd.DataFrame()
     table['E_nu'] = e_bins
 
     for flavor, key in flavor_map.items():
-        table[flavor] = fluences[key][time_i]
+        table[flavor] = fluences_mixed[key][time_i]
 
     return table
