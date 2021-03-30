@@ -105,10 +105,10 @@ for tab in tabs:
     # models_path = f'/home/zac/projects/codes/BANG/runs/run_ecrates_tab{tab}'
 
     # Open output files for time-integrated quantities
-    totfile = analysis.open_tot_file(tab=tab,
-                                     output=output,
-                                     detector=detector,
-                                     channel_groups=channel_groups)
+    # totfile = analysis.open_tot_file(tab=tab,
+    #                                  output=output,
+    #                                  detector=detector,
+    #                                  channel_groups=channel_groups)
 
     for mass in masses:
         dat_filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'
@@ -152,20 +152,20 @@ for tab in tabs:
                            detector=detector)
 
         #  Analysis on snowglobes output
-        print('=== Analysing output ===')
-        analysis.analyze_output(a=tab,
-                                m=mass,
-                                detector=detector,
-                                channel_groups=channel_groups,
-                                integrated_file=totfile, output=output)
+        # print('=== Analysing output ===')
+        # analysis.analyze_output(a=tab,
+        #                         m=mass,
+        #                         detector=detector,
+        #                         channel_groups=channel_groups,
+        #                         integrated_file=totfile, output=output)
 
         # Cleanup snowglobes output
         print('=== Cleaning up model ===')
         cleanup.mass()
 
     # Close files for time-integrated quantities
-    print('=== Cleaning up alpha ===')
-    cleanup.alpha(totfile)
+    # print('=== Cleaning up alpha ===')
+    # cleanup.alpha(totfile)
 
 # Clean up working directory
 print('=== Final cleanup ===')
