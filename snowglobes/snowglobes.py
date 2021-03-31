@@ -47,8 +47,8 @@ class SnowGlobesData:
         self.prog_table = None
 
         if load_data:
-            self.load_summary_tables()
             self.load_mass_tables()
+            self.integrate_summary()
             self.prog_table = snow_tools.load_prog_table()
 
     # ===============================================================
@@ -87,6 +87,27 @@ class SnowGlobesData:
             print()
 
         self.mass_tables = tables
+
+    def integrate_summary(self, n_bins=None):
+        """Integrate models over timebins
+        """
+        if n_bins is None:
+            n_bins = self.n_bins
+
+        ref_table = self.mass_tables[self.model_sets[0]][self.mass_list[0]]
+        t0 = ref_table.loc[0]['Time']
+        t1 = ref_table.loc[n_bins]['Time']
+        print(f'Integrating timebins from {t0:.2f}-{t1:.2f} s')
+
+        tables = {}
+        for model_set in self.model_sets:
+            print(f'Integrating timebins: {model_set}')
+            mass_tables = self.mass_tables[model_set]
+            tables[model_set] = snow_tools.time_integrate(mass_tables=mass_tables,
+                                                          n_bins=n_bins,
+                                                          channels=self.channels)
+        print()
+        self.summary_tables = tables
 
     # ===============================================================
     #                      Plotting
