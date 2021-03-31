@@ -97,11 +97,11 @@ class SnowGlobesData:
         ref_table = self.mass_tables[self.model_sets[0]][self.mass_list[0]]
         t0 = ref_table.loc[0]['Time']
         t1 = ref_table.loc[n_bins]['Time']
-        print(f'Integrating timebins from {t0:.2f}-{t1:.2f} s')
+        print(f'Integrating timebins from {t0:.2f} to {t1:.2f} s')
 
         tables = {}
         for model_set in self.model_sets:
-            print(f'Integrating timebins: {model_set}')
+            print(f'Integrating: {model_set}')
             mass_tables = self.mass_tables[model_set]
             tables[model_set] = snow_tools.time_integrate(mass_tables=mass_tables,
                                                           n_bins=n_bins,
