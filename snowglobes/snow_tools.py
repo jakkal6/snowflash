@@ -28,7 +28,8 @@ def load_summary_table(tab, detector, time_integral=30):
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
-def load_mass_table(mass, tab, detector):
+def load_mass_table(mass, tab, detector,
+                    output_dir='mass_tables'):
     """Load time-binned table for an individual mass model
 
     Returns : pd.DataFrame
@@ -38,14 +39,11 @@ def load_mass_table(mass, tab, detector):
     mass : str
     tab : int
     detector : str
+    output_dir : str
     """
     path = data_path()
-    # filename = f'{detector}_analysis_a{tab}_m{mass}.dat'
     filename = f'{detector}_analysis_tab{tab}_m{mass}.dat'
-    # filepath = os.path.join(path, 'mass_tables', filename)
-    # filepath = os.path.join(path, 'mass_tables_nomix', filename)
-    # filepath = os.path.join(path, 'mass_tables_normal', filename)
-    filepath = os.path.join(path, 'mass_tables_inverted', filename)
+    filepath = os.path.join(path, output_dir, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
