@@ -10,25 +10,25 @@ Tools for handling snowglobes data
 # ===============================================================
 #                      Load Tables
 # ===============================================================
-def load_summary_table(alpha, detector, time_integral=30):
+def load_summary_table(tab, detector, time_integral=30):
     """Load time-integrated summary table containing all mass models
 
     Returns : pd.DataFrame
 
     parameters
     ----------
-    alpha : int
+    tab : int
     detector : str
     time_integral : int
         time integrated over post-bounce (milliseconds)
     """
     path = data_path()
-    filename = f'{detector}_analysis_{time_integral}ms_a{alpha}.dat'
+    filename = f'{detector}_analysis_{time_integral}ms_a{tab}.dat'
     filepath = os.path.join(path, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
-def load_mass_table(mass, alpha, detector):
+def load_mass_table(mass, tab, detector):
     """Load time-binned table for an individual mass model
 
     Returns : pd.DataFrame
@@ -36,12 +36,16 @@ def load_mass_table(mass, alpha, detector):
     parameters
     ----------
     mass : str
-    alpha : int
+    tab : int
     detector : str
     """
     path = data_path()
-    filename = f'{detector}_analysis_a{alpha}_m{mass}.dat'
-    filepath = os.path.join(path, 'mass_tables', filename)
+    # filename = f'{detector}_analysis_a{tab}_m{mass}.dat'
+    filename = f'{detector}_analysis_tab{tab}_m{mass}.dat'
+    # filepath = os.path.join(path, 'mass_tables', filename)
+    # filepath = os.path.join(path, 'mass_tables_nomix', filename)
+    # filepath = os.path.join(path, 'mass_tables_normal', filename)
+    filepath = os.path.join(path, 'mass_tables_inverted', filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 
 

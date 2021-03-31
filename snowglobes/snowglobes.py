@@ -9,7 +9,7 @@ from . import config
 class SnowGlobesData:
     def __init__(self,
                  model_sets=('LMP', 'LMP+N50', 'SNA'),
-                 alphas=(1, 2, 3),
+                 tabs=(1, 2, 3),
                  detector='ar40kt',
                  load_data=True):
         """Collection of SnowGlobes data
@@ -18,7 +18,7 @@ class SnowGlobesData:
         ----------
         model_sets : [str]
             Labels for model sets
-        alphas : [int]
+        tabs : [int]
             filename IDs that correspond to the model_sets
         detector : str
             Type of neutrino detector used in snowglobes
@@ -27,7 +27,7 @@ class SnowGlobesData:
         """
         self.detector = detector
         self.model_sets = model_sets
-        self.alphas = alphas
+        self.tabs = tabs
 
         self.channels = config.channels[detector]
         self.mass_list = config.mass_list
@@ -51,9 +51,9 @@ class SnowGlobesData:
         print('Loading summary tables')
         tables = dict.fromkeys(self.model_sets)
 
-        for i, alpha in enumerate(self.alphas):
+        for i, tab in enumerate(self.tabs):
             model_set = self.model_sets[i]
-            tables[model_set] = snow_tools.load_summary_table(alpha=alpha,
+            tables[model_set] = snow_tools.load_summary_table(tab=tab,
                                                               detector=self.detector)
         self.summary_tables = tables
 
@@ -62,7 +62,7 @@ class SnowGlobesData:
         """
         tables = dict.fromkeys(self.model_sets)
 
-        for i, alpha in enumerate(self.alphas):
+        for i, tab in enumerate(self.tabs):
             model_set = self.model_sets[i]
             tables[model_set] = {}
 
@@ -70,7 +70,7 @@ class SnowGlobesData:
                 print(f'\rLoading mass tables, {model_set}: {j+1}/{self.n_mass}', end='')
 
                 table = snow_tools.load_mass_table(mass=mass,
-                                                   alpha=alpha,
+                                                   tab=tab,
                                                    detector=self.detector)
                 tables[model_set][mass] = table
 
