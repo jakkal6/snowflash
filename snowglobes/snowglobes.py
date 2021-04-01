@@ -11,6 +11,7 @@ class SnowGlobesData:
                  model_sets=('LMP', 'LMP+N50', 'SNA'),
                  tabs=(1, 2, 3),
                  detector='ar40kt',
+                 mass_list=None,
                  load_data=True,
                  output_dir='mass_tables_nomix',
                  n_bins=20,
@@ -25,6 +26,8 @@ class SnowGlobesData:
             filename IDs that correspond to the model_sets
         detector : str
             Type of neutrino detector used in snowglobes
+        mass_list : [float]
+            progenitor ZAMS masses of models
         load_data : bool
             immediately load all data
         output_dir : str
@@ -37,14 +40,16 @@ class SnowGlobesData:
         self.tabs = tabs
         self.output_dir = output_dir
         self.n_bins = n_bins
-
         self.channels = config.channels[detector]
-        self.mass_list = config.mass_list
-        self.n_mass = len(self.mass_list)
-
+        self.mass_list = mass_list
         self.summary_tables = None
         self.mass_tables = None
         self.prog_table = None
+
+        if self.mass_list is None:
+            self.mass_list = config.mass_list
+
+        self.n_mass = len(self.mass_list)
 
         if load_data:
             self.load_mass_tables()
