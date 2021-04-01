@@ -135,16 +135,20 @@ class SnowGlobesData:
         ax : Axis
         """
         fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
-                                         column=column, x_var=x_var,
+                                         column=column,
+                                         x_var=x_var,
                                          prog_table=self.prog_table,
-                                         x_scale=x_scale, y_scale=y_scale,
+                                         x_scale=x_scale,
+                                         y_scale=y_scale,
                                          marker=marker,
-                                         figsize=figsize, legend=legend,
+                                         figsize=figsize,
+                                         legend=legend,
                                          ax=ax)
         return fig, ax
 
     def plot_time(self, column, mass,
-                  x_scale=None, y_scale=None,
+                  x_scale=None,
+                  y_scale=None,
                   ax=None):
         """Plot time-dependent quantity from mass tables
 
@@ -158,7 +162,9 @@ class SnowGlobesData:
         ax : Axis
         """
         fig, ax = snow_plot.plot_time(mass_tables=self.mass_tables,
-                                      column=column, mass=mass,
-                                      x_scale=x_scale, y_scale=y_scale,
+                                      column=column,
+                                      mass=mass,
+                                      x_scale=x_scale,
+                                      y_scale=y_scale,
                                       ax=ax)
         return fig, ax
