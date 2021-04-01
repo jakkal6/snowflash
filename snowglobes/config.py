@@ -44,7 +44,7 @@ ax_scales = {
 ax_labels = {
     'mass': r'ZAMS Mass [$\mathrm{M}_\odot$]',
     'Time': 'Time post-bounce [s]',
-    'Avg': r'${\langle E \rangle}_\mathrm{tot}$ [MeV]',
+    'Avg': r'${\langle E \rangle}_\mathrm{tot}$ [$\mathrm{MeV}$]',
     'Tot': r'$\mathrm{N_{tot}}$',
     'm_fe': r'$M_\mathrm{Fe}$ [$\mathrm{M}_\odot$]',
 }
