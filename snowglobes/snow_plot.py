@@ -45,7 +45,7 @@ def plot_summary(tables, column, prog_table,
 
 
 def plot_time(mass_tables, column, mass,
-              x_scale=None, y_scale='log',
+              x_scale=None, y_scale=None,
               ax=None, legend=True, figsize=None):
     """Plot time-dependent quantity from mass tables
 

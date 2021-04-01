@@ -144,7 +144,8 @@ class SnowGlobesData:
         return fig, ax
 
     def plot_time(self, column, mass,
-                  x_scale='linear', y_scale='log', ax=None):
+                  x_scale=None, y_scale=None,
+                  ax=None):
         """Plot time-dependent quantity from mass tables
 
         parameters
