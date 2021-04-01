@@ -8,6 +8,7 @@ from . import config
 def plot_summary(tables, column, prog_table,
                  x_var='m_fe',
                  x_scale=None, y_scale='linear',
+                 x_lims=None, y_lims=None,
                  marker='.',
                  ax=None,
                  legend=True,
@@ -24,6 +25,8 @@ def plot_summary(tables, column, prog_table,
     x_var : str
     x_scale : str
     y_scale : str
+    x_lims : [low, high]
+    y_lims : [low, high]
     marker : str
     ax : Axis
     legend : bool
@@ -38,6 +41,7 @@ def plot_summary(tables, column, prog_table,
 
     plot_tools.set_ax_all(ax=ax, x_var=x_var, y_var=column[:3],
                           x_scale=x_scale, y_scale=y_scale,
+                          x_lims=x_lims, y_lims=y_lims,
                           legend=legend)
 
     plt.tight_layout()

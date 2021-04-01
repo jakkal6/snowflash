@@ -122,6 +122,8 @@ class SnowGlobesData:
                      marker='.',
                      x_scale=None,
                      y_scale='linear',
+                     x_lims=None,
+                     y_lims=None,
                      legend=True,
                      figsize=None,
                      ax=None):
@@ -135,6 +137,8 @@ class SnowGlobesData:
         marker : str
         y_scale : str
         x_scale : str
+        x_lims : [low, high]
+        y_lims : [low, high]
         legend : bool
         figsize : (width, length)
         ax : Axis
@@ -145,6 +149,8 @@ class SnowGlobesData:
                                          prog_table=self.prog_table,
                                          x_scale=x_scale,
                                          y_scale=y_scale,
+                                         x_lims=x_lims,
+                                         y_lims=y_lims,
                                          marker=marker,
                                          figsize=figsize,
                                          legend=legend,

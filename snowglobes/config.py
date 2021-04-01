@@ -46,7 +46,7 @@ ax_labels = {
     'Time': 'Time post-bounce [s]',
     'Avg': r'${\langle E \rangle}_\mathrm{tot}$ [MeV]',
     'Tot': r'$\mathrm{N_{tot}}$',
-    'm_fe': r'Iron core mass [$\mathrm{M}_\odot$]',
+    'm_fe': r'$M_\mathrm{Fe}$ [$\mathrm{M}_\odot$]',
 }
 
 ax_lims = {
