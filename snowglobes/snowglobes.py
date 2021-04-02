@@ -45,6 +45,7 @@ class SnowGlobesData:
         self.summary_tables = None
         self.mass_tables = None
         self.prog_table = None
+        self.channel_fracs = None
 
         if self.mass_list is None:
             self.mass_list = config.mass_list
@@ -55,6 +56,7 @@ class SnowGlobesData:
             self.load_mass_tables()
             self.integrate_summary()
             self.prog_table = snow_tools.load_prog_table()
+            self.get_channel_fractions()
 
     # ===============================================================
     #                      Load Tables
@@ -114,6 +116,15 @@ class SnowGlobesData:
         print()
         self.summary_tables = tables
 
+    # ===============================================================
+    #                      Analysis
+    # ===============================================================
+    def get_channel_fractions(self):
+        """Calculate fractional contribution of each channel to total counts
+        """
+        self.channel_fracs = snow_tools.get_channel_fractions(tables=self.summary_tables,
+                                                              channels=self.channels)
+        
     # ===============================================================
     #                      Plotting
     # ===============================================================
