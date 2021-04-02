@@ -48,6 +48,60 @@ def plot_summary(tables, column, prog_table,
     return fig, ax
 
 
+def plot_difference(tables, column, prog_table, ref_model_set,
+                    x_var='m_fe',
+                    x_scale=None, y_scale=None,
+                    x_lims=None, y_lims=None,
+                    marker='.',
+                    ax=None,
+                    legend=True,
+                    figsize=None):
+    """Plot differences relative to given model_set
+
+    parameters
+    ----------
+    tables : {model_set: pd.DataFrame}
+        collection of summary_tables to plot
+    column : str
+        which column to plot
+    prog_table : pd.DataFrame
+    ref_model_set : str
+        which model_set to use as the baseline for comparison
+    x_var : str
+    x_scale : str
+    y_scale : str
+    x_lims : [low, high]
+    y_lims : [low, high]
+    marker : str
+    ax : Axis
+    legend : bool
+    figsize : (width, height)
+    """
+    fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
+    ref_table = tables[ref_model_set]
+    x = prog_table[x_var]
+
+    for model_set, table in tables.items():
+        if model_set == ref_model_set:
+            continue
+
+        ax.plot(x, table[column] - ref_table[column],
+                marker=marker, ls='none', label=model_set,
+                color=config.colors.get(model_set))
+
+    ax.hlines(0, x.min(), x.max(),
+              linestyles='--',
+              colors=config.colors.get(ref_model_set))
+
+    plot_tools.set_ax_all(ax=ax, x_var=x_var, y_var=column[:3],
+                          x_scale=x_scale, y_scale=y_scale,
+                          x_lims=x_lims, y_lims=y_lims,
+                          legend=legend)
+
+    plt.tight_layout()
+    return fig, ax
+
+
 def plot_time(mass_tables, column, mass,
               x_scale=None, y_scale=None,
               ax=None, legend=True, figsize=None):

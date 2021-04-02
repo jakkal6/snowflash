@@ -157,6 +157,49 @@ class SnowGlobesData:
                                          ax=ax)
         return fig, ax
 
+    def plot_difference(self, column, ref_model_set,
+                        x_var='m_fe',
+                        marker='.',
+                        x_scale=None,
+                        y_scale=None,
+                        x_lims=None,
+                        y_lims=None,
+                        legend=True,
+                        figsize=None,
+                        ax=None):
+        """Plot differences relative to a given model_set
+
+        parameters
+        ----------
+        column : str
+            which column to plot from summary_tables
+        ref_model_set : str
+                which model_set to use as the baseline for comparison
+        x_var : str
+        marker : str
+        y_scale : str
+        x_scale : str
+        x_lims : [low, high]
+        y_lims : [low, high]
+        legend : bool
+        figsize : (width, length)
+        ax : Axis
+        """
+        fig, ax = snow_plot.plot_difference(tables=self.summary_tables,
+                                            column=column,
+                                            ref_model_set=ref_model_set,
+                                            x_var=x_var,
+                                            prog_table=self.prog_table,
+                                            x_scale=x_scale,
+                                            y_scale=y_scale,
+                                            x_lims=x_lims,
+                                            y_lims=y_lims,
+                                            marker=marker,
+                                            figsize=figsize,
+                                            legend=legend,
+                                            ax=ax)
+        return fig, ax
+
     def plot_time(self, column, mass,
                   x_scale=None,
                   y_scale=None,
