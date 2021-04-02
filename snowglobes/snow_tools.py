@@ -104,6 +104,31 @@ def time_integrate(mass_tables, n_bins, channels):
     return table_out
 
 
+def get_channel_fractions(tables, channels):
+    """Calculate fractional contribution of each channel to total counts
+
+    Returns: pd.DataFrame
+
+    Parameters
+    ----------
+    tables : {model_set: pd.DataFrame}
+    channels : [str]
+    """
+    n_channels = len(channels)
+    frac_table = pd.DataFrame()
+
+    for model_set, table in tables.items():
+        fracs = np.zeros(n_channels)
+
+        for i, channel in enumerate(channels):
+            fracs[i] = np.mean(table[f'Tot_{channel}'] / table['Tot_Total'])
+
+        frac_table[model_set] = fracs
+
+    frac_table.index = channels
+    return frac_table
+
+
 # ===============================================================
 #                      Paths
 # ===============================================================
