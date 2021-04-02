@@ -124,7 +124,7 @@ class SnowGlobesData:
         """
         self.channel_fracs = snow_tools.get_channel_fractions(tables=self.summary_tables,
                                                               channels=self.channels)
-        
+
     # ===============================================================
     #                      Plotting
     # ===============================================================

@@ -44,7 +44,6 @@ def plot_summary(tables, column, prog_table,
                           x_lims=x_lims, y_lims=y_lims,
                           legend=legend)
 
-    plt.tight_layout()
     return fig, ax
 
 
@@ -144,7 +143,6 @@ def plot_difference(tables, column, prog_table, ref_model_set,
                           x_lims=x_lims, y_lims=y_lims,
                           legend=legend)
 
-    plt.tight_layout()
     return fig, ax
 
 
