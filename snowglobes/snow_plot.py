@@ -48,6 +48,52 @@ def plot_summary(tables, column, prog_table,
     return fig, ax
 
 
+def plot_all_channels(tables, var, prog_table, channels,
+                      x_var='m_fe',
+                      x_scale=None, y_scale=None,
+                      x_lims=None, y_lims=None,
+                      marker='.',
+                      ax=None,
+                      legend=True,
+                      figsize=None):
+    """Plot differences relative to given model_set
+
+    parameters
+    ----------
+    tables : {model_set: pd.DataFrame}
+        collection of summary_tables to plot
+    var : 'Tot' or 'Avg'
+    prog_table : pd.DataFrame
+    channels : [str]
+    x_var : str
+    x_scale : str
+    y_scale : str
+    x_lims : [low, high]
+    y_lims : [low, high]
+    marker : str
+    ax : Axis
+    legend : bool
+    figsize : (width, height)
+    """
+    fig, ax = plt.subplots(len(channels), figsize=figsize, sharex=True)
+
+    for i, channel in enumerate(channels):
+        plot_summary(tables=tables,
+                     column=f'{var}_{channel}',
+                     x_var=x_var,
+                     prog_table=prog_table,
+                     x_scale=x_scale,
+                     y_scale=y_scale,
+                     x_lims=x_lims,
+                     y_lims=y_lims,
+                     marker=marker,
+                     legend=False,
+                     ax=ax[i])
+
+    plt.subplots_adjust(hspace=0)
+    return fig, ax
+
+
 def plot_difference(tables, column, prog_table, ref_model_set,
                     x_var='m_fe',
                     x_scale=None, y_scale=None,
