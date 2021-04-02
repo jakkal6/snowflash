@@ -53,10 +53,9 @@ def plot_all_channels(tables, var, prog_table, channels,
                       x_scale=None, y_scale=None,
                       x_lims=None, y_lims=None,
                       marker='.',
-                      ax=None,
                       legend=True,
                       figsize=None):
-    """Plot differences relative to given model_set
+    """Plot summary variable for all channels
 
     parameters
     ----------
@@ -71,7 +70,6 @@ def plot_all_channels(tables, var, prog_table, channels,
     x_lims : [low, high]
     y_lims : [low, high]
     marker : str
-    ax : Axis
     legend : bool
     figsize : (width, height)
     """
@@ -90,6 +88,8 @@ def plot_all_channels(tables, var, prog_table, channels,
                      legend=False,
                      ax=ax[i])
 
+    if legend:
+        ax[0].legend()
     plt.subplots_adjust(hspace=0)
     return fig, ax
 

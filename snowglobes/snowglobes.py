@@ -166,8 +166,7 @@ class SnowGlobesData:
                           x_lims=None,
                           y_lims=None,
                           legend=True,
-                          figsize=None,
-                          ax=None):
+                          figsize=None):
         """Plot summary variable for all channels
 
         parameters
@@ -182,7 +181,6 @@ class SnowGlobesData:
         y_lims : [low, high]
         legend : bool
         figsize : (width, length)
-        ax : Axis
         """
         if channels is None:
             channels = self.channels
@@ -198,8 +196,7 @@ class SnowGlobesData:
                                               y_lims=y_lims,
                                               marker=marker,
                                               figsize=figsize,
-                                              legend=legend,
-                                              ax=ax)
+                                              legend=legend)
         return fig, ax
 
     def plot_difference(self, column, ref_model_set,
