@@ -7,7 +7,7 @@ from . import config
 
 def plot_summary(tables, column, prog_table,
                  x_var='m_fe',
-                 x_scale=None, y_scale='linear',
+                 x_scale=None, y_scale=None,
                  x_lims=None, y_lims=None,
                  marker='.',
                  ax=None,
