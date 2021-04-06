@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+import xarray as xr
 
 """
 Tools for handling snowglobes data
@@ -71,7 +72,7 @@ def time_integrate(mass_tables, n_bins, channels):
     n_bins : int
         no. of time bins to integrate over. Currently each bin is 5 ms
     channels : [str]
-        list of channel labels
+        list of channel names
     """
     channels = ['Total'] + channels
     mass_list = list(mass_tables.keys())
@@ -102,6 +103,37 @@ def time_integrate(mass_tables, n_bins, channels):
         table_out[column] = mass_arrays[column]
 
     return table_out
+
+
+def get_cumulative(mass_tables, max_n_bins, channels):
+    """Calculate cumulative neutrino counts for each time bin
+
+    Returns : xr.Dataset
+        3D table with dimensions (Mass, n_bins)
+
+    parameters
+    ----------
+    mass_tables : {mass: pd.DataFrame}
+        collection of time-binned mass model tables
+    max_n_bins : int
+        maximum time bins to integrate up to
+    channels : [str]
+        list of channel names
+    """
+    bins = np.arange(1, max_n_bins+1)
+    cumulative = {}
+
+    for b in bins:
+        print(f'\rIntegrating bins: {b}/{max_n_bins}', end='')
+        integrated = time_integrate(mass_tables, n_bins=b, channels=channels)
+        integrated.set_index('Mass', inplace=True)
+        cumulative[b] = integrated.to_xarray()
+
+    print()
+    x = xr.concat(cumulative.values(), dim='n_bins')
+    x.coords['n_bins'] = bins
+
+    return x
 
 
 def get_channel_fractions(tables, channels):
