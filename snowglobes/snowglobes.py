@@ -160,6 +160,7 @@ class SnowGlobesData:
                      x_lims=None,
                      y_lims=None,
                      legend=True,
+                     legend_loc=None,
                      figsize=None,
                      ax=None):
         """Plot quantity from summary table
@@ -175,6 +176,7 @@ class SnowGlobesData:
         x_lims : [low, high]
         y_lims : [low, high]
         legend : bool
+        legend_loc : int or str
         figsize : (width, length)
         ax : Axis
         """
@@ -189,6 +191,7 @@ class SnowGlobesData:
                                          marker=marker,
                                          figsize=figsize,
                                          legend=legend,
+                                         legend_loc=legend_loc,
                                          ax=ax)
         return fig, ax
 
@@ -313,6 +316,7 @@ class SnowGlobesData:
                             x_factor=None,
                             y_factor=None,
                             legend=True,
+                            legend_loc=None,
                             figsize=None):
         """Plot interactive summary table
 
@@ -329,6 +333,7 @@ class SnowGlobesData:
         x_factor : float
         y_factor : float
         legend : bool
+        legend_loc : int or str
         figsize : (width, length)
         """
         def update_slider(n_bins):
@@ -359,6 +364,7 @@ class SnowGlobesData:
                           marker=marker,
                           figsize=figsize,
                           legend=legend,
+                          legend_loc=legend_loc,
                           ax=slider.ax)
 
         slider.slider.on_changed(update_slider)
