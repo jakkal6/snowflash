@@ -97,6 +97,9 @@ class SnowGlobesData:
 
         self.mass_tables = tables
 
+    # ===============================================================
+    #                      Analysis
+    # ===============================================================
     def integrate_summary(self, n_bins=None):
         """Integrate models over timebins
         """
@@ -118,9 +121,6 @@ class SnowGlobesData:
         print()
         self.summary_tables = tables
 
-    # ===============================================================
-    #                      Analysis
-    # ===============================================================
     def get_cumulative(self, max_n_bins=None):
         """Integrate models over timebins
         """
