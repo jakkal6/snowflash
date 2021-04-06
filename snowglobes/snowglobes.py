@@ -337,10 +337,9 @@ class SnowGlobesData:
             for i, model_set in enumerate(self.model_sets):
                 data = self.cumulative[model_set].sel(n_bins=n_bins)
 
-                slider.update_ax_line(x=self.prog_table[x_var],
-                                      y=data[column],
-                                      y_var=column,
-                                      model_set=model_set)
+                slider.update_ax_y(y=data[column],
+                                   y_var=column,
+                                   model_set=model_set)
 
             slider.fig.canvas.draw_idle()
 
