@@ -152,7 +152,7 @@ class SnowGlobesData:
     # ===============================================================
     #                      Plotting
     # ===============================================================
-    def plot_summary(self, column,
+    def plot_summary(self, y_var,
                      x_var='m_fe',
                      marker='.',
                      x_scale=None,
@@ -167,7 +167,7 @@ class SnowGlobesData:
 
         parameters
         ----------
-        column : str
+        y_var : str
             which column to plot from summary_tables
         x_var : str
         marker : str
@@ -181,7 +181,7 @@ class SnowGlobesData:
         ax : Axis
         """
         fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
-                                         column=column,
+                                         y_var=y_var,
                                          x_var=x_var,
                                          prog_table=self.prog_table,
                                          x_scale=x_scale,
@@ -237,7 +237,7 @@ class SnowGlobesData:
                                               legend=legend)
         return fig, ax
 
-    def plot_difference(self, column, ref_model_set,
+    def plot_difference(self, y_var, ref_model_set,
                         x_var='m_fe',
                         marker='.',
                         x_scale=None,
@@ -251,7 +251,7 @@ class SnowGlobesData:
 
         parameters
         ----------
-        column : str
+        y_var : str
             which column to plot from summary_tables
         ref_model_set : str
                 which model_set to use as the baseline for comparison
@@ -266,7 +266,7 @@ class SnowGlobesData:
         ax : Axis
         """
         fig, ax = snow_plot.plot_difference(tables=self.summary_tables,
-                                            column=column,
+                                            y_var=y_var,
                                             ref_model_set=ref_model_set,
                                             x_var=x_var,
                                             prog_table=self.prog_table,
@@ -280,7 +280,7 @@ class SnowGlobesData:
                                             ax=ax)
         return fig, ax
 
-    def plot_time(self, column, mass,
+    def plot_time(self, y_var, mass,
                   x_scale=None,
                   y_scale=None,
                   ax=None):
@@ -288,7 +288,7 @@ class SnowGlobesData:
 
         parameters
         ----------
-        column : str
+        y_var : str
             which column to plot from mass_tables
         mass : float or int
         y_scale : str
@@ -296,7 +296,7 @@ class SnowGlobesData:
         ax : Axis
         """
         fig, ax = snow_plot.plot_time(mass_tables=self.mass_tables,
-                                      column=column,
+                                      y_var=y_var,
                                       mass=mass,
                                       x_scale=x_scale,
                                       y_scale=y_scale,
@@ -306,7 +306,7 @@ class SnowGlobesData:
     # ===============================================================
     #                      Plotting
     # ===============================================================
-    def plot_summary_slider(self, column,
+    def plot_summary_slider(self, y_var,
                             x_var='m_fe',
                             marker='.',
                             x_scale=None,
@@ -322,7 +322,7 @@ class SnowGlobesData:
 
         parameters
         ----------
-        column : str
+        y_var : str
             which column to plot from summary_tables
         x_var : str
         marker : str
@@ -342,20 +342,20 @@ class SnowGlobesData:
             for i, model_set in enumerate(self.model_sets):
                 data = self.cumulative[model_set].sel(n_bins=n_bins)
 
-                slider.update_ax_y(y=data[column],
-                                   y_var=column,
+                slider.update_ax_y(y=data[y_var],
+                                   y_var=y_var,
                                    model_set=model_set)
 
             slider.fig.canvas.draw_idle()
 
         # ----------------
-        slider = SnowSlider(y_vars=[column],
+        slider = SnowSlider(y_vars=[y_var],
                             n_bins=np.arange(1, self.n_bins+1),
                             model_sets=self.model_sets,
                             x_factor=x_factor,
                             y_factor=y_factor)
 
-        self.plot_summary(column=column,
+        self.plot_summary(y_var=y_var,
                           x_var=x_var,
                           x_scale=x_scale,
                           y_scale=y_scale,

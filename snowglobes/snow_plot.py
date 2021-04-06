@@ -5,7 +5,7 @@ from . import plot_tools
 from . import config
 
 
-def plot_summary(tables, column, prog_table,
+def plot_summary(tables, y_var, prog_table,
                  x_var='m_fe',
                  x_scale=None,
                  y_scale=None,
@@ -22,8 +22,7 @@ def plot_summary(tables, column, prog_table,
     ----------
     tables : {model_set: pd.DataFrame}
         collection of summary_tables to plot
-    column : str
-        which column to plot
+    y_var : str
     prog_table : pd.DataFrame
     x_var : str
     x_scale : str
@@ -39,11 +38,11 @@ def plot_summary(tables, column, prog_table,
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
 
     for model_set, table in tables.items():
-        ax.plot(prog_table[x_var], table[column],
+        ax.plot(prog_table[x_var], table[y_var],
                 marker=marker, ls='none', label=model_set,
                 color=config.colors.get(model_set))
 
-    plot_tools.set_ax_all(ax=ax, x_var=x_var, y_var=column[:3],
+    plot_tools.set_ax_all(ax=ax, x_var=x_var, y_var=y_var[:3],
                           x_scale=x_scale, y_scale=y_scale,
                           x_lims=x_lims, y_lims=y_lims,
                           legend=legend, legend_loc=legend_loc)
@@ -81,7 +80,7 @@ def plot_all_channels(tables, var, prog_table, channels,
 
     for i, channel in enumerate(channels):
         plot_summary(tables=tables,
-                     column=f'{var}_{channel}',
+                     y_var=f'{var}_{channel}',
                      x_var=x_var,
                      prog_table=prog_table,
                      x_scale=x_scale,
@@ -99,7 +98,7 @@ def plot_all_channels(tables, var, prog_table, channels,
     return fig, ax
 
 
-def plot_difference(tables, column, prog_table, ref_model_set,
+def plot_difference(tables, y_var, prog_table, ref_model_set,
                     x_var='m_fe',
                     x_scale=None, y_scale=None,
                     x_lims=None, y_lims=None,
@@ -113,8 +112,7 @@ def plot_difference(tables, column, prog_table, ref_model_set,
     ----------
     tables : {model_set: pd.DataFrame}
         collection of summary_tables to plot
-    column : str
-        which column to plot
+    y_var : str
     prog_table : pd.DataFrame
     ref_model_set : str
         which model_set to use as the baseline for comparison
@@ -136,7 +134,7 @@ def plot_difference(tables, column, prog_table, ref_model_set,
         if model_set == ref_model_set:
             continue
 
-        ax.plot(x, table[column] - ref_table[column],
+        ax.plot(x, table[y_var] - ref_table[y_var],
                 marker=marker, ls='none', label=model_set,
                 color=config.colors.get(model_set))
 
@@ -144,7 +142,7 @@ def plot_difference(tables, column, prog_table, ref_model_set,
               linestyles='--',
               colors=config.colors.get(ref_model_set))
 
-    plot_tools.set_ax_all(ax=ax, x_var=x_var, y_var=column[:3],
+    plot_tools.set_ax_all(ax=ax, x_var=x_var, y_var=y_var[:3],
                           x_scale=x_scale, y_scale=y_scale,
                           x_lims=x_lims, y_lims=y_lims,
                           legend=legend)
@@ -152,7 +150,7 @@ def plot_difference(tables, column, prog_table, ref_model_set,
     return fig, ax
 
 
-def plot_time(mass_tables, column, mass,
+def plot_time(mass_tables, y_var, mass,
               x_scale=None, y_scale=None,
               ax=None, legend=True, figsize=None):
     """Plot time-dependent quantity from mass tables
@@ -161,8 +159,7 @@ def plot_time(mass_tables, column, mass,
     ----------
     mass_tables : {model_set: pd.DataFrame}
         collection of summary_tables to plot
-    column : str
-        which column to plot
+    y_var : str
     mass : float or int
     y_scale : str
     x_scale : str
@@ -174,11 +171,11 @@ def plot_time(mass_tables, column, mass,
 
     for model_set, tables in mass_tables.items():
         table = tables[mass]
-        ax.step(table['Time'], table[column],
+        ax.step(table['Time'], table[y_var],
                 where='post', label=model_set,
                 color=config.colors.get(model_set))
 
-    plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=column[:3],
+    plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=y_var[:3],
                           x_scale=x_scale, y_scale=y_scale,
                           legend=legend)
 
