@@ -87,19 +87,29 @@ class SnowSlider:
         y_var : str
         model_set : str
         """
-        if self.lines is None:
-            self.get_ax_lines()
+        self.update_ax_x(x=x, y_var=y_var, model_set=model_set)
+        self.update_ax_y(y=y, y_var=y_var, model_set=model_set)
 
-        line = self.lines[model_set][y_var]
-        line.set_xdata(x / self.x_factor)
-        line.set_ydata(y / self.y_factor)
-
-    def update_ax_x(self, x, y, y_var, model_set):
-        """Update x line values
+    def update_ax_x(self, x, y_var, model_set):
+        """Update x values
 
         Parameters
         ----------
         x : array
+        y_var : str
+        model_set : str
+        """
+        if self.lines is None:
+            self.get_ax_lines()
+
+        line = self.lines[model_set][y_var]
+        line.set_ydata(x / self.y_factor)
+
+    def update_ax_y(self, y, y_var, model_set):
+        """Update y values
+
+        Parameters
+        ----------
         y : array
         y_var : str
         model_set : str
@@ -108,8 +118,8 @@ class SnowSlider:
             self.get_ax_lines()
 
         line = self.lines[model_set][y_var]
-        line.set_xdata(x / self.x_factor)
         line.set_ydata(y / self.y_factor)
+
 
 # =======================================================
 #                      Misc.
