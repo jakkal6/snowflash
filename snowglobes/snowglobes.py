@@ -1,9 +1,10 @@
-import matplotlib.pyplot as plt
+import numpy as np
 
 # snowglobes
 from . import snow_tools
 from . import snow_plot
 from . import config
+from .slider import SnowSlider
 
 
 class SnowGlobesData:
@@ -298,3 +299,69 @@ class SnowGlobesData:
                                       y_scale=y_scale,
                                       ax=ax)
         return fig, ax
+
+    # ===============================================================
+    #                      Plotting
+    # ===============================================================
+    def plot_summary_slider(self, column,
+                            x_var='m_fe',
+                            marker='.',
+                            x_scale=None,
+                            y_scale=None,
+                            x_lims=None,
+                            y_lims=None,
+                            x_factor=None,
+                            y_factor=None,
+                            legend=True,
+                            figsize=None):
+        """Plot interactive summary table
+
+        parameters
+        ----------
+        column : str
+            which column to plot from summary_tables
+        x_var : str
+        marker : str
+        y_scale : str
+        x_scale : str
+        x_lims : [low, high]
+        y_lims : [low, high]
+        x_factor : float
+        y_factor : float
+        legend : bool
+        figsize : (width, length)
+        """
+        def update_slider(n_bins):
+            n_bins = int(n_bins)
+
+            for i, model_set in enumerate(self.model_sets):
+                data = self.cumulative[model_set].sel(n_bins=n_bins)
+
+                slider.update_ax_line(x=self.prog_table[x_var],
+                                      y=data[column],
+                                      y_var=column,
+                                      model_set=model_set)
+
+            slider.fig.canvas.draw_idle()
+
+        # ----------------
+        slider = SnowSlider(y_vars=[column],
+                            n_bins=np.arange(1, self.n_bins+1),
+                            model_sets=self.model_sets,
+                            x_factor=x_factor,
+                            y_factor=y_factor)
+
+        self.plot_summary(column=column,
+                          x_var=x_var,
+                          x_scale=x_scale,
+                          y_scale=y_scale,
+                          x_lims=x_lims,
+                          y_lims=y_lims,
+                          marker=marker,
+                          figsize=figsize,
+                          legend=legend,
+                          ax=slider.ax)
+
+        slider.slider.on_changed(update_slider)
+
+        return slider
