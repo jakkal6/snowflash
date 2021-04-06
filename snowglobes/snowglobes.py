@@ -42,10 +42,12 @@ class SnowGlobesData:
         self.n_bins = n_bins
         self.channels = config.channels[detector]
         self.mass_list = mass_list
+
         self.summary_tables = None
         self.mass_tables = None
         self.prog_table = None
         self.channel_fracs = None
+        self.cumulative = None
 
         if self.mass_list is None:
             self.mass_list = config.mass_list
@@ -119,6 +121,27 @@ class SnowGlobesData:
     # ===============================================================
     #                      Analysis
     # ===============================================================
+    def get_cumulative(self, max_n_bins=None):
+        """Integrate models over timebins
+        """
+        if max_n_bins is None:
+            max_n_bins = self.n_bins
+
+        ref_table = self.mass_tables[self.model_sets[0]][self.mass_list[0]]
+        t0 = ref_table.loc[0]['Time']
+        t1 = ref_table.loc[max_n_bins]['Time']
+        print(f'Integrating timebins from {t0:.2f} to {t1:.2f} s')
+
+        tables = {}
+        for model_set in self.model_sets:
+            print(f'Integrating: {model_set}')
+            mass_tables = self.mass_tables[model_set]
+            tables[model_set] = snow_tools.get_cumulative(mass_tables=mass_tables,
+                                                          max_n_bins=max_n_bins,
+                                                          channels=self.channels)
+        print()
+        self.cumulative = tables
+
     def get_channel_fractions(self):
         """Calculate fractional contribution of each channel to total counts
         """
