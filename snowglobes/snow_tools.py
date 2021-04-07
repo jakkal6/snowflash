@@ -194,3 +194,16 @@ def prog_path():
     """
     path = ecrate_path()
     return os.path.join(path, 'plotRoutines', 'data', 'progenitor_table.dat')
+
+
+def y_column(y_var, channel):
+    """Return name of column
+
+    Returns str
+
+    Parameters
+    ----------
+    y_var : 'Tot' or 'Avg'
+    channel : str
+    """
+    return f'{y_var}_{channel}'
