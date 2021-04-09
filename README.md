@@ -1,5 +1,17 @@
-# snowglobes
+# flash_snowglobes
 
-This package is for handling and plotting simulated CCSN neutrino data from [SNOwGLoBES](https://github.com/SNOwGLoBES/snowglobes), as used in the electron-capture rate project.
+Tools for running [SNOwGLoBES](https://github.com/SNOwGLoBES/snowglobes) on FLASH models to predict neutrino observables.
+
+## flash2snowglobes
+Modules to convert FLASH data to neutrino fluxes and run snowglobes.
+
+Credit: Adapted from scripts written by MacKenzie Warren.
+
+The main loop is `flash2snowglobes.py`, which takes FLASH input, converts it to the neutrino fluences for snowglobes, runs snowglobes on each time bin, then extracts the output. Currently defaults to 5ms time bins. The extracted output is in the form of average detected energies and neutrino counts.
+
+
+## snowglobes
+
+Subpackage for handling and plotting snowglobes output, as used in the electron-capture rate project.
 
 The main class is `snowglobes.SnowGlobesData`.
