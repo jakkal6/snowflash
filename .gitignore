@@ -1,5 +1,7 @@
 temp/
 cache/
+output_*/
+fluxes/
 
 # misc.
 .idea
