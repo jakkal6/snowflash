@@ -96,12 +96,13 @@ def load_prog_table():
 def time_integrate(mass_tables, n_bins, channels):
     """Integrate a set of models over a given no. of time bins
 
-    Returns : pd.DataFrame
+    Returns : xr.Dataset
+        dim: [mass]
 
     parameters
     ----------
     mass_tables : xr.Dataset
-        3D table of time-binned mass tables
+        3D table of time-binned mass tables, dim: [mass, time]
     n_bins : int
         no. of time bins to integrate over. Currently each bin is 5 ms
     channels : [str]
@@ -112,6 +113,7 @@ def time_integrate(mass_tables, n_bins, channels):
 
     time_slice = mass_tables.isel(Time=slice(0, n_bins))
     totals = time_slice.sum(dim='Time')
+    table = xr.Dataset()
 
     for channel in channels:
         tot = f'Tot_{channel}'
@@ -120,17 +122,10 @@ def time_integrate(mass_tables, n_bins, channels):
         total_counts = totals[tot]
         total_energy = (time_slice[avg] * time_slice[tot]).sum(dim='Time')
 
-        mass_arrays[tot] = total_counts
-        mass_arrays[avg] = total_energy / total_counts
+        table[tot] = total_counts
+        table[avg] = total_energy / total_counts
 
-    # Build final table
-    table_out = pd.DataFrame()
-    table_out['Mass'] = mass_tables.mass.values
-
-    for column in mass_arrays.keys():
-        table_out[column] = mass_arrays[column]
-
-    return table_out
+    return table
 
 
 def get_cumulative(mass_tables, max_n_bins, channels):
@@ -153,9 +148,7 @@ def get_cumulative(mass_tables, max_n_bins, channels):
 
     for b in bins:
         print(f'\rIntegrating bins: {b}/{max_n_bins}', end='')
-        integrated = time_integrate(mass_tables, n_bins=b, channels=channels)
-        integrated.set_index('Mass', inplace=True)
-        cumulative[b] = integrated.to_xarray()
+        cumulative[b] = time_integrate(mass_tables, n_bins=b, channels=channels)
 
     print()
     x = xr.concat(cumulative.values(), dim='n_bins')

@@ -22,7 +22,7 @@ def plot_summary(tables, y_var, prog_table,
 
     parameters
     ----------
-    tables : {model_set: pd.DataFrame}
+    tables : {model_set: xr.Dataset}
         collection of summary_tables to plot
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
@@ -73,7 +73,7 @@ def plot_channels(tables, y_var, prog_table, channels,
 
     parameters
     ----------
-    tables : {model_set: pd.DataFrame}
+    tables : {model_set: xr.Dataset}
         collection of summary_tables to plot
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
@@ -126,7 +126,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
 
     parameters
     ----------
-    tables : {model_set: pd.DataFrame}
+    tables : {model_set: xr.Dataset}
         collection of summary_tables to plot
     y_var : str
     channel : str
