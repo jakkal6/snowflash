@@ -31,9 +31,10 @@ def load_summary_table(tab, detector, time_integral=30):
 
 def load_all_mass_tables(mass_list, tab, detector,
                          output_dir='mass_tables'):
-    """Load time-binned tables for all mass models
+    """Load and combine tables for all mass models
 
-    Returns : {mass: pd.DataFrame}
+    Returns : xr.Dataset
+        3D table with dimensions (mass, n_bins)
 
     parameters
     ----------
@@ -42,7 +43,7 @@ def load_all_mass_tables(mass_list, tab, detector,
     detector : str
     output_dir : str
     """
-    mass_tables = {}
+    tables_dict = {}
     for j, mass in enumerate(mass_list):
         print(f'\rLoading mass tables: {j+1}/{len(mass_list)}', end='')
 
@@ -50,8 +51,13 @@ def load_all_mass_tables(mass_list, tab, detector,
                                 tab=tab,
                                 detector=detector,
                                 output_dir=output_dir)
-        mass_tables[mass] = table
+
+        table.set_index('Time', inplace=True)
+        tables_dict[mass] = table.to_xarray()
+
     print()
+    mass_tables = xr.concat(tables_dict.values(), dim='mass')
+    mass_tables.coords['mass'] = list(mass_list)
 
     return mass_tables
 
