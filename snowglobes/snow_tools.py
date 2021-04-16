@@ -100,37 +100,32 @@ def time_integrate(mass_tables, n_bins, channels):
 
     parameters
     ----------
-    mass_tables : {mass: pd.DataFrame}
-        collection of time-binned mass model tables
+    mass_tables : xr.Dataset
+        3D table of time-binned mass tables
     n_bins : int
         no. of time bins to integrate over. Currently each bin is 5 ms
     channels : [str]
         list of channel names
     """
     channels = ['Total'] + channels
-    mass_list = list(mass_tables.keys())
-    n_models = len(mass_list)
-
     mass_arrays = {}
+
+    time_slice = mass_tables.isel(Time=slice(0, n_bins))
+    totals = time_slice.sum(dim='Time')
+
     for channel in channels:
-        mass_arrays[f'Avg_{channel}'] = np.zeros(n_models)
-        mass_arrays[f'Tot_{channel}'] = np.zeros(n_models)
+        tot = f'Tot_{channel}'
+        avg = f'Avg_{channel}'
 
-    # Fill mass arrays
-    for i, mass in enumerate(mass_list):
-        m_table = mass_tables[mass][:n_bins]
-        tot = m_table.sum()
+        total_counts = totals[tot]
+        total_energy = (time_slice[avg] * time_slice[tot]).sum(dim='Time')
 
-        for channel in channels:
-            tot_key = f'Tot_{channel}'
-            avg_key = f'Avg_{channel}'
+        mass_arrays[tot] = total_counts
+        mass_arrays[avg] = total_energy / total_counts
 
-            mass_arrays[tot_key][i] = tot[tot_key]
-            mass_arrays[avg_key][i] = np.sum(m_table[avg_key] * m_table[tot_key]) / tot[tot_key]
-
-    # Build final table from mass arrays
+    # Build final table
     table_out = pd.DataFrame()
-    table_out['Mass'] = mass_list
+    table_out['Mass'] = mass_tables.mass.values
 
     for column in mass_arrays.keys():
         table_out[column] = mass_arrays[column]
