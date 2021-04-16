@@ -100,10 +100,7 @@ class SnowGlobesData:
         if n_bins is None:
             n_bins = self.n_bins
 
-        ref_table = self.mass_tables[self.model_sets[0]][self.mass_list[0]]
-        t0 = ref_table.loc[0]['Time']
-        t1 = ref_table.loc[n_bins]['Time']
-        print(f'Integrating timebins from {t0:.2f} to {t1:.2f} s')
+        self.print_time_slice(n_bins=n_bins)
 
         tables = {}
         for model_set in self.model_sets:
@@ -121,12 +118,9 @@ class SnowGlobesData:
         if max_n_bins is None:
             max_n_bins = self.n_bins
 
-        ref_table = self.mass_tables[self.model_sets[0]][self.mass_list[0]]
-        t0 = ref_table.loc[0]['Time']
-        t1 = ref_table.loc[max_n_bins]['Time']
-        print(f'Integrating timebins from {t0:.2f} to {t1:.2f} s')
-
+        self.print_time_slice(n_bins=max_n_bins)
         tables = {}
+
         for model_set in self.model_sets:
             print(f'Integrating: {model_set}')
             mass_tables = self.mass_tables[model_set]
@@ -377,3 +371,21 @@ class SnowGlobesData:
         slider.slider.on_changed(update_slider)
 
         return slider
+
+    # ===============================================================
+    #                      Misc.
+    # ===============================================================
+    def print_time_slice(self, n_bins):
+        """Print time limits for given n_bins
+
+        Parameters
+        ----------
+        n_bins : int
+        """
+        model_set = self.model_sets[0]
+        mass = self.mass_list[0]
+        ref_table = self.mass_tables[model_set].sel(mass=mass)
+
+        t0 = ref_table.Time.values[0]
+        t1 = ref_table.Time.values[n_bins]
+        print(f'Using timebins from {t0:.2f} to {t1:.2f} s')
