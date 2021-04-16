@@ -118,7 +118,7 @@ class SnowGlobesData:
         if max_n_bins is None:
             max_n_bins = self.n_bins
 
-        self.print_time_slice(n_bins=max_n_bins)
+        self.print_time_slice(n_bins=max_n_bins-1)
         tables = {}
 
         for model_set in self.model_sets:

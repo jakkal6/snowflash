@@ -200,9 +200,10 @@ def plot_time(mass_tables, y_var, mass,
     y_col = y_column(y_var=y_var, channel=channel)
 
     for model_set, tables in mass_tables.items():
-        table = tables[mass]
+        table = tables.sel(mass=mass)
         ax.step(table['Time'], table[y_col],
-                where='post', label=model_set,
+                where='post',
+                label=model_set,
                 color=config.colors.get(model_set))
 
     plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=y_var,
