@@ -22,7 +22,7 @@ def plot_summary(tables, y_var, prog_table,
 
     parameters
     ----------
-    tables : {model_set: pd.DataFrame}
+    tables : {model_set: xr.Dataset}
         collection of summary_tables to plot
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
@@ -73,7 +73,7 @@ def plot_channels(tables, y_var, prog_table, channels,
 
     parameters
     ----------
-    tables : {model_set: pd.DataFrame}
+    tables : {model_set: xr.Dataset}
         collection of summary_tables to plot
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
@@ -126,7 +126,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
 
     parameters
     ----------
-    tables : {model_set: pd.DataFrame}
+    tables : {model_set: xr.Dataset}
         collection of summary_tables to plot
     y_var : str
     channel : str
@@ -200,9 +200,10 @@ def plot_time(mass_tables, y_var, mass,
     y_col = y_column(y_var=y_var, channel=channel)
 
     for model_set, tables in mass_tables.items():
-        table = tables[mass]
+        table = tables.sel(mass=mass)
         ax.step(table['Time'], table[y_col],
-                where='post', label=model_set,
+                where='post',
+                label=model_set,
                 color=config.colors.get(model_set))
 
     plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=y_var,
