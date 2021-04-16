@@ -29,6 +29,33 @@ def load_summary_table(tab, detector, time_integral=30):
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
+def load_all_mass_tables(mass_list, tab, detector,
+                         output_dir='mass_tables'):
+    """Load time-binned tables for all mass models
+
+    Returns : {mass: pd.DataFrame}
+
+    parameters
+    ----------
+    mass_list : [str]
+    tab : int
+    detector : str
+    output_dir : str
+    """
+    mass_tables = {}
+    for j, mass in enumerate(mass_list):
+        print(f'\rLoading mass tables: {j+1}/{len(mass_list)}', end='')
+
+        table = load_mass_table(mass=mass,
+                                tab=tab,
+                                detector=detector,
+                                output_dir=output_dir)
+        mass_tables[mass] = table
+    print()
+
+    return mass_tables
+
+
 def load_mass_table(mass, tab, detector,
                     output_dir='mass_tables'):
     """Load time-binned table for an individual mass model

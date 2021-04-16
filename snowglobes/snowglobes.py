@@ -83,19 +83,12 @@ class SnowGlobesData:
 
         for i, tab in enumerate(self.tabs):
             model_set = self.model_sets[i]
-            tables[model_set] = {}
-
-            for j, mass in enumerate(self.mass_list):
-                print(f'\rLoading mass tables, {model_set}: {j+1}/{self.n_mass}', end='')
-
-                table = snow_tools.load_mass_table(mass=mass,
-                                                   tab=tab,
-                                                   detector=self.detector,
-                                                   output_dir=self.output_dir)
-                tables[model_set][mass] = table
-
-            print()
-
+            print(f'Loading {model_set}')
+            tables[model_set] = snow_tools.load_all_mass_tables(
+                                                mass_list=self.mass_list,
+                                                tab=tab,
+                                                detector=self.detector,
+                                                output_dir=self.output_dir)
         self.mass_tables = tables
 
     # ===============================================================

@@ -9,7 +9,7 @@ def mixing_fractions(ordering):
     Parameters
     ----------
     """
-    # Capozzi et al. (2017), Nagakura et al. (2021)
+    # Capozzi et al. (2017)
     sin2_12 = 0.297
     sin2_13 = 0.0215
 
@@ -34,6 +34,7 @@ def mixing_fractions(ordering):
 
 def mix_fluences(fluences, ordering):
     """Mix neutrino flavors for MSW oscillations
+        Equations from Nagakura et al. (2021)
 
     Returns: fluence_mix {flavor: [timebins, e_bins]}
 
