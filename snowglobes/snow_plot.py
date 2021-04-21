@@ -17,7 +17,8 @@ def plot_summary(tables, y_var, prog_table,
                  ax=None,
                  legend=True,
                  legend_loc=None,
-                 figsize=None):
+                 figsize=None,
+                 data_only=False):
     """Plot quantity from summary table
 
     parameters
@@ -37,6 +38,7 @@ def plot_summary(tables, y_var, prog_table,
     legend : bool
     legend_loc : int or str
     figsize : (width, height)
+    data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
@@ -48,15 +50,16 @@ def plot_summary(tables, y_var, prog_table,
                 label=model_set,
                 color=config.colors.get(model_set))
 
-    plot_tools.set_ax_all(ax=ax,
-                          x_var=x_var,
-                          y_var=y_var,
-                          x_scale=x_scale,
-                          y_scale=y_scale,
-                          x_lims=x_lims,
-                          y_lims=y_lims,
-                          legend=legend,
-                          legend_loc=legend_loc)
+    if not data_only:
+        plot_tools.set_ax_all(ax=ax,
+                              x_var=x_var,
+                              y_var=y_var,
+                              x_scale=x_scale,
+                              y_scale=y_scale,
+                              x_lims=x_lims,
+                              y_lims=y_lims,
+                              legend=legend,
+                              legend_loc=legend_loc)
 
     return fig, ax
 

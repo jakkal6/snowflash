@@ -150,7 +150,8 @@ class SnowGlobesData:
                      legend=True,
                      legend_loc=None,
                      figsize=None,
-                     ax=None):
+                     ax=None,
+                     data_only=False):
         """Plot quantity from summary table
 
         parameters
@@ -167,6 +168,7 @@ class SnowGlobesData:
         legend_loc : int or str
         figsize : (width, length)
         ax : Axis
+        data_only : bool
         """
         fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
                                          y_var=y_var,
@@ -181,7 +183,8 @@ class SnowGlobesData:
                                          figsize=figsize,
                                          legend=legend,
                                          legend_loc=legend_loc,
-                                         ax=ax)
+                                         ax=ax,
+                                         data_only=data_only)
         return fig, ax
 
     def plot_channels(self, y_var,
