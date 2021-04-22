@@ -58,7 +58,7 @@ class SnowGlobesData:
         if load_data:
             self.load_mass_tables()
             self.integrate_summary()
-            self.prog_table = snow_tools.load_prog_table()
+            self.load_prog_table()
             self.get_channel_fractions()
 
     # ===============================================================
@@ -90,6 +90,12 @@ class SnowGlobesData:
                                                 detector=self.detector,
                                                 output_dir=self.output_dir)
         self.mass_tables = tables
+
+    def load_prog_table(self):
+        """Load progenitor table
+        """
+        prog_table = snow_tools.load_prog_table()
+        self.prog_table = prog_table[prog_table['mass'].isin(self.mass_list)]
 
     # ===============================================================
     #                      Analysis
@@ -299,8 +305,45 @@ class SnowGlobesData:
                                       ax=ax)
         return fig, ax
 
+    def plot_cumulative(self, y_var, mass,
+                        channel='Total',
+                        x_scale=None,
+                        y_scale=None,
+                        ax=None,
+                        linestyle=None):
+        """Plot cumulative quantity versus time
+
+        parameters
+        ----------
+        y_var : 'Tot' or 'Avg'
+        channel : str
+        mass : float or int
+        y_scale : str
+        x_scale : str
+        ax : Axis
+        linestyle : str
+        """
+        if self.cumulative is None:
+            print('Need to extract cumulative data!')
+            self.get_cumulative()
+
+        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=None)
+
+        for model_set, cumulative in self.cumulative.items():
+            snow_plot.plot_cumulative(cumulative=cumulative,
+                                      y_var=y_var,
+                                      mass=mass,
+                                      channel=channel,
+                                      x_scale=x_scale,
+                                      y_scale=y_scale,
+                                      ax=ax,
+                                      label=model_set,
+                                      color=config.colors.get(model_set),
+                                      linestyle=linestyle)
+        return fig
+
     # ===============================================================
-    #                      Plotting
+    #                      Slider Plots
     # ===============================================================
     def plot_summary_slider(self, y_var,
                             channel='Total',

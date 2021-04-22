@@ -216,6 +216,54 @@ def plot_time(mass_tables, y_var, mass,
     return fig, ax
 
 
+def plot_cumulative(cumulative, y_var, mass,
+                    channel='Total',
+                    x_scale=None,
+                    y_scale=None,
+                    ax=None,
+                    label=None,
+                    color=None,
+                    legend=True,
+                    linestyle=None,
+                    figsize=None):
+    """Plot cumulative quantity
+
+    parameters
+    ----------
+    cumulative : xr.Dataset
+        table of cumulative quantities
+    y_var : 'Tot' or 'Avg'
+    mass : float or int
+    channel : str
+    y_scale : str
+    x_scale : str
+    ax : Axis
+    label : str
+    color : str
+    legend : bool
+    linestyle : str
+    figsize : (width, height)
+    """
+    fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
+    y_col = y_column(y_var=y_var, channel=channel)
+
+    table = cumulative.sel(mass=mass)
+    ax.step(table['n_bins'], table[y_col],
+            where='pre',
+            label=label,
+            color=color,
+            linestyle=linestyle)
+
+    plot_tools.set_ax_all(ax=ax,
+                          x_var='timebins [5 ms]',
+                          y_var=y_var,
+                          x_scale=x_scale,
+                          y_scale=y_scale,
+                          legend=legend)
+
+    return fig, ax
+
+
 # ===============================================================
 #                      Misc.
 # ===============================================================
