@@ -320,7 +320,10 @@ class SnowGlobesData:
                   channel='Total',
                   x_scale=None,
                   y_scale=None,
-                  ax=None):
+                  ax=None,
+                  legend=True,
+                  data_only=False,
+                  ):
         """Plot time-dependent quantity from mass tables
 
         parameters
@@ -331,14 +334,29 @@ class SnowGlobesData:
         y_scale : str
         x_scale : str
         ax : Axis
+        legend : bool
+        data_only : bool
         """
-        fig = snow_plot.plot_time(mass_tables=self.mass_tables,
+        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=None)
+
+        for model_set, mass_table in self.mass_tables.items():
+            snow_plot.plot_time(mass_table=mass_table,
+                                y_var=y_var,
+                                mass=mass,
+                                label=model_set,
+                                color=config.colors.get(model_set),
+                                channel=channel,
+                                ax=ax,
+                                data_only=True)
+
+        if not data_only:
+            plot_tools.set_ax_all(ax=ax,
+                                  x_var='Time',
                                   y_var=y_var,
-                                  mass=mass,
-                                  channel=channel,
                                   x_scale=x_scale,
                                   y_scale=y_scale,
-                                  ax=ax)
+                                  legend=legend)
+
         return fig
 
     def plot_cumulative(self, y_var, mass,

@@ -198,19 +198,22 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
     return fig
 
 
-def plot_time(mass_tables, y_var, mass,
+def plot_time(mass_table, y_var, mass,
               channel='Total',
               x_scale=None,
               y_scale=None,
               ax=None,
-              legend=True,
-              figsize=None):
-    """Plot time-dependent quantity from mass tables
+              legend=False,
+              figsize=None,
+              label=None,
+              color=None,
+              data_only=False,
+              ):
+    """Plot time-dependent quantity from mass table
 
     parameters
     ----------
-    mass_tables : {model_set: pd.DataFrame}
-        collection of summary_tables to plot
+    mass_table : pd.DataFrame
     y_var : 'Tot' or 'Avg'
     mass : float or int
     channel : str
@@ -219,21 +222,26 @@ def plot_time(mass_tables, y_var, mass,
     ax : Axis
     legend : bool
     figsize : (width, height)
+    label : str
+    color : str
+    data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
 
-    for model_set, tables in mass_tables.items():
-        table = tables.sel(mass=mass)
-        ax.step(table['Time'], table[y_col],
-                where='post',
-                label=model_set,
-                color=config.colors.get(model_set))
+    table = mass_table.sel(mass=mass)
+    ax.step(table['Time'], table[y_col],
+            where='post',
+            label=label,
+            color=color)
 
-    plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=y_var,
-                          x_scale=x_scale, y_scale=y_scale,
-                          legend=legend)
-
+    if not data_only:
+        plot_tools.set_ax_all(ax=ax,
+                              x_var='Time',
+                              y_var=y_var,
+                              x_scale=x_scale,
+                              y_scale=y_scale,
+                              legend=legend)
     return fig
 
 
