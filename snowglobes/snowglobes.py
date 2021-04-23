@@ -1,8 +1,10 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 # snowglobes
 from . import snow_tools
 from . import snow_plot
+from . import plot_tools
 from . import config
 from .slider import SnowSlider
 
@@ -176,21 +178,30 @@ class SnowGlobesData:
         ax : Axis
         data_only : bool
         """
-        fig = snow_plot.plot_summary(tables=self.summary_tables,
-                                     y_var=y_var,
-                                     channel=channel,
-                                     x_var=x_var,
-                                     prog_table=self.prog_table,
-                                     x_scale=x_scale,
-                                     y_scale=y_scale,
-                                     x_lims=x_lims,
-                                     y_lims=y_lims,
-                                     marker=marker,
-                                     figsize=figsize,
-                                     legend=legend,
-                                     legend_loc=legend_loc,
-                                     ax=ax,
-                                     data_only=data_only)
+        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=figsize)
+
+        for model_set, summary in self.summary_tables.items():
+            snow_plot.plot_summary(summary=summary,
+                                   y_var=y_var,
+                                   channel=channel,
+                                   x_var=x_var,
+                                   prog_table=self.prog_table,
+                                   marker=marker,
+                                   ax=ax,
+                                   label=model_set,
+                                   color=config.colors.get(model_set),
+                                   data_only=True)
+
+        if not data_only:
+            plot_tools.set_ax_all(ax=ax,
+                                  x_var=x_var,
+                                  y_var=y_var,
+                                  x_scale=x_scale,
+                                  y_scale=y_scale,
+                                  x_lims=x_lims,
+                                  y_lims=y_lims,
+                                  legend=legend,
+                                  legend_loc=legend_loc)
         return fig
 
     def plot_channels(self, y_var,
@@ -202,7 +213,11 @@ class SnowGlobesData:
                       x_lims=None,
                       y_lims=None,
                       legend=True,
-                      figsize=None):
+                      legend_loc=None,
+                      figsize=None,
+                      axes=None,
+                      data_only=False,
+                      ):
         """Plot summary variable for all channels
 
         parameters
@@ -216,23 +231,44 @@ class SnowGlobesData:
         x_lims : [low, high]
         y_lims : [low, high]
         legend : bool
+        legend_loc : str or int
         figsize : (width, length)
+        axes : [Axis]
+        data_only : bool
         """
         if channels is None:
             channels = self.channels
 
-        fig = snow_plot.plot_channels(tables=self.summary_tables,
-                                      y_var=y_var,
-                                      channels=channels,
+        fig = None
+        if axes is None:
+            fig, axes = plt.subplots(len(channels), figsize=figsize, sharex=True)
+
+        for model_set, summary in self.summary_tables.items():
+            snow_plot.plot_channels(summary=summary,
+                                    y_var=y_var,
+                                    channels=channels,
+                                    x_var=x_var,
+                                    prog_table=self.prog_table,
+                                    marker=marker,
+                                    figsize=figsize,
+                                    label=model_set,
+                                    color=config.colors.get(model_set),
+                                    legend=False,
+                                    axes=axes,
+                                    data_only=True)
+
+        if not data_only:
+            for i, channel in enumerate(channels):
+                plot_tools.set_ax_all(ax=axes[i],
                                       x_var=x_var,
-                                      prog_table=self.prog_table,
+                                      y_var=y_var,
                                       x_scale=x_scale,
                                       y_scale=y_scale,
                                       x_lims=x_lims,
-                                      y_lims=y_lims,
-                                      marker=marker,
-                                      figsize=figsize,
-                                      legend=legend)
+                                      y_lims=y_lims)
+        if legend:
+            axes[0].legend(loc=legend_loc)
+
         return fig
 
     def plot_difference(self, y_var, ref_model_set,
