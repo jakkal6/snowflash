@@ -9,7 +9,10 @@ Generalised plotting wrappers
 """
 
 
-def setup_subplots(n_sub, max_cols=1, sub_figsize=(6, 5), **kwargs):
+def setup_subplots(n_sub,
+                   max_cols=1,
+                   sub_figsize=(6, 5),
+                   **kwargs):
     """Constructs fig for given number of subplots
 
     returns : fig, ax
@@ -48,9 +51,15 @@ def check_ax(ax, figsize):
     return fig, ax
 
 
-def set_ax_all(ax, x_var=None, y_var=None, x_scale=None, y_scale=None,
-               x_label=None, y_label=None, x_lims=None, y_lims=None,
-               legend=False, legend_loc=None, title=False, title_str=None):
+def set_ax_all(ax,
+               x_var=None, y_var=None,
+               x_scale=None, y_scale=None,
+               x_label=None, y_label=None,
+               x_lims=None, y_lims=None,
+               legend=False,
+               legend_loc=None,
+               title=False,
+               title_str=None):
     """Set all ax properties
 
     parameters
@@ -76,7 +85,9 @@ def set_ax_all(ax, x_var=None, y_var=None, x_scale=None, y_scale=None,
     set_ax_title(ax, string=title_str, title=title)
 
 
-def set_ax_scales(ax, x_var=None, y_var=None, x_scale=None, y_scale=None):
+def set_ax_scales(ax,
+                  x_var=None, y_var=None,
+                  x_scale=None, y_scale=None):
     """Set axis scales (linear, log)
 
     parameters
@@ -109,7 +120,9 @@ def set_ax_title(ax, string, title):
         ax.set_title(string)
 
 
-def set_ax_lims(ax, x_var=None, y_var=None, x_lims=None, y_lims=None):
+def set_ax_lims(ax,
+                x_var=None, y_var=None,
+                x_lims=None, y_lims=None):
     """Set x and y axis limits
 
     parameters
@@ -129,7 +142,9 @@ def set_ax_lims(ax, x_var=None, y_var=None, x_lims=None, y_lims=None):
     ax.set_ylim(y_lims)
 
 
-def set_ax_labels(ax, x_var=None, y_var=None, x_label=None, y_label=None):
+def set_ax_labels(ax,
+                  x_var=None, y_var=None,
+                  x_label=None, y_label=None):
     """Set x and y axis limits
 
     parameters
