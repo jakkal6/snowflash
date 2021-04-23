@@ -6,7 +6,7 @@ from . import config
 from .snow_tools import y_column
 
 
-def plot_summary(tables, y_var, prog_table,
+def plot_summary(summary, y_var, prog_table,
                  channel='Total',
                  x_var='m_fe',
                  x_scale=None,
@@ -17,13 +17,17 @@ def plot_summary(tables, y_var, prog_table,
                  ax=None,
                  legend=True,
                  legend_loc=None,
-                 figsize=None):
+                 figsize=None,
+                 label=None,
+                 color=None,
+                 data_only=False,
+                 ):
     """Plot quantity from summary table
 
     parameters
     ----------
-    tables : {model_set: xr.Dataset}
-        collection of summary_tables to plot
+    summary : xr.Dataset}
+        table of summary quantities
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
     x_var : str
@@ -37,44 +41,51 @@ def plot_summary(tables, y_var, prog_table,
     legend : bool
     legend_loc : int or str
     figsize : (width, height)
+    label : str
+    color : str
+    data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
 
-    for model_set, table in tables.items():
-        ax.plot(prog_table[x_var], table[y_col],
-                marker=marker,
-                ls='none',
-                label=model_set,
-                color=config.colors.get(model_set))
+    ax.plot(prog_table[x_var], summary[y_col],
+            marker=marker,
+            ls='none',
+            label=label,
+            color=color)
 
-    plot_tools.set_ax_all(ax=ax,
-                          x_var=x_var,
-                          y_var=y_var,
-                          x_scale=x_scale,
-                          y_scale=y_scale,
-                          x_lims=x_lims,
-                          y_lims=y_lims,
-                          legend=legend,
-                          legend_loc=legend_loc)
+    if not data_only:
+        plot_tools.set_ax_all(ax=ax,
+                              x_var=x_var,
+                              y_var=y_var,
+                              x_scale=x_scale,
+                              y_scale=y_scale,
+                              x_lims=x_lims,
+                              y_lims=y_lims,
+                              legend=legend,
+                              legend_loc=legend_loc)
 
-    return fig, ax
+    return fig
 
 
-def plot_channels(tables, y_var, prog_table, channels,
+def plot_channels(summary, y_var, prog_table, channels,
                   x_var='m_fe',
                   x_scale=None, y_scale=None,
                   x_lims=None, y_lims=None,
                   marker='.',
-                  legend=True,
+                  legend=False,
                   legend_loc=None,
-                  figsize=None):
+                  figsize=None,
+                  axes=None,
+                  color=None,
+                  label=None,
+                  data_only=False,
+                  ):
     """Plot summary variable for all channels
 
     parameters
     ----------
-    tables : {model_set: xr.Dataset}
-        collection of summary_tables to plot
+    summary : xr.Dataset
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
     channels : [str]
@@ -87,28 +98,41 @@ def plot_channels(tables, y_var, prog_table, channels,
     legend : bool
     legend_loc : int or str
     figsize : (width, height)
+    axes : [Axis]
+        len(axes) must equal len(channels)
+    color : str
+    label : str
+    data_only : bool
     """
-    fig, ax = plt.subplots(len(channels), figsize=figsize, sharex=True)
+    fig = None
+    if axes is None:
+        fig, axes = plt.subplots(len(channels), figsize=figsize, sharex=True)
 
     for i, channel in enumerate(channels):
-        plot_summary(tables=tables,
+        plot_summary(summary=summary,
                      y_var=y_var,
                      channel=channel,
                      x_var=x_var,
                      prog_table=prog_table,
-                     x_scale=x_scale,
-                     y_scale=y_scale,
-                     x_lims=x_lims,
-                     y_lims=y_lims,
                      marker=marker,
-                     legend=False,
-                     ax=ax[i])
+                     color=color,
+                     label=label,
+                     ax=axes[i],
+                     data_only=True)
 
+        if not data_only:
+            plot_tools.set_ax_all(ax=axes[i],
+                                  x_var=x_var,
+                                  y_var=y_var,
+                                  x_scale=x_scale,
+                                  y_scale=y_scale,
+                                  x_lims=x_lims,
+                                  y_lims=y_lims,)
     if legend:
-        ax[0].legend(loc=legend_loc)
+        axes[0].legend(loc=legend_loc)
 
     plt.subplots_adjust(hspace=0)
-    return fig, ax
+    return fig
 
 
 def plot_difference(tables, y_var, prog_table, ref_model_set,
@@ -171,22 +195,25 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
                           y_lims=y_lims,
                           legend=legend)
 
-    return fig, ax
+    return fig
 
 
-def plot_time(mass_tables, y_var, mass,
+def plot_time(mass_table, y_var, mass,
               channel='Total',
               x_scale=None,
               y_scale=None,
               ax=None,
-              legend=True,
-              figsize=None):
-    """Plot time-dependent quantity from mass tables
+              legend=False,
+              figsize=None,
+              label=None,
+              color=None,
+              data_only=False,
+              ):
+    """Plot time-dependent quantity from mass table
 
     parameters
     ----------
-    mass_tables : {model_set: pd.DataFrame}
-        collection of summary_tables to plot
+    mass_table : pd.DataFrame
     y_var : 'Tot' or 'Avg'
     mass : float or int
     channel : str
@@ -195,22 +222,79 @@ def plot_time(mass_tables, y_var, mass,
     ax : Axis
     legend : bool
     figsize : (width, height)
+    label : str
+    color : str
+    data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
 
-    for model_set, tables in mass_tables.items():
-        table = tables.sel(mass=mass)
-        ax.step(table['Time'], table[y_col],
-                where='post',
-                label=model_set,
-                color=config.colors.get(model_set))
+    table = mass_table.sel(mass=mass)
+    ax.step(table['Time'], table[y_col],
+            where='post',
+            label=label,
+            color=color)
 
-    plot_tools.set_ax_all(ax=ax, x_var='Time', y_var=y_var,
-                          x_scale=x_scale, y_scale=y_scale,
-                          legend=legend)
+    if not data_only:
+        plot_tools.set_ax_all(ax=ax,
+                              x_var='Time',
+                              y_var=y_var,
+                              x_scale=x_scale,
+                              y_scale=y_scale,
+                              legend=legend)
+    return fig
 
-    return fig, ax
+
+def plot_cumulative(cumulative, y_var, mass,
+                    channel='Total',
+                    x_scale=None,
+                    y_scale=None,
+                    ax=None,
+                    label=None,
+                    color=None,
+                    legend=True,
+                    linestyle=None,
+                    figsize=None,
+                    data_only=False,
+                    ):
+    """Plot cumulative quantity
+
+    parameters
+    ----------
+    cumulative : xr.Dataset
+        table of cumulative quantities
+    y_var : 'Tot' or 'Avg'
+    mass : float or int
+    channel : str
+    y_scale : str
+    x_scale : str
+    ax : Axis
+    label : str
+    color : str
+    legend : bool
+    linestyle : str
+    figsize : (width, height)
+    data_only : bool
+    """
+    fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
+    y_col = y_column(y_var=y_var, channel=channel)
+
+    table = cumulative.sel(mass=mass)
+    ax.step(table['n_bins'], table[y_col],
+            where='pre',
+            label=label,
+            color=color,
+            linestyle=linestyle)
+
+    if not data_only:
+        plot_tools.set_ax_all(ax=ax,
+                              x_var='timebins [5 ms]',
+                              y_var=y_var,
+                              x_scale=x_scale,
+                              y_scale=y_scale,
+                              legend=legend)
+
+    return fig
 
 
 # ===============================================================

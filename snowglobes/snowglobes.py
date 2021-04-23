@@ -1,8 +1,10 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 # snowglobes
 from . import snow_tools
 from . import snow_plot
+from . import plot_tools
 from . import config
 from .slider import SnowSlider
 
@@ -58,7 +60,7 @@ class SnowGlobesData:
         if load_data:
             self.load_mass_tables()
             self.integrate_summary()
-            self.prog_table = snow_tools.load_prog_table()
+            self.load_prog_table()
             self.get_channel_fractions()
 
     # ===============================================================
@@ -85,11 +87,17 @@ class SnowGlobesData:
             model_set = self.model_sets[i]
             print(f'Loading {model_set}')
             tables[model_set] = snow_tools.load_all_mass_tables(
-                                                mass_list=self.mass_list,
-                                                tab=tab,
-                                                detector=self.detector,
-                                                output_dir=self.output_dir)
+                mass_list=self.mass_list,
+                tab=tab,
+                detector=self.detector,
+                output_dir=self.output_dir)
         self.mass_tables = tables
+
+    def load_prog_table(self):
+        """Load progenitor table
+        """
+        prog_table = snow_tools.load_prog_table()
+        self.prog_table = prog_table[prog_table['mass'].isin(self.mass_list)]
 
     # ===============================================================
     #                      Analysis
@@ -118,7 +126,7 @@ class SnowGlobesData:
         if max_n_bins is None:
             max_n_bins = self.n_bins
 
-        self.print_time_slice(n_bins=max_n_bins-1)
+        self.print_time_slice(n_bins=max_n_bins - 1)
         tables = {}
 
         for model_set in self.model_sets:
@@ -150,7 +158,8 @@ class SnowGlobesData:
                      legend=True,
                      legend_loc=None,
                      figsize=None,
-                     ax=None):
+                     ax=None,
+                     data_only=False):
         """Plot quantity from summary table
 
         parameters
@@ -167,22 +176,33 @@ class SnowGlobesData:
         legend_loc : int or str
         figsize : (width, length)
         ax : Axis
+        data_only : bool
         """
-        fig, ax = snow_plot.plot_summary(tables=self.summary_tables,
-                                         y_var=y_var,
-                                         channel=channel,
-                                         x_var=x_var,
-                                         prog_table=self.prog_table,
-                                         x_scale=x_scale,
-                                         y_scale=y_scale,
-                                         x_lims=x_lims,
-                                         y_lims=y_lims,
-                                         marker=marker,
-                                         figsize=figsize,
-                                         legend=legend,
-                                         legend_loc=legend_loc,
-                                         ax=ax)
-        return fig, ax
+        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=figsize)
+
+        for model_set, summary in self.summary_tables.items():
+            snow_plot.plot_summary(summary=summary,
+                                   y_var=y_var,
+                                   channel=channel,
+                                   x_var=x_var,
+                                   prog_table=self.prog_table,
+                                   marker=marker,
+                                   ax=ax,
+                                   label=model_set,
+                                   color=config.colors.get(model_set),
+                                   data_only=True)
+
+        if not data_only:
+            plot_tools.set_ax_all(ax=ax,
+                                  x_var=x_var,
+                                  y_var=y_var,
+                                  x_scale=x_scale,
+                                  y_scale=y_scale,
+                                  x_lims=x_lims,
+                                  y_lims=y_lims,
+                                  legend=legend,
+                                  legend_loc=legend_loc)
+        return fig
 
     def plot_channels(self, y_var,
                       channels=None,
@@ -193,7 +213,11 @@ class SnowGlobesData:
                       x_lims=None,
                       y_lims=None,
                       legend=True,
-                      figsize=None):
+                      legend_loc=None,
+                      figsize=None,
+                      axes=None,
+                      data_only=False,
+                      ):
         """Plot summary variable for all channels
 
         parameters
@@ -207,24 +231,45 @@ class SnowGlobesData:
         x_lims : [low, high]
         y_lims : [low, high]
         legend : bool
+        legend_loc : str or int
         figsize : (width, length)
+        axes : [Axis]
+        data_only : bool
         """
         if channels is None:
             channels = self.channels
 
-        fig, ax = snow_plot.plot_channels(tables=self.summary_tables,
-                                          y_var=y_var,
-                                          channels=channels,
-                                          x_var=x_var,
-                                          prog_table=self.prog_table,
-                                          x_scale=x_scale,
-                                          y_scale=y_scale,
-                                          x_lims=x_lims,
-                                          y_lims=y_lims,
-                                          marker=marker,
-                                          figsize=figsize,
-                                          legend=legend)
-        return fig, ax
+        fig = None
+        if axes is None:
+            fig, axes = plt.subplots(len(channels), figsize=figsize, sharex=True)
+
+        for model_set, summary in self.summary_tables.items():
+            snow_plot.plot_channels(summary=summary,
+                                    y_var=y_var,
+                                    channels=channels,
+                                    x_var=x_var,
+                                    prog_table=self.prog_table,
+                                    marker=marker,
+                                    figsize=figsize,
+                                    label=model_set,
+                                    color=config.colors.get(model_set),
+                                    legend=False,
+                                    axes=axes,
+                                    data_only=True)
+
+        if not data_only:
+            for i, channel in enumerate(channels):
+                plot_tools.set_ax_all(ax=axes[i],
+                                      x_var=x_var,
+                                      y_var=y_var,
+                                      x_scale=x_scale,
+                                      y_scale=y_scale,
+                                      x_lims=x_lims,
+                                      y_lims=y_lims)
+        if legend:
+            axes[0].legend(loc=legend_loc)
+
+        return fig
 
     def plot_difference(self, y_var, ref_model_set,
                         channel='Total',
@@ -255,27 +300,30 @@ class SnowGlobesData:
         figsize : (width, length)
         ax : Axis
         """
-        fig, ax = snow_plot.plot_difference(tables=self.summary_tables,
-                                            y_var=y_var,
-                                            channel=channel,
-                                            ref_model_set=ref_model_set,
-                                            x_var=x_var,
-                                            prog_table=self.prog_table,
-                                            x_scale=x_scale,
-                                            y_scale=y_scale,
-                                            x_lims=x_lims,
-                                            y_lims=y_lims,
-                                            marker=marker,
-                                            figsize=figsize,
-                                            legend=legend,
-                                            ax=ax)
-        return fig, ax
+        fig = snow_plot.plot_difference(tables=self.summary_tables,
+                                        y_var=y_var,
+                                        channel=channel,
+                                        ref_model_set=ref_model_set,
+                                        x_var=x_var,
+                                        prog_table=self.prog_table,
+                                        x_scale=x_scale,
+                                        y_scale=y_scale,
+                                        x_lims=x_lims,
+                                        y_lims=y_lims,
+                                        marker=marker,
+                                        figsize=figsize,
+                                        legend=legend,
+                                        ax=ax)
+        return fig
 
     def plot_time(self, y_var, mass,
                   channel='Total',
                   x_scale=None,
                   y_scale=None,
-                  ax=None):
+                  ax=None,
+                  legend=True,
+                  data_only=False,
+                  ):
         """Plot time-dependent quantity from mass tables
 
         parameters
@@ -286,18 +334,84 @@ class SnowGlobesData:
         y_scale : str
         x_scale : str
         ax : Axis
+        legend : bool
+        data_only : bool
         """
-        fig, ax = snow_plot.plot_time(mass_tables=self.mass_tables,
+        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=None)
+
+        for model_set, mass_table in self.mass_tables.items():
+            snow_plot.plot_time(mass_table=mass_table,
+                                y_var=y_var,
+                                mass=mass,
+                                label=model_set,
+                                color=config.colors.get(model_set),
+                                channel=channel,
+                                ax=ax,
+                                data_only=True)
+
+        if not data_only:
+            plot_tools.set_ax_all(ax=ax,
+                                  x_var='Time',
+                                  y_var=y_var,
+                                  x_scale=x_scale,
+                                  y_scale=y_scale,
+                                  legend=legend)
+
+        return fig
+
+    def plot_cumulative(self, y_var, mass,
+                        channel='Total',
+                        x_scale=None,
+                        y_scale=None,
+                        ax=None,
+                        legend=True,
+                        linestyle=None,
+                        data_only=False,
+                        ):
+        """Plot cumulative quantity versus time
+
+        parameters
+        ----------
+        y_var : 'Tot' or 'Avg'
+        channel : str
+        mass : float or int
+        y_scale : str
+        x_scale : str
+        ax : Axis
+        legend : bool
+        linestyle : str
+        data_only : bool
+        """
+        if self.cumulative is None:
+            print('Need to extract cumulative data!')
+            self.get_cumulative()
+
+        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=None)
+
+        for model_set, cumulative in self.cumulative.items():
+            snow_plot.plot_cumulative(cumulative=cumulative,
                                       y_var=y_var,
                                       mass=mass,
                                       channel=channel,
                                       x_scale=x_scale,
                                       y_scale=y_scale,
-                                      ax=ax)
-        return fig, ax
+                                      ax=ax,
+                                      label=model_set,
+                                      color=config.colors.get(model_set),
+                                      linestyle=linestyle,
+                                      data_only=True)
+
+        if not data_only:
+            plot_tools.set_ax_all(ax=ax,
+                                  x_var='timebins [5 ms]',
+                                  y_var=y_var,
+                                  x_scale=x_scale,
+                                  y_scale=y_scale,
+                                  legend=legend)
+        return fig
 
     # ===============================================================
-    #                      Plotting
+    #                      Slider Plots
     # ===============================================================
     def plot_summary_slider(self, y_var,
                             channel='Total',
@@ -330,6 +444,7 @@ class SnowGlobesData:
         legend_loc : int or str
         figsize : (width, length)
         """
+
         def update_slider(n_bins):
             n_bins = int(n_bins)
 
@@ -350,7 +465,7 @@ class SnowGlobesData:
         y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
         slider = SnowSlider(y_vars=[y_col],
-                            n_bins=np.arange(1, self.n_bins+1),
+                            n_bins=np.arange(1, self.n_bins + 1),
                             model_sets=self.model_sets,
                             x_factor=x_factor,
                             y_factor=y_factor)
