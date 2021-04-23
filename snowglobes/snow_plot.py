@@ -61,7 +61,7 @@ def plot_summary(tables, y_var, prog_table,
                               legend=legend,
                               legend_loc=legend_loc)
 
-    return fig, ax
+    return fig
 
 
 def plot_channels(tables, y_var, prog_table, channels,
@@ -111,7 +111,7 @@ def plot_channels(tables, y_var, prog_table, channels,
         ax[0].legend(loc=legend_loc)
 
     plt.subplots_adjust(hspace=0)
-    return fig, ax
+    return fig
 
 
 def plot_difference(tables, y_var, prog_table, ref_model_set,
@@ -174,7 +174,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
                           y_lims=y_lims,
                           legend=legend)
 
-    return fig, ax
+    return fig
 
 
 def plot_time(mass_tables, y_var, mass,
@@ -213,7 +213,7 @@ def plot_time(mass_tables, y_var, mass,
                           x_scale=x_scale, y_scale=y_scale,
                           legend=legend)
 
-    return fig, ax
+    return fig
 
 
 def plot_cumulative(cumulative, y_var, mass,
@@ -261,7 +261,7 @@ def plot_cumulative(cumulative, y_var, mass,
                           y_scale=y_scale,
                           legend=legend)
 
-    return fig, ax
+    return fig
 
 
 # ===============================================================
