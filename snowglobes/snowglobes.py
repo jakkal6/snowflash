@@ -265,7 +265,8 @@ class SnowGlobesData:
                                       x_scale=x_scale,
                                       y_scale=y_scale,
                                       x_lims=x_lims,
-                                      y_lims=y_lims)
+                                      y_lims=y_lims,
+                                      y_label=f'{y_var} ({channel})')
         if legend:
             axes[0].legend(loc=legend_loc)
 
