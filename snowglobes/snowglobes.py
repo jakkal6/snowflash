@@ -364,7 +364,10 @@ class SnowGlobesData:
                         x_scale=None,
                         y_scale=None,
                         ax=None,
-                        linestyle=None):
+                        legend=True,
+                        linestyle=None,
+                        data_only=False,
+                        ):
         """Plot cumulative quantity versus time
 
         parameters
@@ -375,7 +378,9 @@ class SnowGlobesData:
         y_scale : str
         x_scale : str
         ax : Axis
+        legend : bool
         linestyle : str
+        data_only : bool
         """
         if self.cumulative is None:
             print('Need to extract cumulative data!')
@@ -393,7 +398,16 @@ class SnowGlobesData:
                                       ax=ax,
                                       label=model_set,
                                       color=config.colors.get(model_set),
-                                      linestyle=linestyle)
+                                      linestyle=linestyle,
+                                      data_only=True)
+
+        if not data_only:
+            plot_tools.set_ax_all(ax=ax,
+                                  x_var='timebins [5 ms]',
+                                  y_var=y_var,
+                                  x_scale=x_scale,
+                                  y_scale=y_scale,
+                                  legend=legend)
         return fig
 
     # ===============================================================

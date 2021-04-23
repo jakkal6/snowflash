@@ -254,7 +254,9 @@ def plot_cumulative(cumulative, y_var, mass,
                     color=None,
                     legend=True,
                     linestyle=None,
-                    figsize=None):
+                    figsize=None,
+                    data_only=False,
+                    ):
     """Plot cumulative quantity
 
     parameters
@@ -272,6 +274,7 @@ def plot_cumulative(cumulative, y_var, mass,
     legend : bool
     linestyle : str
     figsize : (width, height)
+    data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
@@ -283,12 +286,13 @@ def plot_cumulative(cumulative, y_var, mass,
             color=color,
             linestyle=linestyle)
 
-    plot_tools.set_ax_all(ax=ax,
-                          x_var='timebins [5 ms]',
-                          y_var=y_var,
-                          x_scale=x_scale,
-                          y_scale=y_scale,
-                          legend=legend)
+    if not data_only:
+        plot_tools.set_ax_all(ax=ax,
+                              x_var='timebins [5 ms]',
+                              y_var=y_var,
+                              x_scale=x_scale,
+                              y_scale=y_scale,
+                              legend=legend)
 
     return fig
 
