@@ -18,8 +18,11 @@ def analyze_output(a, m, output, detector, channel_groups):
     time = np.loadtxt(time_filepath, skiprows=1, usecols=[1], unpack=True)
     n_time = len(time)
 
-    energy_bins = load_energy_bins(channel=channels[0], i=1,
-                                   a=a, m=m, detector=detector)
+    energy_bins = load_energy_bins(channel=channels[0],
+                                   i=1,
+                                   a=a,
+                                   m=m,
+                                   detector=detector)
     n_bins = len(energy_bins)
 
     time_totals = {'Total': np.zeros(n_time)}
@@ -29,9 +32,11 @@ def analyze_output(a, m, output, detector, channel_groups):
         time_totals[group] = np.zeros(n_time)
         time_avg[group] = np.zeros(n_time)
 
-    for i in range(1, n_time + 1):
+    for i in range(n_time):
         channel_counts = load_channel_counts(channels=channels,
-                                             i=i, a=a, m=m,
+                                             i=i+1,
+                                             a=a,
+                                             m=m,
                                              detector=detector)
 
         group_counts = get_group_counts(channel_counts,
@@ -44,15 +49,18 @@ def analyze_output(a, m, output, detector, channel_groups):
                             energy_bins=energy_bins)
 
         for group in group_totals:
-            time_totals[group][i-1] = group_totals[group]
-            time_avg[group][i-1] = group_avg[group]
+            time_totals[group][i] = group_totals[group]
+            time_avg[group][i] = group_avg[group]
 
     time_table = create_time_table(timesteps=time,
                                    time_totals=time_totals,
                                    time_avg=time_avg)
 
-    save_time_table(table=time_table, detector=detector,
-                    a=a, m=m, output=output)
+    save_time_table(table=time_table,
+                    detector=detector,
+                    a=a,
+                    m=m,
+                    output=output)
 
 
 # ===========================================================
