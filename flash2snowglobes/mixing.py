@@ -1,4 +1,28 @@
-import numpy as np
+
+
+def mix_fluences(fluences, ordering):
+    """Mix neutrino flavors for MSW oscillations
+        See also:
+            - Dighe & Smirnov (2000),
+            - Nagakura et al. (2021)
+
+    Returns: fluence_mix {flavor: [timebins, e_bins]}
+
+    Parameters
+    ----------
+    fluences : {flavor: [timebins, e_bins]}
+    ordering : 'normal', 'inverted', or 'none'
+    """
+    fluence_mix = {}
+    p, pbar = mixing_fractions(ordering=ordering)
+
+    # Note: input heavy flavor x=xbar is assumed
+    fluence_mix['e'] = p*fluences['e'] + (1 - p)*fluences['x']
+    fluence_mix['a'] = pbar*fluences['a'] + (1 - pbar)*fluences['x']
+    fluence_mix['x'] = 0.5*(1 - p)*fluences['e'] + 0.5*(1 + p)*fluences['x']
+    fluence_mix['ax'] = 0.5*(1 - pbar)*fluences['a'] + 0.5*(1 + pbar)*fluences['x']
+
+    return fluence_mix
 
 
 def mixing_fractions(ordering):
@@ -8,6 +32,7 @@ def mixing_fractions(ordering):
 
     Parameters
     ----------
+    ordering : 'normal', 'inverted', or 'none'
     """
     # Capozzi et al. (2017)
     sin2_12 = 0.297
@@ -30,26 +55,3 @@ def mixing_fractions(ordering):
         print('Using no mixing')
 
     return p, pbar
-
-
-def mix_fluences(fluences, ordering):
-    """Mix neutrino flavors for MSW oscillations
-        Equations from Nagakura et al. (2021)
-
-    Returns: fluence_mix {flavor: [timebins, e_bins]}
-
-    Parameters
-    ----------
-    fluences : {flavor: [timebins, e_bins]}
-    ordering : 'normal', 'inverted', or 'none'
-    """
-    fluence_mix = {}
-    p, pbar = mixing_fractions(ordering=ordering)
-
-    # Note: input heavy flavor x=xbar is assumed
-    fluence_mix['e'] = p*fluences['e'] + (1 - p)*fluences['x']
-    fluence_mix['a'] = pbar*fluences['a'] + (1 - pbar)*fluences['x']
-    fluence_mix['x'] = 0.5*(1 - p)*fluences['e'] + 0.5*(1 + p)*fluences['x']
-    fluence_mix['ax'] = 0.5*(1 - pbar)*fluences['a'] + 0.5*(1 + pbar)*fluences['x']
-
-    return fluence_mix
