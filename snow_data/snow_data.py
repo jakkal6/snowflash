@@ -9,7 +9,7 @@ from . import config
 from .slider import SnowSlider
 
 
-class SnowGlobesData:
+class SnowData:
     def __init__(self,
                  model_sets=('LMP', 'LMP+N50', 'SNA'),
                  tabs=(1, 2, 3),
