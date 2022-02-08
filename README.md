@@ -1,5 +1,7 @@
 # flash_snowglobes
 
+[![DOI](https://zenodo.org/badge/342716130.svg)](https://zenodo.org/badge/latestdoi/342716130)
+
 Tools for running [SNOwGLoBES](https://github.com/SNOwGLoBES/snowglobes) on FLASH models to predict neutrino observables.
 Contains two packages:
 
