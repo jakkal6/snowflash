@@ -185,27 +185,18 @@ def get_channel_fractions(tables, channels):
 # ===============================================================
 #                      Paths
 # ===============================================================
-def ecrate_path():
-    """Return path to ecRateStudy repo
-
-    Returns : str
-    """
-    try:
-        path = os.environ['ECRATE']
-    except KeyError:
-        raise EnvironmentError('Environment variable ECRATE not set. '
-                               'Set path to ecRateStudy directory, e.g. '
-                               '"export ECRATE=${HOME}/projects/ecRateStudy"')
-    return path
-
-
 def data_path():
     """Return path to Snowglobes data
 
     Returns : str
     """
-    path = ecrate_path()
-    return os.path.join(path, 'plotRoutines', 'SnowglobesData')
+    try:
+        path = os.environ['SNOWGLOBES_DATA']
+    except KeyError:
+        raise EnvironmentError('Environment variable SNOWGLOBES_DATA not set. '
+                               'Set path to snowglobes data directory, e.g. '
+                               '"export SNOWGLOBES_DATA=${HOME}/snowglobes/output"')
+    return path
 
 
 def prog_path():
@@ -213,8 +204,8 @@ def prog_path():
 
     Returns : str
     """
-    path = ecrate_path()
-    return os.path.join(path, 'plotRoutines', 'data', 'progenitor_table.dat')
+    path = data_path()
+    return os.path.join(path, 'progenitor_table.dat')
 
 
 def y_column(y_var, channel):
