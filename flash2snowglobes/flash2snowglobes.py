@@ -154,7 +154,7 @@ for tab in tabs:
         #  Extract snowglobes output
         print('=== Analysing output ===')
         analysis.analyze_output(tab=tab,
-                                m=mass,
+                                mass=mass,
                                 detector=detector,
                                 channel_groups=channel_groups,
                                 output=output)

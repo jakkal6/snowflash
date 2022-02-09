@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def analyze_output(tab,
-                   m,
+                   mass,
                    output,
                    detector,
                    channel_groups):
@@ -16,21 +16,21 @@ def analyze_output(tab,
     parameters
     ----------
     tab : int
-    m : float or int
+    mass : float or int
     output : str
     detector : str
     channel_groups : {}
     """
     channels = get_all_channels(channel_groups)
 
-    time_filepath = os.path.join('./fluxes/', f'pinched_tab{tab}_m{m}_key.dat')
+    time_filepath = os.path.join('./fluxes/', f'pinched_tab{tab}_m{mass}_key.dat')
     time = np.loadtxt(time_filepath, skiprows=1, usecols=[1], unpack=True)
     n_time = len(time)
 
     energy_bins = load_energy_bins(channel=channels[0],
                                    i=1,
                                    tab=tab,
-                                   m=m,
+                                   mass=mass,
                                    detector=detector)
     n_bins = len(energy_bins)
 
@@ -45,7 +45,7 @@ def analyze_output(tab,
         channel_counts = load_channel_counts(channels=channels,
                                              i=i+1,
                                              tab=tab,
-                                             m=m,
+                                             mass=mass,
                                              detector=detector)
 
         group_counts = get_group_counts(channel_counts,
@@ -68,7 +68,7 @@ def analyze_output(tab,
     save_time_table(table=time_table,
                     detector=detector,
                     tab=tab,
-                    m=m,
+                    mass=mass,
                     output=output)
 
 
@@ -85,33 +85,33 @@ def get_all_channels(groups):
     return channels
 
 
-def load_channel_counts(channels, i, tab, m, detector):
+def load_channel_counts(channels, i, tab, mass, detector):
     """Load all raw channel counts into dict
     """
     channel_counts = {}  # arrays of channel counts per energy bin
     for chan in channels:
         channel_counts[chan] = load_channel_dat(channel=chan, i=i, tab=tab,
-                                                m=m, detector=detector)
+                                                mass=mass, detector=detector)
     return channel_counts
 
 
-def load_channel_dat(channel, i, tab, m, detector):
+def load_channel_dat(channel, i, tab, mass, detector):
     """Load array of detection counts per energy bin
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, tab=tab, m=m, detector=detector)
+    filepath = channel_dat_filepath(channel=channel, i=i, tab=tab, mass=mass, detector=detector)
     return np.genfromtxt(filepath, skip_footer=2, usecols=[1], unpack=True)
 
 
-def channel_dat_filepath(channel, i, tab, m, detector):
+def channel_dat_filepath(channel, i, tab, mass, detector):
     """Return filepath to snowglobes output file
     """
-    return f'./out/pinched_tab{tab}_m{m}_{i}_{channel}_{detector}_events_smeared.dat'
+    return f'./out/pinched_tab{tab}_m{mass}_{i}_{channel}_{detector}_events_smeared.dat'
 
 
-def load_energy_bins(channel, i, tab, m, detector):
+def load_energy_bins(channel, i, tab, mass, detector):
     """Load array of energy bins (MeV) from a snowglobes output file
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, tab=tab, m=m, detector=detector)
+    filepath = channel_dat_filepath(channel=channel, i=i, tab=tab, mass=mass, detector=detector)
     energy_bins = np.genfromtxt(filepath, skip_footer=2, usecols=[0], unpack=True)
     return energy_bins * 1000
 
@@ -180,11 +180,11 @@ def create_time_table(timesteps, time_totals, time_avg):
     return table
 
 
-def save_time_table(table, detector, tab, m, output):
+def save_time_table(table, detector, tab, mass, output):
     """Save time-dependent table to file
     """
     mset = {1: 'LMP', 2: 'LMP+N50', 3: 'SNA'}[tab]
-    filepath = os.path.join(output, f"{detector}_analysis_{mset}_m{m}.dat")
+    filepath = os.path.join(output, f"{detector}_analysis_{mset}_m{mass}.dat")
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:
@@ -194,10 +194,10 @@ def save_time_table(table, detector, tab, m, output):
 # ===========================================================
 #                   integrated data
 # ===========================================================
-def write_to_integrated_file(m, integrated_avg, integrated_totals, integrated_file):
+def write_to_integrated_file(mass, integrated_avg, integrated_totals, integrated_file):
     """Write line to time-integrated dat file
     """
-    line = f'{m}\t'
+    line = f'{mass}\t'
 
     for group, value in integrated_avg.items():
         line += f'{value}\t'
