@@ -3,7 +3,10 @@ message: "If you use this software, please cite it as below."
 authors:
   - family-names: Johnston
     given-names: Zac
-    orcid: https://orcid.org/0000-0003-4023-4488
+    orcid: https://orcid.org/0000-0003-4023-4488    
+  - family-names: Warren
+    given-names: MacKenzie
+    orcid: https://orcid.org/0000-0001-9440-6017
 title: flash_snowglobes
 version: v0.2.2
 date-released: 2022-02-07
