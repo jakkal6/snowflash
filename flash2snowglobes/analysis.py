@@ -174,7 +174,8 @@ def create_time_table(timesteps, time_totals, time_avg):
 def save_time_table(table, detector, a, m, output):
     """Save time-dependent table to file
     """
-    filepath = os.path.join(output, f"{detector}_analysis_tab{a}_m{m}.dat")
+    mset = {1: 'LMP', 2: 'LMP+N50', 3: 'SNA'}[a]
+    filepath = os.path.join(output, f"{detector}_analysis_{mset}_m{m}.dat")
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:
