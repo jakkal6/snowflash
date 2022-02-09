@@ -11,25 +11,29 @@ Tools for handling snowglobes data
 # ===============================================================
 #                      Load Tables
 # ===============================================================
-def load_summary_table(tab, detector, time_integral=30):
+def load_summary_table(model_set,
+                       detector,
+                       time_integral=30):
     """Load time-integrated summary table containing all mass models
 
     Returns : pd.DataFrame
 
     parameters
     ----------
-    tab : int
+    model_set : str
     detector : str
     time_integral : int
         time integrated over post-bounce (milliseconds)
     """
     path = data_path()
-    filename = f'{detector}_analysis_{time_integral}ms_a{tab}.dat'
+    filename = f'{detector}_analysis_{model_set}_{time_integral}ms.dat'
     filepath = os.path.join(path, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
-def load_all_mass_tables(mass_list, tab, detector,
+def load_all_mass_tables(mass_list,
+                         model_set,
+                         detector,
                          output_dir='mass_tables'):
     """Load and combine tables for all mass models
 
@@ -39,7 +43,7 @@ def load_all_mass_tables(mass_list, tab, detector,
     parameters
     ----------
     mass_list : [str]
-    tab : int
+    model_set : str
     detector : str
     output_dir : str
     """
@@ -48,7 +52,7 @@ def load_all_mass_tables(mass_list, tab, detector,
         print(f'\rLoading mass tables: {j+1}/{len(mass_list)}', end='')
 
         table = load_mass_table(mass=mass,
-                                tab=tab,
+                                model_set=model_set,
                                 detector=detector,
                                 output_dir=output_dir)
 
@@ -62,7 +66,9 @@ def load_all_mass_tables(mass_list, tab, detector,
     return mass_tables
 
 
-def load_mass_table(mass, tab, detector,
+def load_mass_table(mass,
+                    model_set,
+                    detector,
                     output_dir='mass_tables'):
     """Load time-binned table for an individual mass model
 
@@ -71,12 +77,12 @@ def load_mass_table(mass, tab, detector,
     parameters
     ----------
     mass : str
-    tab : int
+    model_set : str
     detector : str
     output_dir : str
     """
     path = data_path()
-    filename = f'{detector}_analysis_tab{tab}_m{mass}.dat'
+    filename = f'{detector}_analysis_{model_set}_m{mass}.dat'
     filepath = os.path.join(path, output_dir, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 

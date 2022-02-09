@@ -12,7 +12,6 @@ from .slider import SnowSlider
 class SnowData:
     def __init__(self,
                  model_sets=('LMP', 'LMP+N50', 'SNA'),
-                 tabs=(1, 2, 3),
                  detector='ar40kt',
                  mass_list=None,
                  load_data=True,
@@ -25,8 +24,6 @@ class SnowData:
         ----------
         model_sets : [str]
             Labels for model sets
-        tabs : [int]
-            filename IDs that correspond to the model_sets
         detector : str
             Type of neutrino detector used in snowglobes
         mass_list : [float]
@@ -40,7 +37,6 @@ class SnowData:
         """
         self.detector = detector
         self.model_sets = model_sets
-        self.tabs = tabs
         self.output_dir = output_dir
         self.n_bins = n_bins
         self.channels = config.channels[detector]
@@ -72,9 +68,8 @@ class SnowData:
         print('Loading summary tables')
         tables = dict.fromkeys(self.model_sets)
 
-        for i, tab in enumerate(self.tabs):
-            model_set = self.model_sets[i]
-            tables[model_set] = snow_tools.load_summary_table(tab=tab,
+        for model_set in self.model_sets:
+            tables[model_set] = snow_tools.load_summary_table(model_set=model_set,
                                                               detector=self.detector)
         self.summary_tables = tables
 
@@ -83,14 +78,15 @@ class SnowData:
         """
         tables = dict.fromkeys(self.model_sets)
 
-        for i, tab in enumerate(self.tabs):
-            model_set = self.model_sets[i]
+        for model_set in self.model_sets:
             print(f'Loading {model_set}')
+
             tables[model_set] = snow_tools.load_all_mass_tables(
-                mass_list=self.mass_list,
-                tab=tab,
-                detector=self.detector,
-                output_dir=self.output_dir)
+                                                    mass_list=self.mass_list,
+                                                    model_set=model_set,
+                                                    detector=self.detector,
+                                                    output_dir=self.output_dir)
+
         self.mass_tables = tables
 
     def load_prog_table(self):
