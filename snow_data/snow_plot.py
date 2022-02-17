@@ -199,22 +199,22 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
     return fig
 
 
-def plot_time(mass_table, y_var, mass,
-              channel='Total',
-              x_scale=None,
-              y_scale=None,
-              ax=None,
-              legend=False,
-              figsize=None,
-              label=None,
-              color=None,
-              data_only=False,
-              ):
-    """Plot time-dependent quantity from mass table
+def plot_timebin(timebin_table, y_var, mass,
+                 channel='Total',
+                 x_scale=None,
+                 y_scale=None,
+                 ax=None,
+                 legend=False,
+                 figsize=None,
+                 label=None,
+                 color=None,
+                 data_only=False,
+                 ):
+    """Plot timebinned variable from table
 
     parameters
     ----------
-    mass_table : pd.DataFrame
+    timebin_table : pd.DataFrame
     y_var : 'Tot' or 'Avg'
     mass : float or int
     channel : str
@@ -230,7 +230,7 @@ def plot_time(mass_table, y_var, mass,
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
 
-    table = mass_table.sel(mass=mass)
+    table = timebin_table.sel(mass=mass)
     ax.step(table['Time'], table[y_col],
             where='post',
             label=label,

@@ -14,7 +14,7 @@ Tools for handling snowglobes data
 def load_integrated_table(model_set,
                           detector,
                           time_integral=30):
-    """Load time-integrated table containing all mass models
+    """Load time-integrated table containing all models
 
     Returns : pd.DataFrame
 
@@ -31,11 +31,11 @@ def load_integrated_table(model_set,
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
-def load_all_mass_tables(mass_list,
-                         model_set,
-                         detector,
-                         output_dir='mass_tables'):
-    """Load and combine tables for all mass models
+def load_all_timebin_tables(mass_list,
+                            model_set,
+                            detector,
+                            output_dir='timebin_tables'):
+    """Load and combine timebinned tables for all models
 
     Returns : xr.Dataset
         3D table with dimensions (mass, n_bins)
@@ -49,28 +49,28 @@ def load_all_mass_tables(mass_list,
     """
     tables_dict = {}
     for j, mass in enumerate(mass_list):
-        print(f'\rLoading mass tables: {j+1}/{len(mass_list)}', end='')
+        print(f'\rLoading timebin tables: {j+1}/{len(mass_list)}', end='')
 
-        table = load_mass_table(mass=mass,
-                                model_set=model_set,
-                                detector=detector,
-                                output_dir=output_dir)
+        table = load_timebin_table(mass=mass,
+                                   model_set=model_set,
+                                   detector=detector,
+                                   output_dir=output_dir)
 
         table.set_index('Time', inplace=True)
         tables_dict[mass] = table.to_xarray()
 
     print()
-    mass_tables = xr.concat(tables_dict.values(), dim='mass')
-    mass_tables.coords['mass'] = list(mass_list)
+    timebin_tables = xr.concat(tables_dict.values(), dim='mass')
+    timebin_tables.coords['mass'] = list(mass_list)
 
-    return mass_tables
+    return timebin_tables
 
 
-def load_mass_table(mass,
-                    model_set,
-                    detector,
-                    output_dir='mass_tables'):
-    """Load time-binned table for an individual mass model
+def load_timebin_table(mass,
+                       model_set,
+                       detector,
+                       output_dir='timebin_tables'):
+    """Load timebinned table for an individual model
 
     Returns : pd.DataFrame
 
@@ -99,7 +99,7 @@ def load_prog_table():
 # ===============================================================
 #                      Analysis
 # ===============================================================
-def time_integrate(mass_tables, n_bins, channels):
+def time_integrate(timebin_tables, n_bins, channels):
     """Integrate a set of models over a given no. of time bins
 
     Returns : xr.Dataset
@@ -107,8 +107,8 @@ def time_integrate(mass_tables, n_bins, channels):
 
     parameters
     ----------
-    mass_tables : xr.Dataset
-        3D table of time-binned mass tables, dim: [mass, time]
+    timebin_tables : xr.Dataset
+        3D table of timebinned models, dim: [mass, time]
     n_bins : int
         no. of time bins to integrate over. Currently each bin is 5 ms
     channels : [str]
@@ -117,7 +117,7 @@ def time_integrate(mass_tables, n_bins, channels):
     channels = ['Total'] + channels
     mass_arrays = {}
 
-    time_slice = mass_tables.isel(Time=slice(0, n_bins))
+    time_slice = timebin_tables.isel(Time=slice(0, n_bins))
     totals = time_slice.sum(dim='Time')
     table = xr.Dataset()
 
@@ -134,7 +134,7 @@ def time_integrate(mass_tables, n_bins, channels):
     return table
 
 
-def get_cumulative(mass_tables, max_n_bins, channels):
+def get_cumulative(timebin_tables, max_n_bins, channels):
     """Calculate cumulative neutrino counts for each time bin
 
     Returns : xr.Dataset
@@ -142,8 +142,8 @@ def get_cumulative(mass_tables, max_n_bins, channels):
 
     parameters
     ----------
-    mass_tables : {mass: pd.DataFrame}
-        collection of time-binned mass model tables
+    timebin_tables : {mass: pd.DataFrame}
+        collection of timebinned model tables
     max_n_bins : int
         maximum time bins to integrate up to
     channels : [str]
@@ -154,7 +154,7 @@ def get_cumulative(mass_tables, max_n_bins, channels):
 
     for b in bins:
         print(f'\rIntegrating bins: {b}/{max_n_bins}', end='')
-        cumulative[b] = time_integrate(mass_tables, n_bins=b, channels=channels)
+        cumulative[b] = time_integrate(timebin_tables, n_bins=b, channels=channels)
 
     print()
     x = xr.concat(cumulative.values(), dim='n_bins')

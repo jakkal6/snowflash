@@ -15,7 +15,7 @@ class SnowData:
                  detector='ar40kt',
                  mass_list=None,
                  load_data=True,
-                 output_dir='mass_tables_nomix',
+                 output_dir='timebin_tables_nomix',
                  n_bins=20,
                  ):
         """Collection of SnowGlobes data
@@ -43,7 +43,7 @@ class SnowData:
         self.mass_list = mass_list
 
         self.integrated_tables = None
-        self.mass_tables = None
+        self.timebin_tables = None
         self.prog_table = None
         self.channel_fracs = None
         self.cumulative = None
@@ -54,7 +54,7 @@ class SnowData:
         self.n_mass = len(self.mass_list)
 
         if load_data:
-            self.load_mass_tables()
+            self.load_timebin_tables()
             self.integrate_timebins()
             self.load_prog_table()
             self.get_channel_fractions()
@@ -73,21 +73,21 @@ class SnowData:
                                                                  detector=self.detector)
         self.integrated_tables = tables
 
-    def load_mass_tables(self):
-        """Load time-dependent tables for all individual mass models
+    def load_timebin_tables(self):
+        """Load timebinned tables for all models
         """
         tables = dict.fromkeys(self.model_sets)
 
         for model_set in self.model_sets:
             print(f'Loading {model_set}')
 
-            tables[model_set] = snow_tools.load_all_mass_tables(
-                                                    mass_list=self.mass_list,
-                                                    model_set=model_set,
-                                                    detector=self.detector,
-                                                    output_dir=self.output_dir)
+            tables[model_set] = snow_tools.load_all_timebin_tables(
+                mass_list=self.mass_list,
+                model_set=model_set,
+                detector=self.detector,
+                output_dir=self.output_dir)
 
-        self.mass_tables = tables
+        self.timebin_tables = tables
 
     def load_prog_table(self):
         """Load progenitor table
@@ -109,8 +109,8 @@ class SnowData:
         tables = {}
         for model_set in self.model_sets:
             print(f'Integrating: {model_set}')
-            mass_tables = self.mass_tables[model_set]
-            tables[model_set] = snow_tools.time_integrate(mass_tables=mass_tables,
+            timebin_tables = self.timebin_tables[model_set]
+            tables[model_set] = snow_tools.time_integrate(timebin_tables=timebin_tables,
                                                           n_bins=n_bins,
                                                           channels=self.channels)
         print()
@@ -127,8 +127,8 @@ class SnowData:
 
         for model_set in self.model_sets:
             print(f'Integrating: {model_set}')
-            mass_tables = self.mass_tables[model_set]
-            tables[model_set] = snow_tools.get_cumulative(mass_tables=mass_tables,
+            timebin_tables = self.timebin_tables[model_set]
+            tables[model_set] = snow_tools.get_cumulative(timebin_tables=timebin_tables,
                                                           max_n_bins=max_n_bins,
                                                           channels=self.channels)
         print()
@@ -313,15 +313,15 @@ class SnowData:
                                         ax=ax)
         return fig
 
-    def plot_time(self, y_var, mass,
-                  channel='Total',
-                  x_scale=None,
-                  y_scale=None,
-                  ax=None,
-                  legend=True,
-                  data_only=False,
-                  ):
-        """Plot time-dependent quantity from mass tables
+    def plot_timebin(self, y_var, mass,
+                     channel='Total',
+                     x_scale=None,
+                     y_scale=None,
+                     ax=None,
+                     legend=True,
+                     data_only=False,
+                     ):
+        """Plot time-dependent quantity from timebin tables
 
         parameters
         ----------
@@ -336,15 +336,15 @@ class SnowData:
         """
         fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=None)
 
-        for model_set, mass_table in self.mass_tables.items():
-            snow_plot.plot_time(mass_table=mass_table,
-                                y_var=y_var,
-                                mass=mass,
-                                label=model_set,
-                                color=config.colors.get(model_set),
-                                channel=channel,
-                                ax=ax,
-                                data_only=True)
+        for model_set, timebin_table in self.timebin_tables.items():
+            snow_plot.plot_timebin(timebin_table=timebin_table,
+                                   y_var=y_var,
+                                   mass=mass,
+                                   label=model_set,
+                                   color=config.colors.get(model_set),
+                                   channel=channel,
+                                   ax=ax,
+                                   data_only=True)
 
         if not data_only:
             plot_tools.set_ax_all(ax=ax,
@@ -496,7 +496,7 @@ class SnowData:
         """
         model_set = self.model_sets[0]
         mass = self.mass_list[0]
-        ref_table = self.mass_tables[model_set].sel(mass=mass)
+        ref_table = self.timebin_tables[model_set].sel(mass=mass)
 
         t0 = ref_table.Time.values[0]
         t1 = ref_table.Time.values[n_bins]
