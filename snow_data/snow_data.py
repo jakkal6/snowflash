@@ -42,7 +42,7 @@ class SnowData:
         self.channels = config.channels[detector]
         self.mass_list = mass_list
 
-        self.summary_tables = None
+        self.integrated_tables = None
         self.mass_tables = None
         self.prog_table = None
         self.channel_fracs = None
@@ -55,23 +55,23 @@ class SnowData:
 
         if load_data:
             self.load_mass_tables()
-            self.integrate_summary()
+            self.integrate_timebins()
             self.load_prog_table()
             self.get_channel_fractions()
 
     # ===============================================================
     #                      Load Tables
     # ===============================================================
-    def load_summary_tables(self):
-        """Load all time-integrated summary tables
+    def load_integrated_tables(self):
+        """Load all time-integrated tables
         """
-        print('Loading summary tables')
+        print('Loading integrated tables')
         tables = dict.fromkeys(self.model_sets)
 
         for model_set in self.model_sets:
-            tables[model_set] = snow_tools.load_summary_table(model_set=model_set,
-                                                              detector=self.detector)
-        self.summary_tables = tables
+            tables[model_set] = snow_tools.load_integrated_table(model_set=model_set,
+                                                                 detector=self.detector)
+        self.integrated_tables = tables
 
     def load_mass_tables(self):
         """Load time-dependent tables for all individual mass models
@@ -98,7 +98,7 @@ class SnowData:
     # ===============================================================
     #                      Analysis
     # ===============================================================
-    def integrate_summary(self, n_bins=None):
+    def integrate_timebins(self, n_bins=None):
         """Integrate models over timebins
         """
         if n_bins is None:
@@ -114,7 +114,7 @@ class SnowData:
                                                           n_bins=n_bins,
                                                           channels=self.channels)
         print()
-        self.summary_tables = tables
+        self.integrated_tables = tables
 
     def get_cumulative(self, max_n_bins=None):
         """Integrate models over timebins
@@ -137,26 +137,26 @@ class SnowData:
     def get_channel_fractions(self):
         """Calculate fractional contribution of each channel to total counts
         """
-        self.channel_fracs = snow_tools.get_channel_fractions(tables=self.summary_tables,
+        self.channel_fracs = snow_tools.get_channel_fractions(tables=self.integrated_tables,
                                                               channels=self.channels)
 
     # ===============================================================
     #                      Plotting
     # ===============================================================
-    def plot_summary(self, y_var,
-                     channel='Total',
-                     x_var='m_fe',
-                     marker='.',
-                     x_scale=None,
-                     y_scale=None,
-                     x_lims=None,
-                     y_lims=None,
-                     legend=True,
-                     legend_loc=None,
-                     figsize=None,
-                     ax=None,
-                     data_only=False):
-        """Plot quantity from summary table
+    def plot_integrated(self, y_var,
+                        channel='Total',
+                        x_var='m_fe',
+                        marker='.',
+                        x_scale=None,
+                        y_scale=None,
+                        x_lims=None,
+                        y_lims=None,
+                        legend=True,
+                        legend_loc=None,
+                        figsize=None,
+                        ax=None,
+                        data_only=False):
+        """Plot quantity from integrated table
 
         parameters
         ----------
@@ -176,17 +176,17 @@ class SnowData:
         """
         fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=figsize)
 
-        for model_set, summary in self.summary_tables.items():
-            snow_plot.plot_summary(summary=summary,
-                                   y_var=y_var,
-                                   channel=channel,
-                                   x_var=x_var,
-                                   prog_table=self.prog_table,
-                                   marker=marker,
-                                   ax=ax,
-                                   label=model_set,
-                                   color=config.colors.get(model_set),
-                                   data_only=True)
+        for model_set, integrated in self.integrated_tables.items():
+            snow_plot.plot_integrated(integrated=integrated,
+                                      y_var=y_var,
+                                      channel=channel,
+                                      x_var=x_var,
+                                      prog_table=self.prog_table,
+                                      marker=marker,
+                                      ax=ax,
+                                      label=model_set,
+                                      color=config.colors.get(model_set),
+                                      data_only=True)
 
         if not data_only:
             plot_tools.set_ax_all(ax=ax,
@@ -214,7 +214,7 @@ class SnowData:
                       axes=None,
                       data_only=False,
                       ):
-        """Plot summary variable for all channels
+        """Plot integrated variable for all channels
 
         parameters
         ----------
@@ -239,8 +239,8 @@ class SnowData:
         if axes is None:
             fig, axes = plt.subplots(len(channels), figsize=figsize, sharex=True)
 
-        for model_set, summary in self.summary_tables.items():
-            snow_plot.plot_channels(summary=summary,
+        for model_set, integrated in self.integrated_tables.items():
+            snow_plot.plot_channels(integrated=integrated,
                                     y_var=y_var,
                                     channels=channels,
                                     x_var=x_var,
@@ -297,7 +297,7 @@ class SnowData:
         figsize : (width, length)
         ax : Axis
         """
-        fig = snow_plot.plot_difference(tables=self.summary_tables,
+        fig = snow_plot.plot_difference(tables=self.integrated_tables,
                                         y_var=y_var,
                                         channel=channel,
                                         ref_model_set=ref_model_set,
@@ -410,20 +410,20 @@ class SnowData:
     # ===============================================================
     #                      Slider Plots
     # ===============================================================
-    def plot_summary_slider(self, y_var,
-                            channel='Total',
-                            x_var='m_fe',
-                            marker='.',
-                            x_scale=None,
-                            y_scale=None,
-                            x_lims=None,
-                            y_lims=None,
-                            x_factor=None,
-                            y_factor=None,
-                            legend=True,
-                            legend_loc=None,
-                            figsize=None):
-        """Plot interactive summary table
+    def plot_integrated_slider(self, y_var,
+                               channel='Total',
+                               x_var='m_fe',
+                               marker='.',
+                               x_scale=None,
+                               y_scale=None,
+                               x_lims=None,
+                               y_lims=None,
+                               x_factor=None,
+                               y_factor=None,
+                               legend=True,
+                               legend_loc=None,
+                               figsize=None):
+        """Plot interactive integrated table
 
         parameters
         ----------
@@ -467,18 +467,18 @@ class SnowData:
                             x_factor=x_factor,
                             y_factor=y_factor)
 
-        self.plot_summary(y_var=y_var,
-                          x_var=x_var,
-                          channel=channel,
-                          x_scale=x_scale,
-                          y_scale=y_scale,
-                          x_lims=x_lims,
-                          y_lims=y_lims,
-                          marker=marker,
-                          figsize=figsize,
-                          legend=legend,
-                          legend_loc=legend_loc,
-                          ax=slider.ax)
+        self.plot_integrated(y_var=y_var,
+                             x_var=x_var,
+                             channel=channel,
+                             x_scale=x_scale,
+                             y_scale=y_scale,
+                             x_lims=x_lims,
+                             y_lims=y_lims,
+                             marker=marker,
+                             figsize=figsize,
+                             legend=legend,
+                             legend_loc=legend_loc,
+                             ax=slider.ax)
 
         slider.slider.on_changed(update_slider)
 

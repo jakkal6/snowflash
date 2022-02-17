@@ -6,28 +6,28 @@ from . import config
 from .snow_tools import y_column
 
 
-def plot_summary(summary, y_var, prog_table,
-                 channel='Total',
-                 x_var='m_fe',
-                 x_scale=None,
-                 y_scale=None,
-                 x_lims=None,
-                 y_lims=None,
-                 marker='.',
-                 ax=None,
-                 legend=True,
-                 legend_loc=None,
-                 figsize=None,
-                 label=None,
-                 color=None,
-                 data_only=False,
-                 ):
-    """Plot quantity from summary table
+def plot_integrated(integrated, y_var, prog_table,
+                    channel='Total',
+                    x_var='m_fe',
+                    x_scale=None,
+                    y_scale=None,
+                    x_lims=None,
+                    y_lims=None,
+                    marker='.',
+                    ax=None,
+                    legend=True,
+                    legend_loc=None,
+                    figsize=None,
+                    label=None,
+                    color=None,
+                    data_only=False,
+                    ):
+    """Plot quantity from integrated table
 
     parameters
     ----------
-    summary : xr.Dataset}
-        table of summary quantities
+    integrated : xr.Dataset}
+        table of time-integrated quantities
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
     x_var : str
@@ -48,7 +48,7 @@ def plot_summary(summary, y_var, prog_table,
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
 
-    ax.plot(prog_table[x_var], summary[y_col],
+    ax.plot(prog_table[x_var], integrated[y_col],
             marker=marker,
             ls='none',
             label=label,
@@ -68,7 +68,7 @@ def plot_summary(summary, y_var, prog_table,
     return fig
 
 
-def plot_channels(summary, y_var, prog_table, channels,
+def plot_channels(integrated, y_var, prog_table, channels,
                   x_var='m_fe',
                   x_scale=None, y_scale=None,
                   x_lims=None, y_lims=None,
@@ -81,11 +81,11 @@ def plot_channels(summary, y_var, prog_table, channels,
                   label=None,
                   data_only=False,
                   ):
-    """Plot summary variable for all channels
+    """Plot time-integrated variable for all channels
 
     parameters
     ----------
-    summary : xr.Dataset
+    integrated : xr.Dataset
     y_var : 'Tot' or 'Avg'
     prog_table : pd.DataFrame
     channels : [str]
@@ -109,16 +109,16 @@ def plot_channels(summary, y_var, prog_table, channels,
         fig, axes = plt.subplots(len(channels), figsize=figsize, sharex=True)
 
     for i, channel in enumerate(channels):
-        plot_summary(summary=summary,
-                     y_var=y_var,
-                     channel=channel,
-                     x_var=x_var,
-                     prog_table=prog_table,
-                     marker=marker,
-                     color=color,
-                     label=label,
-                     ax=axes[i],
-                     data_only=True)
+        plot_integrated(integrated=integrated,
+                        y_var=y_var,
+                        channel=channel,
+                        x_var=x_var,
+                        prog_table=prog_table,
+                        marker=marker,
+                        color=color,
+                        label=label,
+                        ax=axes[i],
+                        data_only=True)
 
         if not data_only:
             plot_tools.set_ax_all(ax=axes[i],
@@ -152,7 +152,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
     parameters
     ----------
     tables : {model_set: xr.Dataset}
-        collection of summary_tables to plot
+        collection of integrated_tables to plot
     y_var : str
     channel : str
     prog_table : pd.DataFrame

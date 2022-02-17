@@ -11,10 +11,10 @@ Tools for handling snowglobes data
 # ===============================================================
 #                      Load Tables
 # ===============================================================
-def load_summary_table(model_set,
-                       detector,
-                       time_integral=30):
-    """Load time-integrated summary table containing all mass models
+def load_integrated_table(model_set,
+                          detector,
+                          time_integral=30):
+    """Load time-integrated table containing all mass models
 
     Returns : pd.DataFrame
 
