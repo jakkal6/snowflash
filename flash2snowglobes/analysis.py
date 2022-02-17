@@ -43,7 +43,7 @@ def analyze_output(tab,
 
     for i in range(n_time):
         channel_counts = load_channel_counts(channels=channels,
-                                             i=i+1,
+                                             i=i + 1,
                                              tab=tab,
                                              mass=mass,
                                              detector=detector)
@@ -61,15 +61,15 @@ def analyze_output(tab,
             time_totals[group][i] = group_totals[group]
             time_avg[group][i] = group_avg[group]
 
-    time_table = create_time_table(timesteps=time,
-                                   time_totals=time_totals,
-                                   time_avg=time_avg)
+    timebin_table = create_timebin_table(timesteps=time,
+                                         time_totals=time_totals,
+                                         time_avg=time_avg)
 
-    save_time_table(table=time_table,
-                    detector=detector,
-                    tab=tab,
-                    mass=mass,
-                    output=output)
+    save_timebin_table(table=timebin_table,
+                       detector=detector,
+                       tab=tab,
+                       mass=mass,
+                       output=output)
 
 
 # ===========================================================
@@ -163,10 +163,10 @@ def get_avg(group_counts, group_totals, energy_bins):
 
 
 # ===========================================================
-#                   Time-dependent data
+#                   Timebinned data
 # ===========================================================
-def create_time_table(timesteps, time_totals, time_avg):
-    """Construct a DataFrame from time-dependent arrays of mean energies/total counts
+def create_timebin_table(timesteps, time_totals, time_avg):
+    """Construct a DataFrame from timebinned arrays of mean energies/total counts
     """
     table = pd.DataFrame()
     table['Time'] = timesteps
@@ -180,8 +180,8 @@ def create_time_table(timesteps, time_totals, time_avg):
     return table
 
 
-def save_time_table(table, detector, tab, mass, output):
-    """Save time-dependent table to file
+def save_timebin_table(table, detector, tab, mass, output):
+    """Save timebinned table to file
     """
     mset = {1: 'LMP', 2: 'LMP+N50', 3: 'SNA'}[tab]
     filepath = os.path.join(output, f"{detector}_analysis_{mset}_m{mass}.dat")
