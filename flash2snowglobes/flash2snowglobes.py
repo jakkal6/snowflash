@@ -16,7 +16,8 @@ import run_snowglobes
 import setup
 import mixing
 
-tabs = [1, 2, 3]  # model set (table) IDs
+model_sets = ['LMP', 'LMP+N50', 'SNA']
+tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set model_set IDs
 
 # masses = (12.0, 20.0, 40)
 masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
@@ -100,7 +101,8 @@ output = "output"
 print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(snowglobes_path)
 
-for tab in tabs:
+for model_set in model_sets:
+    tab = tab_map.get(model_set, model_set)
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{tab}'
 
     for mass in masses:
@@ -130,7 +132,7 @@ for tab in tabs:
 
         # Write pinched fluence files for snowglobes input
         print('=== Writing input files ===')
-        write_files.write_fluence_files(tab=tab,
+        write_files.write_fluence_files(model_set=model_set,
                                         mass=mass,
                                         timebins=timebins,
                                         e_bins=e_bins,
@@ -138,7 +140,7 @@ for tab in tabs:
 
         # Run snowglobes
         print('=== Running snowglobes ===')
-        run_snowglobes.run(tab=tab,
+        run_snowglobes.run(model_set=model_set,
                            mass=mass,
                            timebins=timebins,
                            material=material,
@@ -146,7 +148,7 @@ for tab in tabs:
 
         #  Extract snowglobes output
         print('=== Analysing output ===')
-        analysis.analyze_output(tab=tab,
+        analysis.analyze_output(model_set=model_set,
                                 mass=mass,
                                 detector=detector,
                                 channel_groups=channel_groups,

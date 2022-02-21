@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 
-def analyze_output(tab,
+def analyze_output(model_set,
                    mass,
                    output,
                    detector,
@@ -15,7 +15,7 @@ def analyze_output(tab,
 
     parameters
     ----------
-    tab : int
+    model_set : str
     mass : float or int
     output : str
     detector : str
@@ -23,13 +23,13 @@ def analyze_output(tab,
     """
     channels = get_all_channels(channel_groups)
 
-    time_filepath = os.path.join('./fluxes/', f'pinched_tab{tab}_m{mass}_key.dat')
+    time_filepath = os.path.join('./fluxes/', f'pinched_{model_set}_m{mass}_key.dat')
     time = np.loadtxt(time_filepath, skiprows=1, usecols=[1], unpack=True)
     n_time = len(time)
 
     energy_bins = load_energy_bins(channel=channels[0],
                                    i=1,
-                                   tab=tab,
+                                   model_set=model_set,
                                    mass=mass,
                                    detector=detector)
     n_bins = len(energy_bins)
@@ -44,7 +44,7 @@ def analyze_output(tab,
     for i in range(n_time):
         channel_counts = load_channel_counts(channels=channels,
                                              i=i + 1,
-                                             tab=tab,
+                                             model_set=model_set,
                                              mass=mass,
                                              detector=detector)
 
@@ -67,7 +67,7 @@ def analyze_output(tab,
 
     save_timebin_table(table=timebin_table,
                        detector=detector,
-                       tab=tab,
+                       model_set=model_set,
                        mass=mass,
                        output=output)
 
@@ -85,33 +85,33 @@ def get_all_channels(groups):
     return channels
 
 
-def load_channel_counts(channels, i, tab, mass, detector):
+def load_channel_counts(channels, i, model_set, mass, detector):
     """Load all raw channel counts into dict
     """
     channel_counts = {}  # arrays of channel counts per energy bin
     for chan in channels:
-        channel_counts[chan] = load_channel_dat(channel=chan, i=i, tab=tab,
+        channel_counts[chan] = load_channel_dat(channel=chan, i=i, model_set=model_set,
                                                 mass=mass, detector=detector)
     return channel_counts
 
 
-def load_channel_dat(channel, i, tab, mass, detector):
+def load_channel_dat(channel, i, model_set, mass, detector):
     """Load array of detection counts per energy bin
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, tab=tab, mass=mass, detector=detector)
+    filepath = channel_dat_filepath(channel=channel, i=i, model_set=model_set, mass=mass, detector=detector)
     return np.genfromtxt(filepath, skip_footer=2, usecols=[1], unpack=True)
 
 
-def channel_dat_filepath(channel, i, tab, mass, detector):
+def channel_dat_filepath(channel, i, model_set, mass, detector):
     """Return filepath to snowglobes output file
     """
-    return f'./out/pinched_tab{tab}_m{mass}_{i}_{channel}_{detector}_events_smeared.dat'
+    return f'./out/pinched_{model_set}_m{mass}_{i}_{channel}_{detector}_events_smeared.dat'
 
 
-def load_energy_bins(channel, i, tab, mass, detector):
+def load_energy_bins(channel, i, model_set, mass, detector):
     """Load array of energy bins (MeV) from a snowglobes output file
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, tab=tab, mass=mass, detector=detector)
+    filepath = channel_dat_filepath(channel=channel, i=i, model_set=model_set, mass=mass, detector=detector)
     energy_bins = np.genfromtxt(filepath, skip_footer=2, usecols=[0], unpack=True)
     return energy_bins * 1000
 
@@ -180,11 +180,10 @@ def create_timebin_table(timesteps, time_totals, time_avg):
     return table
 
 
-def save_timebin_table(table, detector, tab, mass, output):
+def save_timebin_table(table, detector, model_set, mass, output):
     """Save timebinned table to file
     """
-    mset = {1: 'LMP', 2: 'LMP+N50', 3: 'SNA'}[tab]
-    filepath = os.path.join(output, f"{detector}_analysis_{mset}_m{mass}.dat")
+    filepath = os.path.join(output, f"{detector}_analysis_{model_set}_m{mass}.dat")
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:

@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 
-def write_fluence_files(tab, mass, timebins, e_bins, fluences_mixed):
+def write_fluence_files(model_set, mass, timebins, e_bins, fluences_mixed):
     """Writes input files for snowglobes in fluxes directory
 
     Creates key file to indicate how file index is related to time
@@ -11,8 +11,7 @@ def write_fluence_files(tab, mass, timebins, e_bins, fluences_mixed):
 
     Parameters
     ----------
-    tab : int
-        table ID
+    model_set : str
     mass : float
         progenitor mass
     timebins : []
@@ -27,14 +26,14 @@ def write_fluence_files(tab, mass, timebins, e_bins, fluences_mixed):
 
     # write key table
     key_table = get_key_table(timebins=timebins, dt=dt)
-    key_filepath = os.path.join(path, f'pinched_tab{tab}_m{mass}_key.dat')
+    key_filepath = os.path.join(path, f'pinched_{model_set}_m{mass}_key.dat')
 
     with open(key_filepath, 'w') as keyfile:
         key_table.to_string(keyfile, index=False)
 
     # write fluence files
     for i in range(len(timebins)):
-        out_filepath = os.path.join(path, f'pinched_tab{tab}_m{mass}_{i+1}.dat')
+        out_filepath = os.path.join(path, f'pinched_{model_set}_m{mass}_{i + 1}.dat')
         table = format_fluence_table(time_i=i,
                                      e_bins=e_bins,
                                      fluences_mixed=fluences_mixed)
