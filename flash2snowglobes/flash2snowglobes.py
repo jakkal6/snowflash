@@ -1,4 +1,4 @@
-# FLASH 2 snowglobes wrapper code
+# FLASH to snowglobes wrapper code
 # Need working installation of snowglobes
 # This will convert FLASH data to necessary input format for snowglobes,
 # run snowglobes, analyze the output, and clean up (aka delete) the unneeded
@@ -102,13 +102,6 @@ setup.copy_snowglobes(snowglobes_path)
 
 for tab in tabs:
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{tab}'
-    # models_path = f'/home/zac/projects/codes/BANG/runs/run_ecrates_tab{tab}'
-
-    # Open output files for time-integrated quantities
-    # totfile = analysis.open_tot_file(tab=tab,
-    #                                  output=output,
-    #                                  detector=detector,
-    #                                  channel_groups=channel_groups)
 
     for mass in masses:
         dat_filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'

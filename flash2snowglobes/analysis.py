@@ -34,8 +34,8 @@ def analyze_output(tab,
                                    detector=detector)
     n_bins = len(energy_bins)
 
-    time_totals = {'Total': np.zeros(n_time)}
-    time_avg = {'Total': np.zeros(n_time)}
+    time_totals = {'total': np.zeros(n_time)}
+    time_avg = {'total': np.zeros(n_time)}
 
     for group in channel_groups:
         time_totals[group] = np.zeros(n_time)
@@ -122,7 +122,7 @@ def load_energy_bins(channel, i, tab, mass, detector):
 def get_group_counts(channel_counts, groups, n_bins):
     """Sum channel counts by group
     """
-    group_counts = {'Total': np.zeros(n_bins)}
+    group_counts = {'total': np.zeros(n_bins)}
 
     for group, sub_channels in groups.items():
         counts = np.zeros(n_bins)
@@ -130,7 +130,7 @@ def get_group_counts(channel_counts, groups, n_bins):
         for chan in sub_channels:
             counts += channel_counts[chan]
 
-        group_counts['Total'] += counts
+        group_counts['total'] += counts
         group_counts[group] = counts
 
     return group_counts
@@ -169,13 +169,13 @@ def create_timebin_table(timesteps, time_totals, time_avg):
     """Construct a DataFrame from timebinned arrays of mean energies/total counts
     """
     table = pd.DataFrame()
-    table['Time'] = timesteps
+    table['time'] = timesteps
 
     for group in time_avg:
-        table[f'Avg_{group}'] = time_avg[group]
+        table[f'energy_{group}'] = time_avg[group]
 
     for group in time_totals:
-        table[f'Tot_{group}'] = time_totals[group]
+        table[f'counts_{group}'] = time_totals[group]
 
     return table
 
