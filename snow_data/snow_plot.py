@@ -7,7 +7,7 @@ from .snow_tools import y_column
 
 
 def plot_integrated(integrated, y_var, prog_table,
-                    channel='Total',
+                    channel='total',
                     x_var='m_fe',
                     x_scale=None,
                     y_scale=None,
@@ -28,7 +28,7 @@ def plot_integrated(integrated, y_var, prog_table,
     ----------
     integrated : xr.Dataset}
         table of time-integrated quantities
-    y_var : 'Tot' or 'Avg'
+    y_var : 'counts' or 'energy'
     prog_table : pd.DataFrame
     x_var : str
     channel : str
@@ -86,7 +86,7 @@ def plot_channels(integrated, y_var, prog_table, channels,
     parameters
     ----------
     integrated : xr.Dataset
-    y_var : 'Tot' or 'Avg'
+    y_var : 'counts' or 'energy'
     prog_table : pd.DataFrame
     channels : [str]
     x_var : str
@@ -137,7 +137,7 @@ def plot_channels(integrated, y_var, prog_table, channels,
 
 
 def plot_difference(tables, y_var, prog_table, ref_model_set,
-                    channel='Total',
+                    channel='total',
                     x_var='m_fe',
                     x_scale=None,
                     y_scale=None,
@@ -200,7 +200,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
 
 
 def plot_timebin(timebin_table, y_var, mass,
-                 channel='Total',
+                 channel='total',
                  x_scale=None,
                  y_scale=None,
                  ax=None,
@@ -215,7 +215,7 @@ def plot_timebin(timebin_table, y_var, mass,
     parameters
     ----------
     timebin_table : pd.DataFrame
-    y_var : 'Tot' or 'Avg'
+    y_var : 'counts' or 'energy'
     mass : float or int
     channel : str
     y_scale : str
@@ -231,14 +231,14 @@ def plot_timebin(timebin_table, y_var, mass,
     y_col = y_column(y_var=y_var, channel=channel)
 
     table = timebin_table.sel(mass=mass)
-    ax.step(table['Time'], table[y_col],
+    ax.step(table['time'], table[y_col],
             where='post',
             label=label,
             color=color)
 
     if not data_only:
         plot_tools.set_ax_all(ax=ax,
-                              x_var='Time',
+                              x_var='time',
                               y_var=y_var,
                               x_scale=x_scale,
                               y_scale=y_scale,
@@ -247,7 +247,7 @@ def plot_timebin(timebin_table, y_var, mass,
 
 
 def plot_cumulative(cumulative, y_var, mass,
-                    channel='Total',
+                    channel='total',
                     x_scale=None,
                     y_scale=None,
                     ax=None,
@@ -264,7 +264,7 @@ def plot_cumulative(cumulative, y_var, mass,
     ----------
     cumulative : xr.Dataset
         table of cumulative quantities
-    y_var : 'Tot' or 'Avg'
+    y_var : 'counts' or 'energy'
     mass : float or int
     channel : str
     y_scale : str
