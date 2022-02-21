@@ -43,7 +43,7 @@ masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
 
 # snowglobes setup info - event distance in cm, detector and detector material
 # For more info on detector detector configurations see detector_configurations.dat
-dist = 10 * units.kpc.to(units.cm)
+distance = 10 * units.kpc.to(units.cm)
 
 # time bins [s]
 t_start = -0.05  # relative to bounce
@@ -122,7 +122,7 @@ for model_set in model_sets:
                                         lum=lum,
                                         avg=avg,
                                         rms=rms,
-                                        dist=dist,
+                                        distance=distance,
                                         timebins=timebins,
                                         e_bins=e_bins)
 

@@ -9,7 +9,7 @@ Note on docstrings:
 """
 
 
-def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
+def get_fluences(time, lum, avg, rms, distance, timebins, e_bins):
     """Calculate pinched neutrino fluences at Earth for snowglobes input
 
     Returns: fluences : {flav: [timebins, e_bins]}
@@ -24,7 +24,7 @@ def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
         average energies from FLASH [GeV]
     rms : [timesteps, flavors]
         rms neutrino energies from FLASH [GeV]
-    dist : float
+    distance : float
         event distance [cm]
     timebins : [timebins]
         time bins to sample over [leftside]
@@ -52,7 +52,7 @@ def get_fluences(time, lum, avg, rms, dist, timebins, e_bins):
                                           lum=y_sliced['lum'],
                                           avg=y_sliced['avg'],
                                           rms=y_sliced['rms'],
-                                          dist=dist)
+                                          distance=distance)
 
         fluence = trapz(flux_spectrum, x=t_sliced, axis=0)
 
@@ -89,7 +89,7 @@ def slice_timebin(bin_edges, time, y_vars):
     return t_sliced, y_sliced
 
 
-def get_flux_spectrum(e_bins, lum, avg, rms, dist):
+def get_flux_spectrum(e_bins, lum, avg, rms, distance):
     """Calculate pinched flux spectrum
 
     Returns: [timesteps, flavors, e_bins]
@@ -102,7 +102,7 @@ def get_flux_spectrum(e_bins, lum, avg, rms, dist):
     lum : [timesteps, flavors]
     avg : [timesteps, flavors]
     rms : [timesteps, flavors]
-    dist : float
+    distance : float
     """
     n_ebins = len(e_bins)
     n_time, n_flavors = lum.shape
@@ -110,7 +110,7 @@ def get_flux_spectrum(e_bins, lum, avg, rms, dist):
 
     flux_spectrum = np.zeros([n_time, n_flavors, n_ebins])
     alpha = get_alpha(avg=avg, rms=rms)
-    lum_to_flux = 1 / (4 * np.pi * dist**2)
+    lum_to_flux = 1 / (4 * np.pi * distance ** 2)
 
     for i, e_bin in enumerate(e_bins):
         phi = get_phi(e_bin=e_bin, avg=avg, alpha=alpha)
