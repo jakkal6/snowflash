@@ -15,7 +15,7 @@ def copy_snowglobes(snowglobes_path):
     local_path = "./"
 
     # create local dirs
-    for folder in ['output',
+    for folder in ['analysis',
                    'fluxes',
                    'out']:
         fullpath = os.path.join(local_path, folder)

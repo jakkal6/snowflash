@@ -201,7 +201,7 @@ def data_path():
     except KeyError:
         raise EnvironmentError('Environment variable SNOWGLOBES_DATA not set. '
                                'Set path to snowglobes data directory, e.g. '
-                               '"export SNOWGLOBES_DATA=${HOME}/snowglobes/output"')
+                               '"export SNOWGLOBES_DATA=${HOME}/snowglobes/analysis"')
     return path
 
 

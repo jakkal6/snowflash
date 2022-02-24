@@ -81,8 +81,7 @@ for model_set in config.model_sets:
         analysis.analyze_output(model_set=model_set,
                                 mass=mass,
                                 detector=detector,
-                                channel_groups=channel_groups,
-                                output=config.output)
+                                channel_groups=channel_groups)
 
         print('=== Cleaning up model ===')
         cleanup.mass()

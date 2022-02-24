@@ -5,7 +5,6 @@ import pandas as pd
 
 def analyze_output(model_set,
                    mass,
-                   output,
                    detector,
                    channel_groups):
     """Analyze snowglobes output and writes to ascii files
@@ -17,7 +16,6 @@ def analyze_output(model_set,
     ----------
     model_set : str
     mass : float or int
-    output : str
     detector : str
     channel_groups : {}
     """
@@ -71,8 +69,7 @@ def analyze_output(model_set,
     save_timebin_table(table=timebin_table,
                        detector=detector,
                        model_set=model_set,
-                       mass=mass,
-                       output=output)
+                       mass=mass)
 
 
 # ===========================================================
@@ -208,11 +205,11 @@ def create_timebin_table(timesteps, time_totals, time_avg):
     return table
 
 
-def save_timebin_table(table, detector, model_set, mass, output):
+def save_timebin_table(table, detector, model_set, mass):
     """Save timebinned table to file
     """
     filename = f"{detector}_analysis_{model_set}_m{mass}.dat"
-    filepath = os.path.join(output, filename)
+    filepath = os.path.join('analysis', filename)
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:

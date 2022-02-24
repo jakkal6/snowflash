@@ -3,7 +3,6 @@ model_sets = ['LMP', 'LMP+N50', 'SNA']
 tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
 
 # paths
-output = "output"
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 
 # progenitor ZAMA masses [Msun]
