@@ -10,14 +10,6 @@ def mass():
     clear_dir('./out')
 
 
-def alpha(nomix_tot):
-    """Closes file for output of time-integrated neutrino spectra quantities \n
-    Input: None \n
-    Output: None
-    """
-    nomix_tot.close()
-
-
 def final():
     """Cleans up working directory once script is done running \n
     Removes all of the copies of the working snowglobes installation \n
