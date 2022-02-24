@@ -18,7 +18,7 @@ import flavor_mixing
 
 detector = "ar40kt"
 model_sets = ['LMP', 'LMP+N50', 'SNA']
-mix_ordering = 'nomix'
+mixing = 'nomix'
 
 material = config.detector_materials[detector]
 channel_groups = config.channel_groups[material]
@@ -62,7 +62,7 @@ for model_set in model_sets:
 
         # MSW flavor mixing
         fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
-                                                    ordering=mix_ordering)
+                                                    mixing=mixing)
 
         print('=== Writing input files ===')
         write_files.write_fluence_files(model_set=model_set,
