@@ -24,7 +24,10 @@ def analyze_output(model_set,
     channels = get_all_channels(channel_groups)
 
     time_filepath = os.path.join('./fluxes/', f'pinched_{model_set}_m{mass}_key.dat')
-    time = np.loadtxt(time_filepath, skiprows=1, usecols=[1], unpack=True)
+    time = np.loadtxt(time_filepath,
+                      skiprows=1,
+                      usecols=[1],
+                      unpack=True)
     n_time = len(time)
 
     energy_bins = load_energy_bins(channel=channels[0],
@@ -90,30 +93,55 @@ def load_channel_counts(channels, i, model_set, mass, detector):
     """
     channel_counts = {}  # arrays of channel counts per energy bin
     for chan in channels:
-        channel_counts[chan] = load_channel_dat(channel=chan, i=i, model_set=model_set,
-                                                mass=mass, detector=detector)
+        channel_counts[chan] = load_channel_dat(channel=chan,
+                                                i=i,
+                                                model_set=model_set,
+                                                mass=mass,
+                                                detector=detector)
     return channel_counts
 
 
 def load_channel_dat(channel, i, model_set, mass, detector):
     """Load array of detection counts per energy bin
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, model_set=model_set, mass=mass, detector=detector)
-    return np.genfromtxt(filepath, skip_footer=2, usecols=[1], unpack=True)
+    filepath = channel_dat_filepath(channel=channel,
+                                    i=i,
+                                    model_set=model_set,
+                                    mass=mass,
+                                    detector=detector)
+
+    dat = np.genfromtxt(filepath,
+                        skip_footer=2,
+                        usecols=[1],
+                        unpack=True)
+    return dat
 
 
 def channel_dat_filepath(channel, i, model_set, mass, detector):
     """Return filepath to snowglobes output file
     """
-    return f'./out/pinched_{model_set}_m{mass}_{i}_{channel}_{detector}_events_smeared.dat'
+    filename = f'pinched_{model_set}_m{mass}_{i}_{channel}_{detector}_events_smeared.dat'
+    filepath = os.path.join('./out', filename)
+
+    return filepath
 
 
 def load_energy_bins(channel, i, model_set, mass, detector):
     """Load array of energy bins (MeV) from a snowglobes output file
     """
-    filepath = channel_dat_filepath(channel=channel, i=i, model_set=model_set, mass=mass, detector=detector)
-    energy_bins = np.genfromtxt(filepath, skip_footer=2, usecols=[0], unpack=True)
-    return energy_bins * 1000
+    filepath = channel_dat_filepath(channel=channel,
+                                    i=i,
+                                    model_set=model_set,
+                                    mass=mass,
+                                    detector=detector)
+
+    energy_bins = np.genfromtxt(filepath,
+                                skip_footer=2,
+                                usecols=[0],
+                                unpack=True)
+    energy_bins *= 1000  # GeV to MeV
+
+    return energy_bins
 
 
 # ===========================================================
@@ -183,7 +211,8 @@ def create_timebin_table(timesteps, time_totals, time_avg):
 def save_timebin_table(table, detector, model_set, mass, output):
     """Save timebinned table to file
     """
-    filepath = os.path.join(output, f"{detector}_analysis_{model_set}_m{mass}.dat")
+    filename = f"{detector}_analysis_{model_set}_m{mass}.dat"
+    filepath = os.path.join(output, filename)
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:
