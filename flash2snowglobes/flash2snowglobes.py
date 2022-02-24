@@ -106,6 +106,8 @@ for model_set in model_sets:
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{tab}'
 
     for mass in masses:
+        print('=== Converting flash data ===')
+
         dat_filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'
         dat_filepath = os.path.join(models_path, f'run_{mass}', dat_filename)
         print(f'Reading: {dat_filepath}')
