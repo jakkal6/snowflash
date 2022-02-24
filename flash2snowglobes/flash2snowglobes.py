@@ -1,8 +1,7 @@
 # FLASH to snowglobes wrapper code
 # Need working installation of snowglobes
 # This will convert FLASH data to necessary input format for snowglobes,
-# run snowglobes, analyze the output, and clean up (aka delete) the unneeded
-# snowglobes IO files
+# run snowglobes, analyze the output, and clean up files
 
 import os
 import read_flash
@@ -41,8 +40,6 @@ masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
           29.0, 29.1, 29.2, 29.3, 29.4, 29.5, 29.6, 29.7, 29.8, 29.9,
           30.0, 31, 32, 33, 35, 40, 45, 50, 55, 60, 70, 80, 100, 120)
 
-# snowglobes setup info - event distance in cm, detector and detector material
-# For more info on detector detector configurations see detector_configurations.dat
 distance = 10 * units.kpc.to(units.cm)
 
 # time bins [s]
@@ -68,9 +65,6 @@ materials = {'wc100kt30prct': 'water',
              'ar40kt': 'argon',
              }
 material = materials[detector]
-
-
-# Setup detection channels
 channel_groups = None
 
 if material == 'water':
@@ -94,7 +88,6 @@ elif material == 'argon':
                              'nc_nutau_Ar40', 'nc_nutaubar_Ar40']
                       }
 
-# Provide paths to snowglobes source and output directory
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 output = "output"
 
@@ -116,7 +109,6 @@ for model_set in model_sets:
                                                       t_start=t_start,
                                                       t_end=t_end)
 
-        # Convert FLASH data to pinched-spectrum neutrino fluences at Earth
         timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)
         e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
@@ -132,7 +124,6 @@ for model_set in model_sets:
         fluences_mixed = mixing.mix_fluences(fluences=fluences,
                                              ordering=mix_ordering)
 
-        # Write pinched fluence files for snowglobes input
         print('=== Writing input files ===')
         write_files.write_fluence_files(model_set=model_set,
                                         mass=mass,
@@ -140,7 +131,6 @@ for model_set in model_sets:
                                         e_bins=e_bins,
                                         fluences_mixed=fluences_mixed)
 
-        # Run snowglobes
         print('=== Running snowglobes ===')
         run_snowglobes.run(model_set=model_set,
                            mass=mass,
@@ -148,7 +138,6 @@ for model_set in model_sets:
                            material=material,
                            detector=detector)
 
-        #  Extract snowglobes output
         print('=== Analysing output ===')
         analysis.analyze_output(model_set=model_set,
                                 mass=mass,
@@ -156,14 +145,8 @@ for model_set in model_sets:
                                 channel_groups=channel_groups,
                                 output=output)
 
-        # Cleanup snowglobes output
         print('=== Cleaning up model ===')
         cleanup.mass()
 
-    # Close files for time-integrated quantities
-    # print('=== Cleaning up alpha ===')
-    # cleanup.alpha(totfile)
-
-# Clean up working directory
 print('=== Final cleanup ===')
 cleanup.final()
