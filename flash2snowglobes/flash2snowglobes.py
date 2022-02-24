@@ -16,16 +16,10 @@ import run_snowglobes
 import setup
 import mixing
 
-model_sets = ['LMP', 'LMP+N50', 'SNA']
-tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set model_set IDs
-
-mix_ordering = 'none'
-# mix_ordering = 'normal'
-# mix_ordering = 'inverted'
-
 detector = "ar40kt"
+model_sets = ['LMP', 'LMP+N50', 'SNA']
+mix_ordering = 'nomix'
 
-masses = config.masses
 material = config.detector_materials[detector]
 channel_groups = config.channel_groups[material]
 distance = config.distance * units.kpc.to(units.cm)
@@ -34,10 +28,10 @@ print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)
 
 for model_set in model_sets:
-    tab = tab_map.get(model_set, model_set)
+    tab = config.tab_map.get(model_set, model_set)
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{tab}'
 
-    for mass in masses:
+    for mass in config.masses:
         print('=== Converting flash data ===')
 
         dat_filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'
@@ -62,11 +56,11 @@ for model_set in model_sets:
                                         lum=lum,
                                         avg=avg,
                                         rms=rms,
-                                        distance=distance,
+                                        distance=config.distance,
                                         timebins=timebins,
                                         e_bins=e_bins)
 
-        # Apply MSW neutrino mixing
+        # MSW flavor mixing
         fluences_mixed = mixing.mix_fluences(fluences=fluences,
                                              ordering=mix_ordering)
 

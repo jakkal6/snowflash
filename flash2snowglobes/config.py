@@ -39,6 +39,7 @@ e_step = 0.0002
 output = "output"
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 
+tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
 
 # ===== Detectors =====
 detector_materials = {
