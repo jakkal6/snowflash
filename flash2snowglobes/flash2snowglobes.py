@@ -14,7 +14,7 @@ import write_files
 import analysis
 import run_snowglobes
 import setup
-import mixing
+import flavor_mixing
 
 detector = "ar40kt"
 model_sets = ['LMP', 'LMP+N50', 'SNA']
@@ -61,8 +61,8 @@ for model_set in model_sets:
                                         e_bins=e_bins)
 
         # MSW flavor mixing
-        fluences_mixed = mixing.mix_fluences(fluences=fluences,
-                                             ordering=mix_ordering)
+        fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
+                                                    ordering=mix_ordering)
 
         print('=== Writing input files ===')
         write_files.write_fluence_files(model_set=model_set,
