@@ -1,4 +1,10 @@
 # ===== Model setup =====
+model_sets = ['LMP', 'LMP+N50', 'SNA']
+tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
+
+# paths
+output = "output"
+snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 
 # progenitor ZAMA masses [Msun]
 masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
@@ -35,11 +41,6 @@ e_start = 0.0
 e_end = 0.1
 e_step = 0.0002
 
-# paths
-output = "output"
-snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
-
-tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
 
 # ===== Detectors =====
 detector_materials = {

@@ -17,7 +17,6 @@ import setup
 import flavor_mixing
 
 detector = "ar40kt"
-model_sets = ['LMP', 'LMP+N50', 'SNA']
 mixing = 'nomix'
 
 material = config.detector_materials[detector]
@@ -27,7 +26,7 @@ distance = config.distance * units.kpc.to(units.cm)
 print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)
 
-for model_set in model_sets:
+for model_set in config.model_sets:
     tab = config.tab_map.get(model_set, model_set)
     models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{tab}'
 
