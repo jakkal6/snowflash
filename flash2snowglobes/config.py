@@ -1,3 +1,6 @@
+import convert
+
+
 # ===== Model setup =====
 model_sets = ['LMP', 'LMP+N50', 'SNA']
 tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
@@ -6,7 +9,7 @@ tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
 models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates'
 
-# progenitor ZAMA masses [Msun]
+# progenitor ZAMS masses [Msun]
 masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
           11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0,
           13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9,
@@ -36,10 +39,20 @@ t_start = -0.05  # relative to bounce
 t_end = 1.0
 dt = 0.005
 
+timebins = convert.get_bins(x0=t_start,
+                            x1=t_end,
+                            dx=dt,
+                            endpoint=False)
+
 # energy bins [GeV]
 e_start = 0.0
 e_end = 0.1
 e_step = 0.0002
+
+e_bins = convert.get_bins(x0=e_start,
+                          x1=e_end,
+                          dx=e_step,
+                          endpoint=True)
 
 
 # ===== Detectors =====

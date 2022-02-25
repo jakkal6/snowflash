@@ -3,7 +3,6 @@
 # This will convert FLASH data to necessary input format for snowglobes,
 # run snowglobes, analyze the output, and clean up files
 
-import os
 import read_flash
 from astropy import units
 
@@ -23,16 +22,6 @@ material = config.detector_materials[detector]
 channel_groups = config.channel_groups[material]
 distance = config.distance * units.kpc.to(units.cm)
 
-timebins = convert.get_bins(x0=config.t_start,
-                            x1=config.t_end,
-                            dx=config.dt,
-                            endpoint=False)
-
-e_bins = convert.get_bins(x0=config.e_start,
-                          x1=config.e_end,
-                          dx=config.e_step,
-                          endpoint=True)
-
 print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)
 
@@ -49,22 +38,22 @@ for model_set in config.model_sets:
                                         avg=avg,
                                         rms=rms,
                                         distance=config.distance,
-                                        timebins=timebins,
-                                        e_bins=e_bins)
+                                        timebins=config.timebins,
+                                        e_bins=config.e_bins)
 
         fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
                                                     mixing=mixing)
 
         write_files.write_fluence_files(model_set=model_set,
                                         mass=mass,
-                                        timebins=timebins,
-                                        e_bins=e_bins,
+                                        timebins=config.timebins,
+                                        e_bins=config.e_bins,
                                         fluences_mixed=fluences_mixed)
 
         print('=== Running snowglobes ===')
         run_snowglobes.run(model_set=model_set,
                            mass=mass,
-                           timebins=timebins,
+                           timebins=config.timebins,
                            material=material,
                            detector=detector)
 
