@@ -23,6 +23,7 @@ def clean_all():
     shutil.rmtree("./glb")
     shutil.rmtree("./src")
     os.remove("supernova.pl")
+    os.remove("supernova.glb")
     os.remove("detector_configurations.dat")
     os.remove("make_event_table.pl")
 
