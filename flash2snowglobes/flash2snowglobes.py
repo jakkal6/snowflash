@@ -59,7 +59,7 @@ for mixing in config.mixing:
                                     mixing=mixing)
 
             print('=== Cleaning up model ===')
-            cleanup.mass()
+            cleanup.clean_model()
 
 print('=== Final cleanup ===')
-cleanup.final()
+cleanup.clean_all()

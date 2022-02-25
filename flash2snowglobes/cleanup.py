@@ -2,19 +2,15 @@ import os
 import shutil
 
 
-def mass():
-    """Removes snowglobes input files from fluxes directory \n
-    Output: None
+def clean_model():
+    """Clean up snowglobes input and output files
     """
     clear_dir('./fluxes')
     clear_dir('./out')
 
 
-def final():
-    """Cleans up working directory once script is done running \n
-    Removes all of the copies of the working snowglobes installation \n
-    Input: None \n
-    Output: None
+def clean_all():
+    """Clean working directory of all temporary files
     """
     shutil.rmtree("./fluxes")
     shutil.rmtree("./out")
@@ -32,7 +28,7 @@ def final():
 
 
 def clear_dir(path):
-    """Deletes all files within a dir (leaves the dir itself)
+    """Delete all files within a directory
     """
     files = os.listdir(path)
     for file in files:
