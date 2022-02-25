@@ -25,10 +25,10 @@ def load_integrated_table(model_set,
     time_integral : int
         time integrated over post-bounce (milliseconds)
     """
-    path = model_path(model_set=model_set, detector=detector)
-
+    path = analysis_path()
     filename = f'{detector}_analysis_{model_set}_{time_integral}ms.dat'
     filepath = os.path.join(path, filename)
+
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
@@ -82,7 +82,7 @@ def load_timebin_table(mass,
     detector : str
     output_dir : str
     """
-    path = model_path(model_set=model_set, detector=detector)
+    path = analysis_path()
     filename = f'{detector}_analysis_{model_set}_m{mass}.dat'
     filepath = os.path.join(path, output_dir, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
