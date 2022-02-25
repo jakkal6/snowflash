@@ -22,8 +22,13 @@ for mixing in config.mixing:
     for model_set in config.model_sets:
         for mass in config.masses:
             print('=== Converting flash data ===')
-            time, lum, avg, rms = read_flash.read_datfile(model_set=model_set,
-                                                          mass=mass,
+            dat_model_set = config.model_set_map.get(model_set, model_set)
+
+            filepath = read_flash.dat_filepath(model_set=dat_model_set,
+                                               mass=mass,
+                                               models_path=config.models_path)
+
+            time, lum, avg, rms = read_flash.read_datfile(filepath=filepath,
                                                           t_start=config.t_start,
                                                           t_end=config.t_end)
 

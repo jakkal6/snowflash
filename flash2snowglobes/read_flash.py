@@ -2,10 +2,8 @@ import os
 import numpy as np
 from astropy import units
 
-import config
 
-
-def read_datfile(model_set, mass, t_start, t_end):
+def read_datfile(filepath, t_start, t_end):
     """Read in FLASH data from .dat file
 
     Returns : time [s], lum [GeV/s], avg [GeV], rms [GeV]
@@ -14,20 +12,17 @@ def read_datfile(model_set, mass, t_start, t_end):
 
     Parameters
     ----------
-    model_set : str
-    mass : str or float
+    filepath : str
+        path to dat file
     t_start : float
         start of time slice (relative to bounce)
     t_end : float
         end of time slice (relative to bounce)
     """    
-    filepath = dat_filepath(model_set=model_set, mass=mass)
     print(f'Reading: {filepath}')
-
     cols = [0, 11, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
     dat = np.loadtxt(filepath, usecols=cols)
-
     time = dat[:, 0]
     rshock = dat[:, 1]
 
@@ -48,7 +43,7 @@ def read_datfile(model_set, mass, t_start, t_end):
     return time, lum, avg, rms
 
 
-def dat_filepath(model_set, mass):
+def dat_filepath(model_set, mass, models_path):
     """Return path to dat file
 
     Returns : str
@@ -57,12 +52,13 @@ def dat_filepath(model_set, mass):
     ----------
     model_set : str
     mass : str
+    models_path : str
     """
-    model_set = config.model_set_map.get(model_set, model_set)
-    path = os.path.join(config.models_path, f'run_ecrates_{model_set}')
-
+    model_set_dir = f'run_ecrates_{model_set}'
+    model_dir = f'run_{mass}'
     filename = f'stir_ecrates_{model_set}_s{mass}_alpha1.25.dat'
-    filepath = os.path.join(path, f'run_{mass}', filename)
+
+    filepath = os.path.join(models_path, model_set_dir, model_dir, filename)
     
     return filepath
 
