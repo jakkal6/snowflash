@@ -13,12 +13,10 @@
  
 module purge
 module load intel/2018b
-module load HDF5/1.10
 module load GSL
 
 conda activate flashbang
-cd "${SCRATCH}/flash2snowglobes" || exit
-#cd ${HOME}/flash2snowglobes
+cd "${SCRATCH}/flash_snowglobes/flash2snowglobes" || exit
 
 python flash2snowglobes.py
  
