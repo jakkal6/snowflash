@@ -35,6 +35,7 @@ def load_integrated_table(model_set,
 def load_all_timebin_tables(mass_list,
                             model_set,
                             detector,
+                            mixing,
                             output_dir='timebin_tables'):
     """Load and combine timebinned tables for all models
 
@@ -46,6 +47,7 @@ def load_all_timebin_tables(mass_list,
     mass_list : [str]
     model_set : str
     detector : str
+    mixing : str
     output_dir : str
     """
     tables_dict = {}
@@ -55,7 +57,8 @@ def load_all_timebin_tables(mass_list,
         table = load_timebin_table(mass=mass,
                                    model_set=model_set,
                                    detector=detector,
-                                   output_dir=output_dir)
+                                   output_dir=output_dir,
+                                   mixing=mixing)
 
         table.set_index('Time', inplace=True)
         tables_dict[mass] = table.to_xarray()
@@ -70,6 +73,7 @@ def load_all_timebin_tables(mass_list,
 def load_timebin_table(mass,
                        model_set,
                        detector,
+                       mixing,
                        output_dir='timebin_tables'):
     """Load timebinned table for an individual model
 
@@ -80,10 +84,11 @@ def load_timebin_table(mass,
     mass : str
     model_set : str
     detector : str
+    mixing : str
     output_dir : str
     """
     path = analysis_path()
-    filename = f'{detector}_analysis_{model_set}_m{mass}.dat'
+    filename = f'timebin_{detector}_{mixing}_{model_set}_m{mass}.dat'
     filepath = os.path.join(path, output_dir, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
 

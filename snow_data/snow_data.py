@@ -15,6 +15,7 @@ class SnowData:
                  detector='ar40kt',
                  mass_list=None,
                  load_data=True,
+                 mixing='nomix',
                  output_dir='timebin_tables_nomix',
                  n_bins=20,
                  ):
@@ -41,6 +42,7 @@ class SnowData:
         self.n_bins = n_bins
         self.channels = config.channels[detector]
         self.mass_list = mass_list
+        self.mixing = mixing
 
         self.integrated_tables = None
         self.timebin_tables = None
@@ -85,7 +87,8 @@ class SnowData:
                 mass_list=self.mass_list,
                 model_set=model_set,
                 detector=self.detector,
-                output_dir=self.output_dir)
+                output_dir=self.output_dir,
+                mixing=self.mixing)
 
         self.timebin_tables = tables
 
