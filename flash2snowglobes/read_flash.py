@@ -58,10 +58,10 @@ def dat_filepath(model_set, mass):
     model_set : str
     mass : str
     """
-    tab = config.tab_map.get(model_set, model_set)
-    path = os.path.join(config.models_path, f'run_ecrates_tab{tab}')
+    model_set = config.model_set_map.get(model_set, model_set)
+    path = os.path.join(config.models_path, f'run_ecrates_{model_set}')
 
-    filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'
+    filename = f'stir_ecrates_{model_set}_s{mass}_alpha1.25.dat'
     filepath = os.path.join(path, f'run_{mass}', filename)
     
     return filepath

@@ -3,7 +3,11 @@ import convert
 
 # ===== Model setup =====
 model_sets = ['LMP', 'LMP+N50', 'SNA']
-tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
+
+# labels used in sim files
+model_set_map = {'LMP': 'tab1',
+                 'LMP+N50': 'tab2',
+                 'SNA': 'tab3'}
 
 # paths
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
