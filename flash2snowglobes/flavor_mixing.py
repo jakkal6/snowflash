@@ -51,7 +51,10 @@ def mixing_fractions(mixing):
         p = sin2_12 * (1 - sin2_13)
         pbar = sin2_13
 
-    else:
+    elif mixing == 'nomix':
         print('Using no mixing')
 
+    else:
+        raise ValueError("mixing must be one of ['normal', 'inverted', 'nomix']")
+    
     return p, pbar
