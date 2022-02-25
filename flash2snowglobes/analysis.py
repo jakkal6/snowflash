@@ -6,7 +6,8 @@ import pandas as pd
 def analyze_output(model_set,
                    mass,
                    detector,
-                   channel_groups):
+                   channel_groups,
+                   mixing):
     """Analyze snowglobes output and writes to ascii files
 
     Currently calculating mean energy and total counts for each detector channel
@@ -18,6 +19,7 @@ def analyze_output(model_set,
     mass : float or int
     detector : str
     channel_groups : {}
+    mixing : str
     """
     channels = get_all_channels(channel_groups)
 
@@ -69,7 +71,8 @@ def analyze_output(model_set,
     save_timebin_table(table=timebin_table,
                        detector=detector,
                        model_set=model_set,
-                       mass=mass)
+                       mass=mass,
+                       mixing=mixing)
 
 
 # ===========================================================
@@ -205,7 +208,7 @@ def create_timebin_table(timesteps, time_totals, time_avg):
     return table
 
 
-def save_timebin_table(table, detector, model_set, mass):
+def save_timebin_table(table, detector, model_set, mass, mixing):
     """Save timebinned table to file
     """
     path = os.path.join('analysis', f'{detector}_{model_set}')
@@ -213,7 +216,7 @@ def save_timebin_table(table, detector, model_set, mass):
     if not os.path.isdir(path):
         os.makedirs(path)
 
-    filename = f"{detector}_analysis_{model_set}_m{mass}.dat"
+    filename = f"timebin_{detector}_{mixing}_{model_set}_m{mass}.dat"
     filepath = os.path.join(path, filename)
     string = table.to_string(index=False, justify='left')
 
