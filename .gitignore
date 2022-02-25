@@ -2,6 +2,7 @@ temp/
 cache/
 output_*/
 fluxes/
+analysis/
 
 # misc.
 .idea
