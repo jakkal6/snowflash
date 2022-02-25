@@ -208,8 +208,13 @@ def create_timebin_table(timesteps, time_totals, time_avg):
 def save_timebin_table(table, detector, model_set, mass):
     """Save timebinned table to file
     """
+    path = os.path.join('analysis', f'{detector}_{model_set}')
+
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
     filename = f"{detector}_analysis_{model_set}_m{mass}.dat"
-    filepath = os.path.join('analysis', filename)
+    filepath = os.path.join(path, filename)
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:

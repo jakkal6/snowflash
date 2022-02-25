@@ -25,7 +25,8 @@ def load_integrated_table(model_set,
     time_integral : int
         time integrated over post-bounce (milliseconds)
     """
-    path = data_path()
+    path = model_path(model_set=model_set, detector=detector)
+
     filename = f'{detector}_analysis_{model_set}_{time_integral}ms.dat'
     filepath = os.path.join(path, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
@@ -81,7 +82,7 @@ def load_timebin_table(mass,
     detector : str
     output_dir : str
     """
-    path = data_path()
+    path = model_path(model_set=model_set, detector=detector)
     filename = f'{detector}_analysis_{model_set}_m{mass}.dat'
     filepath = os.path.join(path, output_dir, filename)
     return pd.read_csv(filepath, delim_whitespace=True)
@@ -191,8 +192,8 @@ def get_channel_fractions(tables, channels):
 # ===============================================================
 #                      Paths
 # ===============================================================
-def data_path():
-    """Return path to Snowglobes data
+def analysis_path():
+    """Return path to Snowglobes analysis directory
 
     Returns : str
     """
@@ -202,6 +203,23 @@ def data_path():
         raise EnvironmentError('Environment variable SNOWGLOBES_DATA not set. '
                                'Set path to snowglobes data directory, e.g. '
                                '"export SNOWGLOBES_DATA=${HOME}/snowglobes/analysis"')
+
+    return path
+
+
+def model_path(model_set, detector):
+    """Return path to model data
+
+    Returns : str
+
+    parameters
+    ----------
+    model_set : str
+    detector : str
+    """
+    out_path = analysis_path()
+    path = os.path.join(out_path, f'{detector}_{model_set}')
+
     return path
 
 
@@ -210,7 +228,7 @@ def prog_path():
 
     Returns : str
     """
-    path = data_path()
+    path = analysis_path()
     return os.path.join(path, 'progenitor_table.dat')
 
 
