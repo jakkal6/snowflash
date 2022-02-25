@@ -5,7 +5,7 @@ import convert
 
 # ===== Model setup =====
 detector = "ar40kt"
-mixing = 'nomix'
+mixing = ['nomix', 'normal', 'inverted']
 
 model_sets = ['LMP', 'LMP+N50', 'SNA']
 
