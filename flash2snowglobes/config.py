@@ -4,6 +4,9 @@ import convert
 
 
 # ===== Model setup =====
+detector = "ar40kt"
+mixing = 'nomix'
+
 model_sets = ['LMP', 'LMP+N50', 'SNA']
 
 # labels used in sim files
@@ -61,7 +64,7 @@ e_bins = convert.get_bins(x0=e_start,
                           endpoint=True)
 
 
-# ===== Detectors =====
+# ===== Detection channels =====
 detector_materials = {
     'wc100kt30prct': 'water',
     'icecube': 'water',
@@ -92,4 +95,6 @@ channel_groups = {
          },
 }
 
+material = detector_materials[detector]
+channel_groups = channel_groups[material]
 
