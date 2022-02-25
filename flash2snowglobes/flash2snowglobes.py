@@ -23,6 +23,16 @@ material = config.detector_materials[detector]
 channel_groups = config.channel_groups[material]
 distance = config.distance * units.kpc.to(units.cm)
 
+timebins = convert.get_bins(x0=config.t_start,
+                            x1=config.t_end,
+                            dx=config.dt,
+                            endpoint=False)
+
+e_bins = convert.get_bins(x0=config.e_start,
+                          x1=config.e_end,
+                          dx=config.e_step,
+                          endpoint=True)
+
 print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)
 
@@ -41,16 +51,6 @@ for model_set in config.model_sets:
                                                       t_start=config.t_start,
                                                       t_end=config.t_end)
 
-        timebins = convert.get_bins(x0=config.t_start,
-                                    x1=config.t_end,
-                                    dx=config.dt,
-                                    endpoint=False)
-
-        e_bins = convert.get_bins(x0=config.e_start,
-                                  x1=config.e_end,
-                                  dx=config.e_step,
-                                  endpoint=True)
-
         fluences = convert.get_fluences(time=time,
                                         lum=lum,
                                         avg=avg,
@@ -59,7 +59,6 @@ for model_set in config.model_sets:
                                         timebins=timebins,
                                         e_bins=e_bins)
 
-        # MSW flavor mixing
         fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
                                                     mixing=mixing)
 
