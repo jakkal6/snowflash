@@ -37,17 +37,10 @@ print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)
 
 for model_set in config.model_sets:
-    tab = config.tab_map.get(model_set, model_set)
-    models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates/run_ecrates_tab{tab}'
-
     for mass in config.masses:
         print('=== Converting flash data ===')
-
-        dat_filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'
-        dat_filepath = os.path.join(models_path, f'run_{mass}', dat_filename)
-        print(f'Reading: {dat_filepath}')
-
-        time, lum, avg, rms = read_flash.read_datfile(dat_filepath=dat_filepath,
+        time, lum, avg, rms = read_flash.read_datfile(model_set=model_set,
+                                                      mass=mass,
                                                       t_start=config.t_start,
                                                       t_end=config.t_end)
 
@@ -62,7 +55,6 @@ for model_set in config.model_sets:
         fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
                                                     mixing=mixing)
 
-        print('=== Writing input files ===')
         write_files.write_fluence_files(model_set=model_set,
                                         mass=mass,
                                         timebins=timebins,
@@ -76,7 +68,7 @@ for model_set in config.model_sets:
                            material=material,
                            detector=detector)
 
-        print('=== Analysing output ===')
+        print('=== Analyzing output ===')
         analysis.analyze_output(model_set=model_set,
                                 mass=mass,
                                 detector=detector,

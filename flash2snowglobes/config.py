@@ -4,6 +4,7 @@ tab_map = {'LMP': 1, 'LMP+N50': 2, 'SNA': 3}  # model set tab IDs
 
 # paths
 snowglobes_path = "/mnt/research/SNAPhU/zac/snowglobes"
+models_path = f'/mnt/research/SNAPhU/swasik/run_ecrates'
 
 # progenitor ZAMA masses [Msun]
 masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,

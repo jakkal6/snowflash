@@ -2,8 +2,10 @@ import os
 import numpy as np
 from astropy import units
 
+import config
 
-def read_datfile(dat_filepath, t_start, t_end):
+
+def read_datfile(model_set, mass, t_start, t_end):
     """Read in FLASH data from .dat file
 
     Returns : time [s], lum [GeV/s], avg [GeV], rms [GeV]
@@ -12,15 +14,19 @@ def read_datfile(dat_filepath, t_start, t_end):
 
     Parameters
     ----------
-    dat_filepath : path to FLASH data file
+    model_set : str
+    mass : str or float
     t_start : float
         start of time slice (relative to bounce)
     t_end : float
         end of time slice (relative to bounce)
-    """
+    """    
+    filepath = dat_filepath(model_set=model_set, mass=mass)
+    print(f'Reading: {filepath}')
+
     cols = [0, 11, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
-    dat = np.loadtxt(dat_filepath, usecols=cols)
+    dat = np.loadtxt(filepath, usecols=cols)
 
     time = dat[:, 0]
     rshock = dat[:, 1]
@@ -40,6 +46,25 @@ def read_datfile(dat_filepath, t_start, t_end):
     lum[:, 2] /= 4.  # divide nu_x equally between mu, tau, mu_bar, tau_bar
 
     return time, lum, avg, rms
+
+
+def dat_filepath(model_set, mass):
+    """Return path to dat file
+
+    Returns : str
+
+    Parameters
+    ----------
+    model_set : str
+    mass : str
+    """
+    tab = config.tab_map.get(model_set, model_set)
+    path = os.path.join(config.models_path, f'run_ecrates_tab{tab}')
+
+    filename = f'stir_ecrates_tab{tab}_s{mass}_alpha1.25.dat'
+    filepath = os.path.join(path, f'run_{mass}', filename)
+    
+    return filepath
 
 
 def get_slice_idxs(time, rshock,
