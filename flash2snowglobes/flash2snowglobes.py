@@ -4,7 +4,6 @@
 # run snowglobes, analyze the output, and clean up files
 
 import read_flash
-from astropy import units
 
 import cleanup
 import config
@@ -20,7 +19,6 @@ mixing = 'nomix'
 
 material = config.detector_materials[detector]
 channel_groups = config.channel_groups[material]
-distance = config.distance * units.kpc.to(units.cm)
 
 print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)

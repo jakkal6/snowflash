@@ -1,3 +1,5 @@
+from astropy import units
+
 import convert
 
 
@@ -35,8 +37,8 @@ masses = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
           29.0, 29.1, 29.2, 29.3, 29.4, 29.5, 29.6, 29.7, 29.8, 29.9,
           30.0, 31, 32, 33, 35, 40, 45, 50, 55, 60, 70, 80, 100, 120)
 
-# source distance [kpc]
-distance = 10
+# source distance
+distance = 10 * units.kpc.to(units.cm)
 
 # time bins [s]
 t_start = -0.05  # relative to bounce
