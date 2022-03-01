@@ -3,7 +3,10 @@
 [![DOI](https://zenodo.org/badge/342716130.svg)](https://zenodo.org/badge/latestdoi/342716130)
 
 Tools for running [SNOwGLoBES](https://github.com/SNOwGLoBES/snowglobes) on FLASH models to predict neutrino observables.
-Contains two packages:
+
+You may also be interested in [SNEWPY](https://github.com/SNEWS2/snewpy), a more generalized implementation of this pipeline.
+
+`flash_snowglobes` contains two modules:
 
 ## 1. flash2snowglobes
 Modules to convert FLASH data to neutrino fluxes and run snowglobes.
