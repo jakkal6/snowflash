@@ -30,6 +30,10 @@ def clean_all():
 
 def clear_dir(path):
     """Delete all files within a directory
+
+    Parameters
+    ----------
+    path : str
     """
     files = os.listdir(path)
     for file in files:
