@@ -80,6 +80,10 @@ def analyze_output(model_set,
 # ===========================================================
 def get_all_channels(groups):
     """Extract list of channels from dict of channel groups
+
+    Parameters
+    ----------
+    groups : {}
     """
     channels = []
     for group, subs in groups.items():
@@ -90,6 +94,14 @@ def get_all_channels(groups):
 
 def load_channel_counts(channels, i, model_set, mass, detector):
     """Load all raw channel counts into dict
+
+    Parameters
+    ----------
+    channels : [str]
+    i : int
+    model_set : str
+    mass : str, int or float
+    detector : str
     """
     channel_counts = {}  # arrays of channel counts per energy bin
     for chan in channels:
@@ -103,6 +115,14 @@ def load_channel_counts(channels, i, model_set, mass, detector):
 
 def load_channel_dat(channel, i, model_set, mass, detector):
     """Load array of detection counts per energy bin
+
+    Parameters
+    ----------
+    channel : str
+    i : int
+    model_set : str
+    mass : str, int or float
+    detector : str
     """
     filepath = channel_dat_filepath(channel=channel,
                                     i=i,
@@ -119,6 +139,14 @@ def load_channel_dat(channel, i, model_set, mass, detector):
 
 def channel_dat_filepath(channel, i, model_set, mass, detector):
     """Return filepath to snowglobes output file
+
+    Parameters
+    ----------
+    channel : str
+    i : int
+    model_set : str
+    mass : str, int or float
+    detector : str
     """
     filename = f'pinched_{model_set}_m{mass}_{i}_{channel}_{detector}_events_smeared.dat'
     filepath = os.path.join('./out', filename)
@@ -128,6 +156,14 @@ def channel_dat_filepath(channel, i, model_set, mass, detector):
 
 def load_energy_bins(channel, i, model_set, mass, detector):
     """Load array of energy bins (MeV) from a snowglobes output file
+
+    Parameters
+    ----------
+    channel : str
+    i : int
+    model_set : str
+    mass : str, int or float
+    detector : str
     """
     filepath = channel_dat_filepath(channel=channel,
                                     i=i,
@@ -149,6 +185,12 @@ def load_energy_bins(channel, i, model_set, mass, detector):
 # ===========================================================
 def get_group_counts(channel_counts, groups, n_bins):
     """Sum channel counts by group
+
+    Parameters
+    ----------
+    channel_counts : {}
+    groups : {}
+    n_bins : int
     """
     group_counts = {'total': np.zeros(n_bins)}
 
@@ -166,6 +208,10 @@ def get_group_counts(channel_counts, groups, n_bins):
 
 def get_totals(group_counts):
     """Get total counts over all energy bins
+
+    Parameters
+    ----------
+    group_counts : {}
     """
     totals = {}
     for group in group_counts:
@@ -176,6 +222,12 @@ def get_totals(group_counts):
 
 def get_avg(group_counts, group_totals, energy_bins):
     """Get group average energies
+
+    Parameters
+    ----------
+    group_counts : {}
+    group_totals : {}
+    energy_bins : []
     """
     group_avg = {}
 
@@ -195,6 +247,12 @@ def get_avg(group_counts, group_totals, energy_bins):
 # ===========================================================
 def create_timebin_table(timesteps, time_totals, time_avg):
     """Construct a DataFrame from timebinned arrays of mean energies/total counts
+
+    Parameters
+    ----------
+    timesteps : []
+    time_totals : {group: []}
+    time_avg : {group: []}
     """
     table = pd.DataFrame()
     table['time'] = timesteps
@@ -210,6 +268,14 @@ def create_timebin_table(timesteps, time_totals, time_avg):
 
 def save_timebin_table(table, detector, model_set, mass, mixing):
     """Save timebinned table to file
+
+    Parameters
+    ----------
+    table : pd.DataFrame
+    detector : str
+    model_set : str
+    mass : str, int or float
+    mixing : str
     """
     path = os.path.join('timebin', f'{detector}_{mixing}')
 
