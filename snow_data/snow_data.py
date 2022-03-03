@@ -147,7 +147,7 @@ class SnowData:
     #                      Plotting
     # ===============================================================
     def plot_integrated(self, y_var,
-                        channel='Total',
+                        channel='total',
                         x_var='m_fe',
                         marker='.',
                         x_scale=None,
@@ -163,7 +163,7 @@ class SnowData:
 
         parameters
         ----------
-        y_var : 'Tot' or 'Avg'
+        y_var : 'counts' or 'energy'
         channel : str
         x_var : str
         marker : str
@@ -221,7 +221,7 @@ class SnowData:
 
         parameters
         ----------
-        y_var : 'Tot' or 'Avg'
+        y_var : 'counts' or 'energy'
         channels : [str]
         x_var : str
         marker : str
@@ -272,7 +272,7 @@ class SnowData:
         return fig
 
     def plot_difference(self, y_var, ref_model_set,
-                        channel='Total',
+                        channel='total',
                         x_var='m_fe',
                         marker='.',
                         x_scale=None,
@@ -286,7 +286,7 @@ class SnowData:
 
         parameters
         ----------
-        y_var : 'Tot' or 'Avg'
+        y_var : 'counts' or 'energy'
         channel : str
         ref_model_set : str
                 which model_set to use as the baseline for comparison
@@ -317,7 +317,7 @@ class SnowData:
         return fig
 
     def plot_timebin(self, y_var, mass,
-                     channel='Total',
+                     channel='total',
                      x_scale=None,
                      y_scale=None,
                      ax=None,
@@ -328,7 +328,7 @@ class SnowData:
 
         parameters
         ----------
-        y_var : 'Tot' or 'Avg'
+        y_var : 'counts' or 'energy'
         channel : str
         mass : float or int
         y_scale : str
@@ -351,7 +351,7 @@ class SnowData:
 
         if not data_only:
             plot_tools.set_ax_all(ax=ax,
-                                  x_var='Time',
+                                  x_var='time',
                                   y_var=y_var,
                                   x_scale=x_scale,
                                   y_scale=y_scale,
@@ -360,7 +360,7 @@ class SnowData:
         return fig
 
     def plot_cumulative(self, y_var, mass,
-                        channel='Total',
+                        channel='total',
                         x_scale=None,
                         y_scale=None,
                         ax=None,
@@ -372,7 +372,7 @@ class SnowData:
 
         parameters
         ----------
-        y_var : 'Tot' or 'Avg'
+        y_var : 'counts' or 'energy'
         channel : str
         mass : float or int
         y_scale : str
@@ -414,7 +414,7 @@ class SnowData:
     #                      Slider Plots
     # ===============================================================
     def plot_integrated_slider(self, y_var,
-                               channel='Total',
+                               channel='total',
                                x_var='m_fe',
                                marker='.',
                                x_scale=None,
@@ -430,7 +430,7 @@ class SnowData:
 
         parameters
         ----------
-        y_var : 'Tot' or 'Avg'
+        y_var : 'counts' or 'energy'
         channel : str
         x_var : str
         marker : str
@@ -501,6 +501,6 @@ class SnowData:
         mass = self.mass_list[0]
         ref_table = self.timebin_tables[model_set].sel(mass=mass)
 
-        t0 = ref_table.Time.values[0]
-        t1 = ref_table.Time.values[n_bins]
+        t0 = ref_table.time.values[0]
+        t1 = ref_table.time.values[n_bins]
         print(f'Using timebins from {t0:.2f} to {t1:.2f} s')

@@ -60,7 +60,7 @@ def load_all_timebin_tables(mass_list,
                                    output_dir=output_dir,
                                    mixing=mixing)
 
-        table.set_index('Time', inplace=True)
+        table.set_index('time', inplace=True)
         tables_dict[mass] = table.to_xarray()
 
     print()
@@ -120,19 +120,19 @@ def time_integrate(timebin_tables, n_bins, channels):
     channels : [str]
         list of channel names
     """
-    channels = ['Total'] + channels
+    channels = ['total'] + channels
     mass_arrays = {}
 
-    time_slice = timebin_tables.isel(Time=slice(0, n_bins))
-    totals = time_slice.sum(dim='Time')
+    time_slice = timebin_tables.isel(time=slice(0, n_bins))
+    totals = time_slice.sum(dim='time')
     table = xr.Dataset()
 
     for channel in channels:
-        tot = f'Tot_{channel}'
-        avg = f'Avg_{channel}'
+        tot = f'counts_{channel}'
+        avg = f'energy_{channel}'
 
         total_counts = totals[tot]
-        total_energy = (time_slice[avg] * time_slice[tot]).sum(dim='Time')
+        total_energy = (time_slice[avg] * time_slice[tot]).sum(dim='time')
 
         table[tot] = total_counts
         table[avg] = total_energy / total_counts
@@ -186,7 +186,7 @@ def get_channel_fractions(tables, channels):
         fracs = np.zeros(n_channels)
 
         for i, channel in enumerate(channels):
-            fracs[i] = np.mean(table[f'Tot_{channel}'] / table['Tot_Total'])
+            fracs[i] = np.mean(table[f'counts_{channel}'] / table['counts_total'])
 
         frac_table[model_set] = fracs
 
@@ -244,7 +244,7 @@ def y_column(y_var, channel):
 
     Parameters
     ----------
-    y_var : 'Tot' or 'Avg'
+    y_var : 'counts' or 'energy'
     channel : str
     """
     return f'{y_var}_{channel}'
