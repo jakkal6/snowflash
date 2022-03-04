@@ -4,7 +4,7 @@
 
 Tools for running [SNOwGLoBES](https://github.com/SNOwGLoBES/snowglobes) on FLASH models to predict neutrino observables.
 
-You may also be interested in [SNEWPY](https://github.com/SNEWS2/snewpy), a generalized implementation of a similar pipeline for other CCSN codes.
+You may also want to check out [SNEWPY](https://github.com/SNEWS2/snewpy), an implementation of the SNOwGLoBES pipeline for multiple CCSN codes.
 
 `flash_snowglobes` contains two modules:
 
