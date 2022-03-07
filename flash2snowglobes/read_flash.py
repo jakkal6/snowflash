@@ -83,10 +83,10 @@ def get_slice_idxs(time, rshock,
     i_start = np.searchsorted(time, bounce_time + t_start) - 1
     i_end = np.searchsorted(time, bounce_time + t_end) + 1
 
-    if i_start == -1:
+    if i_start < 0:
         raise ValueError('t_start is outside simulation time')
 
-    if i_end == (len(time) + 1):
+    if i_end > len(time):
         raise ValueError('t_end is outside simulation time')
 
     return i_start, i_bounce, i_end
