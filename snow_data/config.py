@@ -35,6 +35,7 @@ colors = {
     'LMP': '#786ee7',
     'LMP+N50': '#ff6933',
     'SNA': '#00ad62',
+    'IPA': '#00ad62',
 }
 
 ax_scales = {

@@ -16,7 +16,6 @@ class SnowData:
                  mass_list=None,
                  load_data=True,
                  mixing='nomix',
-                 output_dir='timebin_tables_nomix',
                  n_bins=20,
                  ):
         """Collection of SnowGlobes data
@@ -31,14 +30,11 @@ class SnowData:
             progenitor ZAMS masses of models
         load_data : bool
             immediately load all data
-        output_dir : str
-            name of directory containing snowglobes data
         n_bins : int
             number of timebins to integrate over
         """
         self.detector = detector
         self.model_sets = model_sets
-        self.output_dir = output_dir
         self.n_bins = n_bins
         self.channels = config.channels[detector]
         self.mass_list = mass_list
@@ -87,7 +83,6 @@ class SnowData:
                 mass_list=self.mass_list,
                 model_set=model_set,
                 detector=self.detector,
-                output_dir=self.output_dir,
                 mixing=self.mixing)
 
         self.timebin_tables = tables
