@@ -11,7 +11,7 @@ from .slider import SnowSlider
 
 class SnowData:
     def __init__(self,
-                 model_sets=('LMP', 'LMP+N50', 'SNA'),
+                 model_sets=('LMP', 'LMP+N50', 'IPA'),
                  detector='ar40kt',
                  mass_list=None,
                  load_data=True,
