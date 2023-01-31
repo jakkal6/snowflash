@@ -38,3 +38,7 @@ def clear_dir(path):
     files = os.listdir(path)
     for file in files:
         os.remove(f"{path}/" + file)
+
+
+if __name__ == '__main__':
+    clean_all()
