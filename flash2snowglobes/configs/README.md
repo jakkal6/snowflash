@@ -1,0 +1,1 @@
+To use a particular config, copy and rename the file to `flash2snowglobes/config.py` (replacing the existing file)
