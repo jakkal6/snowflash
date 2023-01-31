@@ -17,8 +17,7 @@ import flavor_mixing
 try:
     x = config.snowglobes_path
 except AttributeError:
-    raise FileNotFoundError('config file not found. '
-          'Copy one from `configs/` to `flash2snowglobes/config.py`')
+    raise FileNotFoundError('config file not found. Copy one from `configs/` to `flash2snowglobes/config.py`')
 
 
 print('=== Copying snowglobes install ===')
