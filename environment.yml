@@ -1,0 +1,9 @@
+name: flash_snowglobes
+dependencies:
+  - python=3.8
+  - astropy=5.1
+  - ipython=7
+  - matplotlib=3.6
+  - numpy=1.23
+  - pandas=1.5
+  - xarray=2022.11
