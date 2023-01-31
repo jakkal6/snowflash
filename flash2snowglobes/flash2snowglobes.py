@@ -14,6 +14,12 @@ import run_snowglobes
 import setup
 import flavor_mixing
 
+try:
+    x = config.snowglobes_path
+except AttributeError:
+    print('config file not found. '
+          'Copy one from `configs/` to `flash2snowglobes/config.py`')
+
 
 print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)
