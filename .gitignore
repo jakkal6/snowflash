@@ -4,3 +4,4 @@ output_*/
 fluxes/
 analysis/
 timebin/
+flash2snowglobes/config.py
