@@ -47,7 +47,8 @@ for mixing in config.mixing:
 
             filepath = read_flash.dat_filepath(model_set=dat_model_set,
                                                mass=mass,
-                                               models_path=config.models_path)
+                                               models_path=config.models_path,
+                                               run=config.run)
 
             time, lum, avg, rms = read_flash.read_datfile(filepath=filepath,
                                                           t_start=config.t_start,

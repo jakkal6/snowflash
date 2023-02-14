@@ -2,6 +2,7 @@
 detector = "ar40kt"
 mixing = ['nomix', 'normal', 'inverted']
 model_sets = ['sn1987a']
+run = 'run'
 
 # names used in sim files (if different from model_set)
 model_set_map = {}

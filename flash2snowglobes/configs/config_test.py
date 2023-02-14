@@ -2,8 +2,9 @@
 detector = "ar40kt"
 mixing = ['nomix', ]
 model_sets = ['LMP', ]
+run = None
 
-# labels used in sim files
+# names used in sim files (if different from model_set)
 model_set_map = {'LMP': 'tab1',
                  'LMP+N50': 'tab2',
                  'SNA': 'tab3'}
