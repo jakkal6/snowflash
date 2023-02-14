@@ -1,10 +1,11 @@
 # FLASH to snowglobes wrapper code
 # Need working installation of snowglobes
 # This will convert FLASH data to necessary input format for snowglobes,
-# run snowglobes, analyze the output, and clean up files
+# run snowglobes, extract the output, and clean up files
+
+from astropy import units
 
 import read_flash
-
 import cleanup
 import config
 import convert
@@ -13,6 +14,7 @@ import analysis
 import run_snowglobes
 import setup
 import flavor_mixing
+import detectors
 
 try:
     x = config.snowglobes_path
@@ -22,6 +24,20 @@ except AttributeError:
 
 print('=== Copying snowglobes install ===')
 setup.copy_snowglobes(config.snowglobes_path)
+
+material = detectors.materials[config.detector]
+channel_groups = detectors.channel_groups[material]
+distance = config.distance * units.kpc.to(units.cm)
+
+timebins = convert.get_bins(x0=config.t_start,
+                            x1=config.t_end,
+                            dx=config.dt,
+                            endpoint=False)
+
+e_bins = convert.get_bins(x0=config.e_start,
+                          x1=config.e_end,
+                          dx=config.e_step,
+                          endpoint=True)
 
 for mixing in config.mixing:
     for model_set in config.model_sets:
@@ -41,31 +57,31 @@ for mixing in config.mixing:
                                             lum=lum,
                                             avg=avg,
                                             rms=rms,
-                                            distance=config.distance,
-                                            timebins=config.timebins,
-                                            e_bins=config.e_bins)
+                                            distance=distance,
+                                            timebins=timebins,
+                                            e_bins=e_bins)
 
             fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
                                                         mixing=mixing)
 
             write_files.write_fluence_files(model_set=model_set,
                                             mass=mass,
-                                            timebins=config.timebins,
-                                            e_bins=config.e_bins,
+                                            timebins=timebins,
+                                            e_bins=e_bins,
                                             fluences_mixed=fluences_mixed)
 
             print('=== Running snowglobes ===')
             run_snowglobes.run(model_set=model_set,
                                mass=mass,
-                               timebins=config.timebins,
-                               material=config.material,
+                               timebins=timebins,
+                               material=material,
                                detector=config.detector)
 
             print('=== Analyzing output ===')
             analysis.analyze_output(model_set=model_set,
                                     mass=mass,
                                     detector=config.detector,
-                                    channel_groups=config.channel_groups,
+                                    channel_groups=channel_groups,
                                     mixing=mixing)
 
             print('=== Cleaning up model ===')
