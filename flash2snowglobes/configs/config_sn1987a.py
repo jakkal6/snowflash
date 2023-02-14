@@ -15,7 +15,7 @@ models_path = '/mnt/research/SNAPhU/sn1987a/runs'
 masses = ('15-7b', '15-8b', '16-4a', '16-7b', '17-7a')
 
 # source distance [kpc]
-distance = 10
+distance = 51.4
 
 # time bins [s]
 t_start = -0.05  # relative to bounce
