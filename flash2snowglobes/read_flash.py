@@ -43,7 +43,7 @@ def read_datfile(filepath, t_start, t_end):
     return time, lum, avg, rms
 
 
-def dat_filepath(model_set, mass, models_path):
+def dat_filepath(model_set, mass, models_path, run=None):
     """Return path to dat file
 
     Returns : str
@@ -53,12 +53,18 @@ def dat_filepath(model_set, mass, models_path):
     model_set : str
     mass : str
     models_path : str
+    run : str
+        file basename (optional)
     """
-    model_set_dir = f'run_ecrates_{model_set}'
+    # model_set_dir = f'run_ecrates_{model_set}'
     model_dir = f'run_{mass}'
-    filename = f'stir_ecrates_{model_set}_s{mass}_alpha1.25.dat'
 
-    filepath = os.path.join(models_path, model_set_dir, model_dir, filename)
+    if run is None:
+        filename = f'stir_ecrates_{model_set}_s{mass}_alpha1.25.dat'
+    else:
+        filename = f'run.dat'
+
+    filepath = os.path.join(models_path, model_set, model_dir, filename)
     
     return filepath
 
