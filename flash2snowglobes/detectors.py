@@ -1,0 +1,30 @@
+# map snowglobes materials to common channels
+materials = {
+    'wc100kt30prct': 'water',
+    'icecube': 'water',
+    'ar40kt': 'argon',
+}
+
+# detection channels for given material
+channel_groups = {
+    'water':
+        {'IBD': ['ibd'],
+         'ES': ['nue_e'],
+         'nue_O16': ['nue_O16'],
+         'nuebar_O16': ['nuebar_O16'],
+         'NC': ['nc_nue_O16', 'nc_nuebar_O16',
+                'nc_numu_O16', 'nc_numubar_O16',
+                'nc_nutau_O16', 'nc_nutaubar_O16']
+         },
+
+    'argon':
+        {'ES': ['nue_e', 'nuebar_e',
+                'numu_e', 'numubar_e',
+                'nutau_e', 'nutaubar_e'],
+         'nue_Ar40': ['nue_Ar40'],
+         'nuebar_Ar40': ['nuebar_Ar40'],
+         'NC': ['nc_nue_Ar40', 'nc_nuebar_Ar40',
+                'nc_numu_Ar40', 'nc_numubar_Ar40',
+                'nc_nutau_Ar40', 'nc_nutaubar_Ar40']
+         },
+}
