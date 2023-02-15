@@ -19,8 +19,8 @@ distance = 51.4
 
 # time bins [s]
 t_start = -0.05  # relative to bounce
-t_end = 1.0
-dt = 0.005
+t_end = 1.60
+dt = 0.01
 
 # energy bins [GeV]
 e_start = 0.0
