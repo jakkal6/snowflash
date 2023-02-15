@@ -5,3 +5,4 @@ fluxes/
 analysis/
 timebin/
 flash2snowglobes/config.py
+slurm*.out
