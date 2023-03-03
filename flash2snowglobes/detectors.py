@@ -1,6 +1,7 @@
 # map snowglobes materials to common channels
 materials = {
     'wc100kt30prct': 'water',
+    'wc100kt15prct': 'water',
     'icecube': 'water',
     'ar40kt': 'argon',
 }
