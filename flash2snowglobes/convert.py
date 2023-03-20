@@ -42,8 +42,8 @@ def get_fluences(time,
     n_timebins = len(timebins)
     n_ebins = len(e_bins)
 
-    dt = np.diff(timebins)[0]
-    full_timebins = np.append(timebins, timebins[-1] + dt)
+    t_step = np.diff(timebins)[0]
+    full_timebins = np.append(timebins, timebins[-1] + t_step)
 
     fluences = {f: np.zeros([n_timebins, n_ebins]) for f in flavors}
 

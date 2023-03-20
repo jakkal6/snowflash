@@ -30,7 +30,7 @@ masses = config['models']['masses']
 
 t_start = config['bins']['t_start']
 t_end = config['bins']['t_end']
-dt = config['bins']['dt']
+t_step = config['bins']['t_step']
 
 e_start = config['bins']['e_start']
 e_end = config['bins']['e_end']
@@ -42,7 +42,7 @@ distance = config['snow']['distance'] * units.kpc.to(units.cm)
 material = detectors.materials[detector]
 channel_groups = detectors.channel_groups[material]
 
-timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)
+timebins = convert.get_bins(x0=t_start, x1=t_end, dx=t_step, endpoint=False)
 e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
 

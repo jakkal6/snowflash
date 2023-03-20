@@ -25,11 +25,11 @@ def write_fluence_files(model_set,
     fluences_mixed : {flavor: [timebins, e_bins]}
         neutrino fluences over all time and energy bins [GeV/s/cm^2]
     """
-    dt = np.diff(timebins)[0]
+    t_step = np.diff(timebins)[0]
     path = './fluxes'
 
     # write key table
-    key_table = get_key_table(timebins=timebins, dt=dt)
+    key_table = get_key_table(timebins=timebins, t_step=t_step)
     key_filepath = os.path.join(path, f'pinched_{model_set}_m{mass}_key.dat')
 
     with open(key_filepath, 'w') as keyfile:
@@ -46,8 +46,7 @@ def write_fluence_files(model_set,
             table.to_string(outfile, header=None, index=False)
 
 
-def get_key_table(timebins,
-                  dt):
+def get_key_table(timebins, t_step):
     """Return key table
 
     Returns : pd.DataFrame
@@ -55,12 +54,12 @@ def get_key_table(timebins,
     Parameters
     ----------
     timebins : []
-    dt : float
+    t_step : float
     """
     table = pd.DataFrame()
     table['i'] = np.arange(len(timebins)) + 1
     table['time[s]'] = timebins
-    table['dt[s]'] = dt
+    table['dt[s]'] = t_step
 
     return table
 
