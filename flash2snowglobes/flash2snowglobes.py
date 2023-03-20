@@ -5,53 +5,65 @@
 
 from astropy import units
 
-import io
-import cleanup
-import convert
-import write_files
-import analysis
-import run_snowglobes
-import setup
-import flavor_mixing
-import detectors
+from . import io
+from . import cleanup
+from . import convert
+from . import write_files
+from . import analysis
+from . import run_snowglobes
+from . import setup
+from . import flavor_mixing
+from . import detectors
 
-try:
-    x = config.snowglobes_path
-except AttributeError:
-    raise FileNotFoundError('config file not found. Copy one from `configs/` to `flash2snowglobes/config.py`')
+
+# ===== config and setup =====
+config_name = 'test'
+config = io.load_config(config_name)
+
+snowglobes_path = config['paths']['snowglobes']
+models_path = config['paths']['models']
+
+run = config['models']['run']
+model_sets = config['models']['model_sets']
+model_set_map = config['models']['model_set_map']
+masses = config['models']['masses']
+
+t_start = config['bins']['t_start']
+t_end = config['bins']['t_end']
+dt = config['bins']['dt']
+
+e_start = config['bins']['e_start']
+e_end = config['bins']['e_end']
+e_step = config['bins']['e_step']
+
+detector = config['snow']['detector']
+distance = config['snow']['distance'] * units.kpc.to(units.cm)
+
+material = detectors.materials[detector]
+channel_groups = detectors.channel_groups[material]
+
+timebins = convert.get_bins(x0=t_start, x1=t_end, dx=dt, endpoint=False)
+e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
 
 print('=== Copying snowglobes install ===')
-setup.copy_snowglobes(config.snowglobes_path)
+setup.copy_snowglobes(snowglobes_path)
 
-material = detectors.materials[config.detector]
-channel_groups = detectors.channel_groups[material]
-distance = config.distance * units.kpc.to(units.cm)
 
-timebins = convert.get_bins(x0=config.t_start,
-                            x1=config.t_end,
-                            dx=config.dt,
-                            endpoint=False)
-
-e_bins = convert.get_bins(x0=config.e_start,
-                          x1=config.e_end,
-                          dx=config.e_step,
-                          endpoint=True)
-
-for mixing in config.mixing:
-    for model_set in config.model_sets:
-        for mass in config.masses:
+for mixing in config['snow']['mixing']:
+    for model_set in model_sets:
+        for mass in masses:
             print('=== Converting flash data ===')
-            dat_model_set = config.model_set_map.get(model_set, model_set)
+            dat_model_set = model_set_map.get(model_set, model_set)
 
             filepath = io.dat_filepath(model_set=dat_model_set,
                                        mass=mass,
-                                       models_path=config.models_path,
-                                       run=config.run)
+                                       models_path=models_path,
+                                       run=run)
 
             time, lum, avg, rms = io.read_datfile(filepath=filepath,
-                                                  t_start=config.t_start,
-                                                  t_end=config.t_end)
+                                                  t_start=t_start,
+                                                  t_end=t_end)
 
             fluences = convert.get_fluences(time=time,
                                             lum=lum,
@@ -75,12 +87,12 @@ for mixing in config.mixing:
                                mass=mass,
                                timebins=timebins,
                                material=material,
-                               detector=config.detector)
+                               detector=detector)
 
             print('=== Analyzing output ===')
             analysis.analyze_output(model_set=model_set,
                                     mass=mass,
-                                    detector=config.detector,
+                                    detector=detector,
                                     channel_groups=channel_groups,
                                     mixing=mixing)
 
