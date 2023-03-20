@@ -1,8 +1,13 @@
 import os
 import numpy as np
 from astropy import units
+import ast
+from configparser import ConfigParser
 
 
+# =======================================================
+#                 FLASH files
+# =======================================================
 def read_datfile(filepath, t_start, t_end):
     """Read in FLASH data from .dat file
 
@@ -65,7 +70,7 @@ def dat_filepath(model_set, mass, models_path, run=None):
         filename = f'run.dat'
 
     filepath = os.path.join(models_path, model_set, model_dir, filename)
-    
+
     return filepath
 
 
@@ -75,7 +80,7 @@ def get_slice_idxs(time, rshock,
     """Get indexes of time slice that includes start/end times
 
     Returns: i_start, i_bounce, i_end
-    
+
     Parameters
     ----------
     time : []
@@ -96,3 +101,74 @@ def get_slice_idxs(time, rshock,
         raise ValueError('t_end is outside simulation time')
 
     return i_start, i_bounce, i_end
+
+
+# =======================================================
+#                 Config files
+# =======================================================
+def load_config(config_name):
+    """Load .ini config file and return as dict
+
+    Returns : {}
+
+    parameters
+    ----------
+    config_name : str
+    """
+    filepath = config_filepath(config_name)
+
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f'Config file not found: {filepath}')
+
+    ini = ConfigParser()
+    ini.read(filepath)
+
+    config = {}
+    for section in ini.sections():
+        config[section] = {}
+        for option in ini.options(section):
+            config[section][option] = ast.literal_eval(ini.get(section, option))
+
+    return config
+
+
+def check_config(config, config_name):
+    """Check if config provided, load if not
+
+    Returns : {}
+
+    parameters
+    ----------
+    config : dict or None
+    config_name : str
+    """
+    if config is None:
+        config = load_config(config_name)
+
+    return config
+
+
+def top_path():
+    """Return path to top-level repo directory
+
+    Returns : str
+    """
+    path = os.path.join(os.path.dirname(__file__), '..')
+    path = os.path.abspath(path)
+
+    return path
+
+
+def config_filepath(config_name):
+    """Return path to config file
+
+    Returns : str
+
+    parameters
+    ----------
+    config_name : str
+    """
+    filepath = os.path.join(top_path(), 'config', f'{config_name}.ini')
+    filepath = os.path.abspath(filepath)
+
+    return filepath
