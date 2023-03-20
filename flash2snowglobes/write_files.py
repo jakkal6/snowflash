@@ -3,7 +3,11 @@ import pandas as pd
 import os
 
 
-def write_fluence_files(model_set, mass, timebins, e_bins, fluences_mixed):
+def write_fluence_files(model_set,
+                        mass,
+                        timebins,
+                        e_bins,
+                        fluences_mixed):
     """Writes input files for snowglobes in fluxes directory
 
     Creates key file to indicate how file index is related to time
@@ -42,7 +46,8 @@ def write_fluence_files(model_set, mass, timebins, e_bins, fluences_mixed):
             table.to_string(outfile, header=None, index=False)
 
 
-def get_key_table(timebins, dt):
+def get_key_table(timebins,
+                  dt):
     """Return key table
 
     Returns : pd.DataFrame
@@ -60,7 +65,9 @@ def get_key_table(timebins, dt):
     return table
 
 
-def format_fluence_table(time_i, e_bins, fluences_mixed):
+def format_fluence_table(time_i,
+                         e_bins,
+                         fluences_mixed):
     """Return fluence table for given timestep
 
     Returns: pd.DataFrame

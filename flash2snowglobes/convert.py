@@ -9,7 +9,13 @@ Note on docstrings:
 """
 
 
-def get_fluences(time, lum, avg, rms, distance, timebins, e_bins):
+def get_fluences(time,
+                 lum,
+                 avg,
+                 rms,
+                 distance,
+                 timebins,
+                 e_bins):
     """Calculate pinched neutrino fluences at Earth for snowglobes input
 
     Returns: fluences : {flav: [timebins, e_bins]}
