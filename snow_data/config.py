@@ -25,6 +25,7 @@ mass_list = (9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75,
 channels = {
     'ar40kt': ['ES', 'nue_Ar40', 'nuebar_Ar40', 'NC'],
     'icecube': ['IBD', 'ES', 'nue_O16', 'nuebar_O16', 'NC'],
+    'wc100kt15prct': ['IBD', 'ES', 'nue_O16', 'nuebar_O16', 'NC'],
 }
 
 
