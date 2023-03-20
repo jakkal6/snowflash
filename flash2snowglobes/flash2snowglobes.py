@@ -5,7 +5,7 @@
 
 from astropy import units
 
-from . import io
+from . import flash_io
 from . import cleanup
 from . import convert
 from . import write_files
@@ -18,7 +18,7 @@ from . import detectors
 
 # ===== config and setup =====
 config_name = 'test'
-config = io.load_config(config_name)
+config = flash_io.load_config(config_name)
 
 snowglobes_path = config['paths']['snowglobes']
 models_path = config['paths']['models']
@@ -56,14 +56,14 @@ for mixing in config['snow']['mixing']:
             print('=== Converting flash data ===')
             dat_model_set = model_set_map.get(model_set, model_set)
 
-            filepath = io.dat_filepath(model_set=dat_model_set,
-                                       mass=mass,
-                                       models_path=models_path,
-                                       run=run)
+            filepath = flash_io.dat_filepath(model_set=dat_model_set,
+                                             mass=mass,
+                                             models_path=models_path,
+                                             run=run)
 
-            time, lum, avg, rms = io.read_datfile(filepath=filepath,
-                                                  t_start=t_start,
-                                                  t_end=t_end)
+            time, lum, avg, rms = flash_io.read_datfile(filepath=filepath,
+                                                        t_start=t_start,
+                                                        t_end=t_end)
 
             fluences = convert.get_fluences(time=time,
                                             lum=lum,
