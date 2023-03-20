@@ -5,7 +5,7 @@ import os
 
 def write_fluence_files(model_set,
                         mass,
-                        timebins,
+                        t_bins,
                         e_bins,
                         fluences_mixed):
     """Writes input files for snowglobes in fluxes directory
@@ -18,25 +18,25 @@ def write_fluence_files(model_set,
     model_set : str
     mass : float
         progenitor mass
-    timebins : []
+    t_bins : []
         time bins (leftside) for fluences [s]
     e_bins : []
         energy bins (leftside) for neutrino spectra [GeV]
-    fluences_mixed : {flavor: [timebins, e_bins]}
+    fluences_mixed : {flavor: [t_bins, e_bins]}
         neutrino fluences over all time and energy bins [GeV/s/cm^2]
     """
-    t_step = np.diff(timebins)[0]
+    t_step = np.diff(t_bins)[0]
     path = './fluxes'
 
     # write key table
-    key_table = get_key_table(timebins=timebins, t_step=t_step)
+    key_table = get_key_table(t_bins=t_bins, t_step=t_step)
     key_filepath = os.path.join(path, f'pinched_{model_set}_m{mass}_key.dat')
 
     with open(key_filepath, 'w') as keyfile:
         key_table.to_string(keyfile, index=False)
 
     # write fluence files
-    for i in range(len(timebins)):
+    for i in range(len(t_bins)):
         out_filepath = os.path.join(path, f'pinched_{model_set}_m{mass}_{i + 1}.dat')
         table = format_fluence_table(time_i=i,
                                      e_bins=e_bins,
@@ -46,19 +46,19 @@ def write_fluence_files(model_set,
             table.to_string(outfile, header=None, index=False)
 
 
-def get_key_table(timebins, t_step):
+def get_key_table(t_bins, t_step):
     """Return key table
 
     Returns : pd.DataFrame
 
     Parameters
     ----------
-    timebins : []
+    t_bins : []
     t_step : float
     """
     table = pd.DataFrame()
-    table['i'] = np.arange(len(timebins)) + 1
-    table['time[s]'] = timebins
+    table['i'] = np.arange(len(t_bins)) + 1
+    table['time[s]'] = t_bins
     table['dt[s]'] = t_step
 
     return table
@@ -76,7 +76,7 @@ def format_fluence_table(time_i,
     time_i : int
         timestep index
     e_bins : []
-    fluences_mixed : {flavor: [timebins, e_bins]}
+    fluences_mixed : {flavor: [t_bins, e_bins]}
     """
     flavor_map = {'e': 'e',
                   'mu': 'x',

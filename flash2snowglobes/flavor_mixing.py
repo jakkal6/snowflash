@@ -6,11 +6,11 @@ def mix_fluences(fluences, mixing):
             - Dighe & Smirnov (2000),
             - Nagakura et al. (2021)
 
-    Returns: fluence_mix {flavor: [timebins, e_bins]}
+    Returns: fluence_mix {flavor: [t_bins, e_bins]}
 
     Parameters
     ----------
-    fluences : {flavor: [timebins, e_bins]}
+    fluences : {flavor: [t_bins, e_bins]}
     mixing : 'normal', 'inverted', or 'none'
     """
     fluence_mix = {}

@@ -42,7 +42,7 @@ distance = config['snow']['distance'] * units.kpc.to(units.cm)
 material = detectors.materials[detector]
 channel_groups = detectors.channel_groups[material]
 
-timebins = convert.get_bins(x0=t_start, x1=t_end, dx=t_step, endpoint=False)
+t_bins = convert.get_bins(x0=t_start, x1=t_end, dx=t_step, endpoint=False)
 e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
 
@@ -70,7 +70,7 @@ for mixing in config['snow']['mixing']:
                                             avg=avg,
                                             rms=rms,
                                             distance=distance,
-                                            timebins=timebins,
+                                            t_bins=t_bins,
                                             e_bins=e_bins)
 
             fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
@@ -78,14 +78,14 @@ for mixing in config['snow']['mixing']:
 
             write_files.write_fluence_files(model_set=model_set,
                                             mass=mass,
-                                            timebins=timebins,
+                                            t_bins=t_bins,
                                             e_bins=e_bins,
                                             fluences_mixed=fluences_mixed)
 
             print('=== Running snowglobes ===')
             run_snowglobes.run(model_set=model_set,
                                mass=mass,
-                               timebins=timebins,
+                               t_bins=t_bins,
                                material=material,
                                detector=detector)
 

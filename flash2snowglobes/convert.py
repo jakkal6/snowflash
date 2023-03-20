@@ -14,11 +14,11 @@ def get_fluences(time,
                  avg,
                  rms,
                  distance,
-                 timebins,
+                 t_bins,
                  e_bins):
     """Calculate pinched neutrino fluences at Earth for snowglobes input
 
-    Returns: fluences : {flav: [timebins, e_bins]}
+    Returns: fluences : {flav: [t_bins, e_bins]}
 
     Parameters
     ----------
@@ -32,18 +32,18 @@ def get_fluences(time,
         rms neutrino energies from FLASH [GeV]
     distance : float
         event distance [cm]
-    timebins : [timebins]
+    t_bins : [t_bins]
         time bins to sample over [leftside]
     e_bins : [e_bins]
         neutrino energy bins to sample [GeV]
     """
     flavors = ['e', 'a', 'x']  # nu_e, nu_ebar, nu_x
 
-    n_timebins = len(timebins)
+    n_timebins = len(t_bins)
     n_ebins = len(e_bins)
 
-    t_step = np.diff(timebins)[0]
-    full_timebins = np.append(timebins, timebins[-1] + t_step)
+    t_step = np.diff(t_bins)[0]
+    full_timebins = np.append(t_bins, t_bins[-1] + t_step)
 
     fluences = {f: np.zeros([n_timebins, n_ebins]) for f in flavors}
 
@@ -128,7 +128,7 @@ def get_flux_spectrum(e_bins, lum, avg, rms, distance):
 def interpolate_time(t, time, y_var):
     """Linearly-interpolate values at given time points
 
-    Returns: [timebins, flavors]
+    Returns: [t_bins, flavors]
 
     Parameters
     ----------
