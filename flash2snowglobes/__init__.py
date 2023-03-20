@@ -1,5 +1,4 @@
 from . import cleanup
-from . import config
 from . import convert
 from . import write_files
 from . import analysis

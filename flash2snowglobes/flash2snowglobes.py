@@ -5,9 +5,8 @@
 
 from astropy import units
 
-import read_flash
+import io
 import cleanup
-import config
 import convert
 import write_files
 import analysis
@@ -45,14 +44,14 @@ for mixing in config.mixing:
             print('=== Converting flash data ===')
             dat_model_set = config.model_set_map.get(model_set, model_set)
 
-            filepath = read_flash.dat_filepath(model_set=dat_model_set,
-                                               mass=mass,
-                                               models_path=config.models_path,
-                                               run=config.run)
+            filepath = io.dat_filepath(model_set=dat_model_set,
+                                       mass=mass,
+                                       models_path=config.models_path,
+                                       run=config.run)
 
-            time, lum, avg, rms = read_flash.read_datfile(filepath=filepath,
-                                                          t_start=config.t_start,
-                                                          t_end=config.t_end)
+            time, lum, avg, rms = io.read_datfile(filepath=filepath,
+                                                  t_start=config.t_start,
+                                                  t_end=config.t_end)
 
             fluences = convert.get_fluences(time=time,
                                             lum=lum,
