@@ -19,7 +19,7 @@ import detectors
 
 if len(sys.argv) != 2:
     print('Must provide parameter(s):'
-          + '\n1. config_name'
+          + '\n1. config_name    # must match a file in flash_snowglobes/config/'
           )
     sys.exit(0)
 else:
