@@ -5,15 +5,15 @@
 
 from astropy import units
 
-from . import flash_io
-from . import cleanup
-from . import convert
-from . import write_files
-from . import analysis
-from . import run_snowglobes
-from . import setup
-from . import flavor_mixing
-from . import detectors
+import flash_io
+import cleanup
+import convert
+import write_files
+import analysis
+import run_snowglobes
+import snow_setup
+import flavor_mixing
+import detectors
 
 
 # ===== config and setup =====
@@ -47,7 +47,7 @@ e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
 
 
 print('=== Copying snowglobes install ===')
-setup.copy_snowglobes(snowglobes_path)
+snow_setup.copy_snowglobes(snowglobes_path)
 
 
 for mixing in config['snow']['mixing']:

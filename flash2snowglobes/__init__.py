@@ -4,5 +4,5 @@ from . import write_files
 from . import flash_io
 from . import analysis
 from . import run_snowglobes
-from . import setup
+from . import snow_setup
 from . import flavor_mixing
