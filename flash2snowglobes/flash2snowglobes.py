@@ -18,7 +18,7 @@ import flavor_mixing
 
 if len(sys.argv) != 2:
     print('Must provide parameter(s):'
-          + '\n1. config_name    # must match a file in flash_snowglobes/config/'
+          + '\n1. config_name    # must match a file in flash_snowglobes/config/models/'
           )
     sys.exit(0)
 else:
@@ -27,7 +27,7 @@ else:
 
 # ===== config and setup =====
 config = flash_io.load_config(config_name)
-detector_config = flash_io.load_config('detectors')
+detector_config = flash_io.load_config('detectors', models=False)
 
 snowglobes_path = config['paths']['snowglobes']
 models_path = config['paths']['models']
