@@ -14,7 +14,6 @@ import analysis
 import run_snowglobes
 import snow_setup
 import flavor_mixing
-import detectors
 
 
 if len(sys.argv) != 2:
@@ -28,6 +27,7 @@ else:
 
 # ===== config and setup =====
 config = flash_io.load_config(config_name)
+detector_config = flash_io.load_config('detectors')
 
 snowglobes_path = config['paths']['snowglobes']
 models_path = config['paths']['models']
@@ -46,10 +46,10 @@ e_end = config['bins']['e_end']
 e_step = config['bins']['e_step']
 
 detector = config['snow']['detector']
-distance = config['snow']['distance'] * units.kpc.to(units.cm)
+material = detector_config['materials'][detector]
+channel_groups = detector_config['channel_groups'][material]
 
-material = detectors.materials[detector]
-channel_groups = detectors.channel_groups[material]
+distance = config['snow']['distance'] * units.kpc.to(units.cm)
 
 t_bins = convert.get_bins(x0=t_start, x1=t_end, dx=t_step, endpoint=False)
 e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
