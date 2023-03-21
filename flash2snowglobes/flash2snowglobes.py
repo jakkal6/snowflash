@@ -6,7 +6,7 @@
 from astropy import units
 
 import flash_io
-import cleanup
+import snow_cleanup
 import convert
 import write_files
 import analysis
@@ -97,7 +97,7 @@ for mixing in config['snow']['mixing']:
                                     mixing=mixing)
 
             print('=== Cleaning up model ===')
-            cleanup.clean_model()
+            snow_cleanup.clean_model()
 
 print('=== Final cleanup ===')
-cleanup.clean_all()
+snow_cleanup.clean_all()

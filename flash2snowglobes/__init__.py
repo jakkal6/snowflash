@@ -1,4 +1,4 @@
-from . import cleanup
+from . import snow_cleanup
 from . import convert
 from . import write_files
 from . import flash_io
