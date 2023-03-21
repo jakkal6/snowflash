@@ -3,6 +3,7 @@
 # This will convert FLASH data to necessary input format for snowglobes,
 # run snowglobes, extract the output, and clean up files
 
+import sys
 from astropy import units
 
 import flash_io
@@ -16,8 +17,16 @@ import flavor_mixing
 import detectors
 
 
+if len(sys.argv) != 2:
+    print('Must provide parameter(s):'
+          + '\n1. config_name'
+          )
+    sys.exit(0)
+else:
+    config_name = sys.argv[1]
+
+
 # ===== config and setup =====
-config_name = 'test'
 config = flash_io.load_config(config_name)
 
 snowglobes_path = config['paths']['snowglobes']
