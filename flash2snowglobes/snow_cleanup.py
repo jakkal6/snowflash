@@ -5,27 +5,31 @@ import shutil
 def clean_model():
     """Clean up snowglobes input and output files
     """
-    clear_dir('./fluxes')
-    clear_dir('./out')
+    dirs = ['fluxes', 'out']
+
+    for d in dirs:
+        clear_dir(f'./{d}')
 
 
 def clean_all():
     """Clean working directory of all temporary files
     """
-    shutil.rmtree("./fluxes")
-    shutil.rmtree("./out")
-    shutil.rmtree("./channels")
-    shutil.rmtree("./backgrounds")
-    shutil.rmtree("./bin")
-    shutil.rmtree("./smear")
-    shutil.rmtree("./xscns")
-    shutil.rmtree("./effic")
-    shutil.rmtree("./glb")
-    shutil.rmtree("./src")
-    os.remove("supernova.pl")
-    os.remove("supernova.glb")
-    os.remove("detector_configurations.dat")
-    os.remove("make_event_table.pl")
+    rm_dirs = ['fluxes', 'out', 'channels', 'backgrounds', 'bin',
+               'smear', 'xscns', 'effic', 'glb', 'src']
+
+    rm_files = ['supernova.pl', 'supernova.glb',
+                'detector_configurations.dat', 'make_event_table.pl']
+
+    # Delete directories
+    for d in rm_dirs:
+        shutil.rmtree(f'./{d}', ignore_errors=True)
+
+    # Delete files
+    for f in rm_files:
+        try:
+            os.remove(f)
+        except FileNotFoundError:
+            pass
 
 
 def clear_dir(path):
