@@ -398,7 +398,7 @@ class SnowData:
 
         if not data_only:
             plot_tools.set_ax_all(ax=ax,
-                                  x_var='timebins [5 ms]',
+                                  x_var='time',
                                   y_var=y_var,
                                   x_scale=x_scale,
                                   y_scale=y_scale,

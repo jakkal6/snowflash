@@ -281,7 +281,7 @@ def plot_cumulative(cumulative, y_var, mass,
     y_col = y_column(y_var=y_var, channel=channel)
 
     table = cumulative.sel(mass=mass)
-    ax.step(table['n_bins'], table[y_col],
+    ax.step(table['time'], table[y_col],
             where='pre',
             label=label,
             color=color,
@@ -289,7 +289,7 @@ def plot_cumulative(cumulative, y_var, mass,
 
     if not data_only:
         plot_tools.set_ax_all(ax=ax,
-                              x_var='timebins [5 ms]',
+                              x_var='time',
                               y_var=y_var,
                               x_scale=x_scale,
                               y_scale=y_scale,
