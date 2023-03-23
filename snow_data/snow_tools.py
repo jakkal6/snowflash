@@ -160,9 +160,9 @@ def get_cumulative(timebin_tables, max_n_bins, channels):
         cumulative[b] = time_integrate(timebin_tables, n_bins=b, channels=channels)
 
     print()
-    x = xr.concat(cumulative.values(), dim='n_bins')
-    x.coords['n_bins'] = bins
-
+    x = xr.concat(cumulative.values(), dim='time')
+    x.coords['time'] = np.array(timebin_tables['time'])[1:]
+    
     return x
 
 
