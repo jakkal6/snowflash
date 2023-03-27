@@ -25,7 +25,7 @@ def load_integrated_table(model_set,
     time_integral : int
         time integrated over post-bounce (milliseconds)
     """
-    path = analysis_path()
+    path = data_path()
     filename = f'{detector}_analysis_{model_set}_{time_integral}ms.dat'
     filepath = os.path.join(path, filename)
 
@@ -82,12 +82,13 @@ def load_timebin_table(mass,
     detector : str
     mixing : str
     """
-    path = analysis_path()
-    output_dir = f'{detector}_{mixing}'
+    path = model_path(model_set=model_set, detector=detector, mixing=mixing)
     filename = f'timebin_{detector}_{mixing}_{model_set}_m{mass}.dat'
-    filepath = os.path.join(path, output_dir, filename)
 
-    return pd.read_csv(filepath, delim_whitespace=True)
+    filepath = os.path.join(path, filename)
+    table = pd.read_csv(filepath, delim_whitespace=True)
+    
+    return table
 
 
 def load_prog_table():
@@ -194,8 +195,8 @@ def get_channel_fractions(tables, channels):
 # ===============================================================
 #                      Paths
 # ===============================================================
-def analysis_path():
-    """Return path to Snowglobes analysis directory
+def data_path():
+    """Return path to Snowglobes data directory
 
     Returns : str
     """
@@ -209,7 +210,7 @@ def analysis_path():
     return path
 
 
-def model_path(model_set, detector):
+def model_path(model_set, detector, mixing):
     """Return path to model data
 
     Returns : str
@@ -218,10 +219,9 @@ def model_path(model_set, detector):
     ----------
     model_set : str
     detector : str
+    mixing : str
     """
-    out_path = analysis_path()
-    path = os.path.join(out_path, f'{detector}_{model_set}')
-
+    path = os.path.join(data_path(), model_set, f'{detector}_{mixing}')
     return path
 
 
@@ -230,7 +230,7 @@ def prog_path():
 
     Returns : str
     """
-    path = analysis_path()
+    path = data_path()
     return os.path.join(path, 'progenitor_table.dat')
 
 
