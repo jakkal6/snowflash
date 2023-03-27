@@ -4,5 +4,5 @@ output_*/
 fluxes/
 analysis/
 timebin/
-flash2snowglobes/config.py
+output
 slurm*.out
