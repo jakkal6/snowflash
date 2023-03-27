@@ -190,7 +190,7 @@ def get_bins(x0, x1, dx, endpoint):
     endpoint : bool
         whether to include endpoint
     """
-    n_bins = int((x1 - x0) / dx)
+    n_bins = round((x1 - x0) / dx)
 
     if endpoint:
         n_bins += 1
