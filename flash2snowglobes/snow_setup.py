@@ -15,23 +15,19 @@ def copy_snowglobes(snowglobes_path):
     local_path = "./"
 
     # create local dirs
-    for folder in ['analysis',
-                   'fluxes',
-                   'out']:
+    new_folders = ['fluxes', 'out']
+
+    for folder in new_folders:
         fullpath = os.path.join(local_path, folder)
 
         if not os.path.isdir(fullpath):
             os.makedirs(fullpath)
 
     # copy snowglobes dirs
-    for folder in ['channels',
-                   'backgrounds',
-                   'bin',
-                   'smear',
-                   'xscns',
-                   'effic',
-                   'glb',
-                   'src']:
+    copy_folders = ['channels', 'backgrounds', 'bin', 'smear',
+                    'xscns', 'effic', 'glb', 'src']
+
+    for folder in copy_folders:
         src = os.path.join(snowglobes_path, folder)
         dest = os.path.join(local_path, folder)
 
@@ -41,9 +37,9 @@ def copy_snowglobes(snowglobes_path):
         shutil.copytree(src, dest)
 
     # link files
-    for filename in ['supernova.pl',
-                     'detector_configurations.dat',
-                     'make_event_table.pl']:
+    ln_files = ['supernova.pl', 'detector_configurations.dat', 'make_event_table.pl']
+    
+    for filename in ln_files:
         src = os.path.join(snowglobes_path, filename)
         dest = os.path.join(local_path, filename)
 
