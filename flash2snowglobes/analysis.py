@@ -277,14 +277,31 @@ def save_timebin_table(table, detector, model_set, mass, mixing):
     mass : str, int or float
     mixing : str
     """
-    path = os.path.join('output', model_set, detector, mixing)
-
-    if not os.path.isdir(path):
-        os.makedirs(path)
-
+    path = output_path(model_set=model_set, detector=detector, mixing=mixing)
     filename = f"timebin_{detector}_{mixing}_{model_set}_m{mass}.dat"
     filepath = os.path.join(path, filename)
+
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:
         f.write(string)
+
+
+def output_path(model_set, detector, mixing):
+    """Returns path to output data
+
+    Parameters
+    ----------
+    model_set : str
+    detector : str
+    mixing : str
+    """
+    top_path = os.path.join(os.path.dirname(__file__), '..')
+
+    path = os.path.join(top_path, 'output', model_set, detector, mixing)
+    path = os.path.abspath(path)
+
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+    return path

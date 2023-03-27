@@ -200,12 +200,9 @@ def data_path():
 
     Returns : str
     """
-    try:
-        path = os.environ['SNOWGLOBES_DATA']
-    except KeyError:
-        raise EnvironmentError('Environment variable SNOWGLOBES_DATA not set. '
-                               'Set path to snowglobes data directory, e.g. '
-                               '"export SNOWGLOBES_DATA=${HOME}/snowglobes/analysis"')
+    top_path = os.path.join(os.path.dirname(__file__), '..')
+    path = os.path.join(top_path, 'output')
+    path = os.path.abspath(path)
 
     return path
 
