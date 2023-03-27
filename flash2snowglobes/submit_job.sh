@@ -16,7 +16,7 @@ module load GSL
 conda activate flash_snowglobes
 
 cd "${SCRATCH}/flash_snowglobes/flash2snowglobes" || exit
-python flash2snowglobes.py
+python flash2snowglobes.py sn1987a
  
 scontrol show job "${SLURM_JOB_ID}"     ### write job information to output file
 
