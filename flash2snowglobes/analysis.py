@@ -277,7 +277,7 @@ def save_timebin_table(table, detector, model_set, mass, mixing):
     mass : str, int or float
     mixing : str
     """
-    path = os.path.join('timebin', model_set, detector, mixing)
+    path = os.path.join('output', model_set, detector, mixing)
 
     if not os.path.isdir(path):
         os.makedirs(path)
