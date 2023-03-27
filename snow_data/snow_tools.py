@@ -221,7 +221,7 @@ def model_path(model_set, detector, mixing):
     detector : str
     mixing : str
     """
-    path = os.path.join(data_path(), model_set, f'{detector}_{mixing}')
+    path = os.path.join(data_path(), model_set, detector, detector, mixing)
     return path
 
 
