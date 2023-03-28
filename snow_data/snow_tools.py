@@ -2,6 +2,8 @@ import os
 import numpy as np
 import pandas as pd
 import xarray as xr
+import ast
+from configparser import ConfigParser
 
 """
 Tools for handling snowglobes data
@@ -251,3 +253,59 @@ def y_column(y_var, channel):
     channel : str
     """
     return f'{y_var}_{channel}'
+
+
+# =======================================================
+#                 Config files
+# =======================================================
+def load_config(config_name):
+    """Load .ini config file and return as dict
+
+    Returns : {}
+
+    parameters
+    ----------
+    config_name : str
+    """
+    filepath = config_filepath(config_name)
+
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f'Config file not found: {filepath}')
+
+    ini = ConfigParser()
+    ini.read(filepath)
+
+    config = {}
+    for section in ini.sections():
+        config[section] = {}
+        for option in ini.options(section):
+            config[section][option] = ast.literal_eval(ini.get(section, option))
+
+    return config
+
+
+def top_path():
+    """Return path to top-level repo directory
+
+    Returns : str
+    """
+    path = os.path.join(os.path.dirname(__file__), '..')
+    path = os.path.abspath(path)
+
+    return path
+
+
+def config_filepath(config_name):
+    """Return path to config file
+
+    Returns : str
+
+    parameters
+    ----------
+    config_name : str
+    """
+    filename = f'{config_name}.ini'
+    filepath = os.path.join(top_path(), 'config', filename)
+    filepath = os.path.abspath(filepath)
+
+    return filepath
