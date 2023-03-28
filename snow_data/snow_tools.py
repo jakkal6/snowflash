@@ -268,16 +268,13 @@ def load_config(config_name):
     config_name : str
     """
     filepath = config_filepath(config_name)
-
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f'Config file not found: {filepath}')
-
     ini = ConfigParser()
     ini.read(filepath)
 
     config = {}
     for section in ini.sections():
         config[section] = {}
+
         for option in ini.options(section):
             config[section][option] = ast.literal_eval(ini.get(section, option))
 
@@ -306,6 +303,13 @@ def config_filepath(config_name):
     """
     filename = f'{config_name}.ini'
     filepath = os.path.join(top_path(), 'config', filename)
+
+    if not os.path.exists(filepath):
+        filepath = os.path.join(top_path(), 'config', 'models', filename)
+
     filepath = os.path.abspath(filepath)
+
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f'Config file not found: {filepath}')
 
     return filepath
