@@ -16,6 +16,7 @@ class SnowData:
                  load_data=True,
                  mixing='nomix',
                  n_bins=20,
+                 config_name='ecrates',
                  ):
         """Collection of SnowGlobes data
 
@@ -35,6 +36,7 @@ class SnowData:
         self.config_plot = snow_tools.load_config('plotting')
         self.plot_colors = self.config_plot['plot']['colors']
         self.config_detector = snow_tools.load_config('detectors')
+        self.config = snow_tools.load_config(config_name)
 
         self.detector = detector
         self.material = self.config_detector['materials'][detector]
@@ -53,7 +55,7 @@ class SnowData:
         self.cumulative = None
 
         if self.mass_list is None:
-            self.mass_list = config.mass_list
+            self.mass_list = self.config['models']['mass_list']
 
         self.n_mass = len(self.mass_list)
 
