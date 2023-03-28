@@ -27,7 +27,7 @@ else:
 
 # ===== config and setup =====
 config = flash_io.load_config(config_name)
-detector_config = flash_io.load_config('detectors', models=False)
+detector_config = flash_io.load_config('detectors')
 
 snowglobes_path = config['paths']['snowglobes']
 models_path = config['paths']['models']

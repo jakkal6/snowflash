@@ -106,7 +106,7 @@ def get_slice_idxs(time, rshock,
 # =======================================================
 #                 Config files
 # =======================================================
-def load_config(config_name, models=True):
+def load_config(config_name):
     """Load .ini config file and return as dict
 
     Returns : {}
@@ -114,19 +114,15 @@ def load_config(config_name, models=True):
     parameters
     ----------
     config_name : str
-    models : bool
     """
-    filepath = config_filepath(config_name, models=models)
-
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f'Config file not found: {filepath}')
-
+    filepath = config_filepath(config_name)
     ini = ConfigParser()
     ini.read(filepath)
 
     config = {}
     for section in ini.sections():
         config[section] = {}
+
         for option in ini.options(section):
             config[section][option] = ast.literal_eval(ini.get(section, option))
 
@@ -144,7 +140,7 @@ def top_path():
     return path
 
 
-def config_filepath(config_name, models=True):
+def config_filepath(config_name):
     """Return path to config file
 
     Returns : str
@@ -152,15 +148,16 @@ def config_filepath(config_name, models=True):
     parameters
     ----------
     config_name : str
-    models : bool
     """
     filename = f'{config_name}.ini'
+    filepath = os.path.join(top_path(), 'config', filename)
 
-    if models:
+    if not os.path.exists(filepath):
         filepath = os.path.join(top_path(), 'config', 'models', filename)
-    else:
-        filepath = os.path.join(top_path(), 'config', filename)
 
     filepath = os.path.abspath(filepath)
+
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f'Config file not found: {filepath}')
 
     return filepath
