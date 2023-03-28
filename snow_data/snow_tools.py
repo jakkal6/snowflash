@@ -127,7 +127,6 @@ def time_integrate(timebin_tables, n_bins, channels):
         list of channel names
     """
     channels = ['total'] + channels
-    mass_arrays = {}
 
     time_slice = timebin_tables.isel(time=slice(0, n_bins))
     totals = time_slice.sum(dim='time')
@@ -208,10 +207,7 @@ def data_path():
 
     Returns : str
     """
-    top_path = os.path.join(os.path.dirname(__file__), '..')
-    path = os.path.join(top_path, 'output')
-    path = os.path.abspath(path)
-
+    path = os.path.join(top_path(), 'output')
     return path
 
 

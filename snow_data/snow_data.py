@@ -10,42 +10,34 @@ from .slider import SnowSlider
 
 class SnowData:
     def __init__(self,
-                 model_sets=('LMP', 'LMP+N50', 'IPA'),
-                 detector='ar40kt',
-                 mass_list=None,
+                 config_name,
                  load_data=True,
                  mixing='nomix',
-                 n_bins=20,
-                 config_name='ecrates',
                  ):
         """Collection of SnowGlobes data
 
         parameters
         ----------
-        model_sets : [str]
-            Labels for model sets
-        detector : str
-            Type of neutrino detector used in snowglobes
-        mass_list : [float]
-            progenitor ZAMS masses of models
+        config_name : str
+            name of config file used in 'flash_snowglobes/config/models/'
+                e.g. config_name='sn1987a'
         load_data : bool
             immediately load all data
-        n_bins : int
-            number of timebins to integrate over
+        mixing : str
         """
         self.config_plot = snow_tools.load_config('plotting')
         self.plot_colors = self.config_plot['plot']['colors']
         self.config_detector = snow_tools.load_config('detectors')
         self.config = snow_tools.load_config(config_name)
 
-        self.detector = detector
-        self.material = self.config_detector['materials'][detector]
+        self.detector = self.config['snow']['detector']
+        self.material = self.config_detector['materials'][self.detector]
         channel_groups = self.config_detector['channel_groups'][self.material]
         self.channels = list(channel_groups.keys())
 
-        self.model_sets = model_sets
-        self.n_bins = n_bins
-        self.mass_list = mass_list
+        self.model_sets = self.config['models']['model_sets']
+        self.mass_list = self.config['models']['masses']
+        self.n_integrate = self.config['bins']['n_integrate']
         self.mixing = mixing
 
         self.integrated_tables = None
@@ -53,9 +45,6 @@ class SnowData:
         self.prog_table = None
         self.channel_fracs = None
         self.cumulative = None
-
-        if self.mass_list is None:
-            self.mass_list = self.config['models']['mass_list']
 
         self.n_mass = len(self.mass_list)
 
@@ -104,20 +93,17 @@ class SnowData:
     # ===============================================================
     #                      Analysis
     # ===============================================================
-    def integrate_timebins(self, n_bins=None):
+    def integrate_timebins(self):
         """Integrate models over timebins
         """
-        if n_bins is None:
-            n_bins = self.n_bins
-
-        self.print_time_slice(n_bins=n_bins)
+        self.print_time_slice(self.n_integrate)
 
         tables = {}
         for model_set in self.model_sets:
             print(f'Integrating: {model_set}')
             timebin_tables = self.timebin_tables[model_set]
             tables[model_set] = snow_tools.time_integrate(timebin_tables=timebin_tables,
-                                                          n_bins=n_bins,
+                                                          n_bins=self.n_integrate,
                                                           channels=self.channels)
         print()
         self.integrated_tables = tables
@@ -126,9 +112,9 @@ class SnowData:
         """Integrate models over timebins
         """
         if max_n_bins is None:
-            max_n_bins = self.n_bins
+            max_n_bins = self.n_integrate - 1
 
-        self.print_time_slice(n_bins=max_n_bins - 1)
+        self.print_time_slice(n_bins=max_n_bins)
         tables = {}
 
         for model_set in self.model_sets:
@@ -448,11 +434,11 @@ class SnowData:
         figsize : (width, length)
         """
 
-        def update_slider(n_bins):
-            n_bins = int(n_bins)
+        def update_slider(n_integrate):
+            n_integrate = int(n_integrate)
 
             for i, model_set in enumerate(self.model_sets):
-                data = self.cumulative[model_set].sel(n_bins=n_bins)
+                data = self.cumulative[model_set].sel(n_integrate=n_integrate)
 
                 slider.update_ax_y(y=data[y_col],
                                    y_var=y_col,
@@ -468,7 +454,7 @@ class SnowData:
         y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
         slider = SnowSlider(y_vars=[y_col],
-                            n_bins=np.arange(1, self.n_bins + 1),
+                            n_integrate=np.arange(1, self.n_integrate + 1),
                             model_sets=self.model_sets,
                             x_factor=x_factor,
                             y_factor=y_factor)
@@ -505,5 +491,5 @@ class SnowData:
         ref_table = self.timebin_tables[model_set].sel(mass=mass)
 
         t0 = ref_table.time.values[0]
-        t1 = ref_table.time.values[n_bins]
+        t1 = ref_table.time.values[n_bins-1]
         print(f'Using timebins from {t0:.2f} to {t1:.2f} s')

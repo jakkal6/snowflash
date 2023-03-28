@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class SnowSlider:
     def __init__(self,
                  y_vars,
-                 n_bins,
+                 n_integrate,
                  model_sets,
                  x_factor=None,
                  y_factor=None,
@@ -17,14 +17,14 @@ class SnowSlider:
         ----------
         y_vars : [str]
             List of y-variables being plotted
-        n_bins : [int]
+        n_integrate : [int]
             list of number of bins integrated over
         model_sets : [str]
         x_factor : float
         y_factor : float
         """
         self.y_vars = y_vars
-        self.n_bins = n_bins
+        self.n_integrate = n_integrate
         self.model_sets = model_sets
 
         self.x_factor = check_factor(x_factor)
@@ -45,14 +45,12 @@ class SnowSlider:
         ax = fig.add_axes([0.1, 0.2, 0.8, 0.65])
         slider_ax = fig.add_axes([0.1, 0.05, 0.8, 0.05])
 
-        bin_min = self.n_bins[0]
-        bin_max = self.n_bins[-1]
+        bin_min = self.n_integrate[0]
+        bin_max = self.n_integrate[-1]
 
-        slider = Slider(slider_ax, 'n_bins', bin_min, bin_max, valinit=bin_max, valstep=1)
+        slider = Slider(slider_ax, 'n_integrate', bin_min, bin_max, valinit=bin_max, valstep=1)
 
         return fig, ax, slider
-
-
 
     def get_ax_lines(self):
         """Return dict of labelled axis lines
