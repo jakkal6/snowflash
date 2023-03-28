@@ -438,7 +438,7 @@ class SnowData:
             n_integrate = int(n_integrate)
 
             for i, model_set in enumerate(self.model_sets):
-                data = self.cumulative[model_set].sel(n_integrate=n_integrate)
+                data = self.cumulative[model_set].isel(time=n_integrate)
 
                 slider.update_ax_y(y=data[y_col],
                                    y_var=y_col,
@@ -454,7 +454,7 @@ class SnowData:
         y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
         slider = SnowSlider(y_vars=[y_col],
-                            n_integrate=np.arange(1, self.n_integrate + 1),
+                            n_integrate=np.arange(1, self.n_integrate-1),
                             model_sets=self.model_sets,
                             x_factor=x_factor,
                             y_factor=y_factor)
