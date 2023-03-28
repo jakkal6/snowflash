@@ -90,8 +90,8 @@ class SnowData:
     def load_prog_table(self):
         """Load progenitor table
         """
-        prog_table = snow_tools.load_prog_table()
-        self.prog_table = prog_table[prog_table['mass'].isin(self.mass_list)]
+        prog_table = snow_tools.load_prog_table(self.model_sets[0])
+        self.prog_table = prog_table[prog_table['zams'].isin(self.mass_list)]
 
     # ===============================================================
     #                      Analysis

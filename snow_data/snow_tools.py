@@ -91,13 +91,19 @@ def load_timebin_table(mass,
     return table
 
 
-def load_prog_table():
+def load_prog_table(model_set):
     """Load progenitor data table
 
     Returns : pd.DataFrame
+
+    parameters
+    ----------
+    model_set : str
     """
-    filepath = prog_path()
-    return pd.read_csv(filepath, delim_whitespace=True)
+    filepath = prog_path(model_set)
+    table = pd.read_csv(filepath)
+
+    return table
 
 
 # ===============================================================
@@ -218,17 +224,20 @@ def model_path(model_set, detector, mixing):
     detector : str
     mixing : str
     """
-    path = os.path.join(data_path(), model_set, detector, detector, mixing)
+    path = os.path.join(data_path(), model_set, detector, mixing)
     return path
 
 
-def prog_path():
+def prog_path(model_set):
     """Return path to progenitor table
 
     Returns : str
+
+    parameters
+    ----------
+    model_set : str
     """
-    path = data_path()
-    return os.path.join(path, 'progenitor_table.dat')
+    return os.path.join(data_path(), model_set, 'progenitor_table.dat')
 
 
 def y_column(y_var, channel):
