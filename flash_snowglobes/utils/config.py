@@ -27,11 +27,15 @@ class Config:
                         }
 
         self.paths = self.get_section('models', 'paths')
-        self.flash = self.get_section('models', 'flash')
 
+        self.model_sets = self.get_param('models', 'flash', 'model_sets')
+        self.run = self.get_param('models', 'flash', 'run')
+        self.model_set_map = self.get_param('models', 'flash', 'model_set_map')
+        self.zams_list = self.get_param('models', 'flash', 'zams_list')
+
+        self.bins = self.get_section('models', 'bins')
         self.mixing = self.get_param('models', 'snow', 'mixing')
         self.distance = self.get_param('models', 'snow', 'distance')
-        self.bins = self.get_section('models', 'bins')
 
         self.detector = self.get_param('models', 'snow', 'detector')
         self.material = self.get_param('detectors', 'materials', self.detector)
