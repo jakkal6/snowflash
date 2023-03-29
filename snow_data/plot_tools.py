@@ -2,7 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # snowglobes
-from . import config
+from . import snow_tools
+
+config = snow_tools.load_config('plotting')
 
 """
 Generalised plotting wrappers
@@ -99,9 +101,9 @@ def set_ax_scales(ax,
     y_scale : str
     """
     if x_scale is None:
-        x_scale = config.ax_scales.get(x_var, 'linear')
+        x_scale = config['plot']['ax_scales'].get(x_var, 'linear')
     if y_scale is None:
-        y_scale = config.ax_scales.get(y_var, 'linear')
+        y_scale = config['plot']['ax_scales'].get(y_var, 'linear')
 
     ax.set_xscale(x_scale)
     ax.set_yscale(y_scale)
@@ -134,9 +136,9 @@ def set_ax_lims(ax,
     y_lims : [min, max]
     """
     if x_lims is None:
-        x_lims = config.ax_lims.get(x_var)
+        x_lims = config['plot']['ax_lims'].get(x_var)
     if y_lims is None:
-        y_lims = config.ax_lims.get(y_var)
+        y_lims = config['plot']['ax_lims'].get(y_var)
 
     ax.set_xlim(x_lims)
     ax.set_ylim(y_lims)
@@ -156,9 +158,9 @@ def set_ax_labels(ax,
     y_label : str
     """
     if y_label is None:
-        y_label = config.ax_labels.get(y_var, y_var)
+        y_label = config['plot']['ax_labels'].get(y_var, y_var)
     if x_label is None:
-        x_label = config.ax_labels.get(x_var, x_var)
+        x_label = config['plot']['ax_labels'].get(x_var, x_var)
 
     ax.set_ylabel(y_label)
     ax.set_xlabel(x_label)
