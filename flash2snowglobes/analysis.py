@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def analyze_output(model_set,
-                   mass,
+                   zams,
                    detector,
                    channel_groups,
                    mixing):
@@ -16,14 +16,14 @@ def analyze_output(model_set,
     parameters
     ----------
     model_set : str
-    mass : float or int
+    zams : float or int
     detector : str
     channel_groups : {}
     mixing : str
     """
     channels = get_all_channels(channel_groups)
 
-    time_filepath = os.path.join('./fluxes/', f'pinched_{model_set}_m{mass}_key.dat')
+    time_filepath = os.path.join('./fluxes/', f'pinched_{model_set}_m{zams}_key.dat')
     time = np.loadtxt(time_filepath,
                       skiprows=1,
                       usecols=[1],
@@ -33,7 +33,7 @@ def analyze_output(model_set,
     energy_bins = load_energy_bins(channel=channels[0],
                                    i=1,
                                    model_set=model_set,
-                                   mass=mass,
+                                   zams=zams,
                                    detector=detector)
     n_bins = len(energy_bins)
 
@@ -48,7 +48,7 @@ def analyze_output(model_set,
         channel_counts = load_channel_counts(channels=channels,
                                              i=i + 1,
                                              model_set=model_set,
-                                             mass=mass,
+                                             zams=zams,
                                              detector=detector)
 
         group_counts = get_group_counts(channel_counts,
@@ -71,7 +71,7 @@ def analyze_output(model_set,
     save_timebin_table(table=timebin_table,
                        detector=detector,
                        model_set=model_set,
-                       mass=mass,
+                       zams=zams,
                        mixing=mixing)
 
 
@@ -92,7 +92,7 @@ def get_all_channels(groups):
     return channels
 
 
-def load_channel_counts(channels, i, model_set, mass, detector):
+def load_channel_counts(channels, i, model_set, zams, detector):
     """Load all raw channel counts into dict
 
     Parameters
@@ -100,7 +100,7 @@ def load_channel_counts(channels, i, model_set, mass, detector):
     channels : [str]
     i : int
     model_set : str
-    mass : str, int or float
+    zams : str, int or float
     detector : str
     """
     channel_counts = {}  # arrays of channel counts per energy bin
@@ -108,12 +108,12 @@ def load_channel_counts(channels, i, model_set, mass, detector):
         channel_counts[chan] = load_channel_dat(channel=chan,
                                                 i=i,
                                                 model_set=model_set,
-                                                mass=mass,
+                                                zams=zams,
                                                 detector=detector)
     return channel_counts
 
 
-def load_channel_dat(channel, i, model_set, mass, detector):
+def load_channel_dat(channel, i, model_set, zams, detector):
     """Load array of detection counts per energy bin
 
     Parameters
@@ -121,13 +121,13 @@ def load_channel_dat(channel, i, model_set, mass, detector):
     channel : str
     i : int
     model_set : str
-    mass : str, int or float
+    zams : str, int or float
     detector : str
     """
     filepath = channel_dat_filepath(channel=channel,
                                     i=i,
                                     model_set=model_set,
-                                    mass=mass,
+                                    zams=zams,
                                     detector=detector)
 
     dat = np.genfromtxt(filepath,
@@ -137,7 +137,7 @@ def load_channel_dat(channel, i, model_set, mass, detector):
     return dat
 
 
-def channel_dat_filepath(channel, i, model_set, mass, detector):
+def channel_dat_filepath(channel, i, model_set, zams, detector):
     """Return filepath to snowglobes output file
 
     Parameters
@@ -145,16 +145,16 @@ def channel_dat_filepath(channel, i, model_set, mass, detector):
     channel : str
     i : int
     model_set : str
-    mass : str, int or float
+    zams : str, int or float
     detector : str
     """
-    filename = f'pinched_{model_set}_m{mass}_{i}_{channel}_{detector}_events_smeared.dat'
+    filename = f'pinched_{model_set}_m{zams}_{i}_{channel}_{detector}_events_smeared.dat'
     filepath = os.path.join('./out', filename)
 
     return filepath
 
 
-def load_energy_bins(channel, i, model_set, mass, detector):
+def load_energy_bins(channel, i, model_set, zams, detector):
     """Load array of energy bins (MeV) from a snowglobes output file
 
     Parameters
@@ -162,13 +162,13 @@ def load_energy_bins(channel, i, model_set, mass, detector):
     channel : str
     i : int
     model_set : str
-    mass : str, int or float
+    zams : str, int or float
     detector : str
     """
     filepath = channel_dat_filepath(channel=channel,
                                     i=i,
                                     model_set=model_set,
-                                    mass=mass,
+                                    zams=zams,
                                     detector=detector)
 
     energy_bins = np.genfromtxt(filepath,
@@ -266,7 +266,7 @@ def create_timebin_table(timesteps, time_totals, time_avg):
     return table
 
 
-def save_timebin_table(table, detector, model_set, mass, mixing):
+def save_timebin_table(table, detector, model_set, zams, mixing):
     """Save timebinned table to file
 
     Parameters
@@ -274,11 +274,11 @@ def save_timebin_table(table, detector, model_set, mass, mixing):
     table : pd.DataFrame
     detector : str
     model_set : str
-    mass : str, int or float
+    zams : str, int or float
     mixing : str
     """
     path = output_path(model_set=model_set, detector=detector, mixing=mixing)
-    filename = f"timebin_{detector}_{mixing}_{model_set}_m{mass}.dat"
+    filename = f"timebin_{detector}_{mixing}_{model_set}_m{zams}.dat"
     filepath = os.path.join(path, filename)
 
     string = table.to_string(index=False, justify='left')

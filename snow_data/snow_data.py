@@ -36,7 +36,7 @@ class SnowData:
         self.channels = list(channel_groups.keys())
 
         self.model_sets = self.config['models']['model_sets']
-        self.mass_list = self.config['models']['masses']
+        self.zams_list = self.config['models']['zams']
         self.n_integrate = self.config['bins']['n_integrate']
         self.mixing = mixing
 
@@ -45,8 +45,6 @@ class SnowData:
         self.prog_table = None
         self.channel_fracs = None
         self.cumulative = None
-
-        self.n_mass = len(self.mass_list)
 
         if load_data:
             self.load_timebin_tables()
@@ -77,7 +75,7 @@ class SnowData:
             print(f'Loading {model_set}')
 
             tables[model_set] = snow_tools.load_all_timebin_tables(
-                mass_list=self.mass_list,
+                zams_list=self.zams_list,
                 model_set=model_set,
                 detector=self.detector,
                 mixing=self.mixing)
@@ -88,7 +86,7 @@ class SnowData:
         """Load progenitor table
         """
         prog_table = snow_tools.load_prog_table(self.model_sets[0])
-        self.prog_table = prog_table[prog_table['zams'].isin(self.mass_list)]
+        self.prog_table = prog_table[prog_table['zams'].isin(self.zams_list)]
 
     # ===============================================================
     #                      Analysis
@@ -305,7 +303,7 @@ class SnowData:
                                         ax=ax)
         return fig
 
-    def plot_timebin(self, y_var, mass,
+    def plot_timebin(self, y_var, zams,
                      channel='total',
                      x_scale=None,
                      y_scale=None,
@@ -319,7 +317,7 @@ class SnowData:
         ----------
         y_var : 'counts' or 'energy'
         channel : str
-        mass : float or int
+        zams : float or int
         y_scale : str
         x_scale : str
         ax : Axis
@@ -331,7 +329,7 @@ class SnowData:
         for model_set, timebin_table in self.timebin_tables.items():
             snow_plot.plot_timebin(timebin_table=timebin_table,
                                    y_var=y_var,
-                                   mass=mass,
+                                   zams=zams,
                                    label=model_set,
                                    color=self.plot_colors.get(model_set),
                                    channel=channel,
@@ -348,7 +346,7 @@ class SnowData:
 
         return fig
 
-    def plot_cumulative(self, y_var, mass,
+    def plot_cumulative(self, y_var, zams,
                         channel='total',
                         x_scale=None,
                         y_scale=None,
@@ -363,7 +361,7 @@ class SnowData:
         ----------
         y_var : 'counts' or 'energy'
         channel : str
-        mass : float or int
+        zams : float or int
         y_scale : str
         x_scale : str
         ax : Axis
@@ -380,7 +378,7 @@ class SnowData:
         for model_set, cumulative in self.cumulative.items():
             snow_plot.plot_cumulative(cumulative=cumulative,
                                       y_var=y_var,
-                                      mass=mass,
+                                      zams=zams,
                                       channel=channel,
                                       x_scale=x_scale,
                                       y_scale=y_scale,
@@ -487,8 +485,8 @@ class SnowData:
         n_bins : int
         """
         model_set = self.model_sets[0]
-        mass = self.mass_list[0]
-        ref_table = self.timebin_tables[model_set].sel(mass=mass)
+        zams = self.zams_list[0]
+        ref_table = self.timebin_tables[model_set].sel(zams=zams)
 
         t0 = ref_table.time.values[0]
         t1 = ref_table.time.values[n_bins-1]

@@ -4,7 +4,7 @@ import os
 
 
 def write_fluence_files(model_set,
-                        mass,
+                        zams,
                         t_bins,
                         e_bins,
                         fluences_mixed):
@@ -16,8 +16,8 @@ def write_fluence_files(model_set,
     Parameters
     ----------
     model_set : str
-    mass : float
-        progenitor mass
+    zams : float
+        progenitor zams mass
     t_bins : []
         time bins (leftside) for fluences [s]
     e_bins : []
@@ -30,14 +30,14 @@ def write_fluence_files(model_set,
 
     # write key table
     key_table = get_key_table(t_bins=t_bins, t_step=t_step)
-    key_filepath = os.path.join(path, f'pinched_{model_set}_m{mass}_key.dat')
+    key_filepath = os.path.join(path, f'pinched_{model_set}_m{zams}_key.dat')
 
     with open(key_filepath, 'w') as keyfile:
         key_table.to_string(keyfile, index=False)
 
     # write fluence files
     for i in range(len(t_bins)):
-        out_filepath = os.path.join(path, f'pinched_{model_set}_m{mass}_{i + 1}.dat')
+        out_filepath = os.path.join(path, f'pinched_{model_set}_m{zams}_{i + 1}.dat')
         table = format_fluence_table(time_i=i,
                                      e_bins=e_bins,
                                      fluences_mixed=fluences_mixed)

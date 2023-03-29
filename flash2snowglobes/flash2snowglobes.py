@@ -35,7 +35,7 @@ models_path = config['paths']['models']
 run = config['models']['run']
 model_sets = config['models']['model_sets']
 model_set_map = config['models']['model_set_map']
-masses = config['models']['masses']
+zams_list = config['models']['zams']
 
 t_start = config['bins']['t_start']
 t_end = config['bins']['t_end']
@@ -61,12 +61,12 @@ snow_setup.copy_snowglobes(snowglobes_path)
 
 for mixing in config['snow']['mixing']:
     for model_set in model_sets:
-        for mass in masses:
+        for zams in zams_list:
             print('=== Converting flash data ===')
             dat_model_set = model_set_map.get(model_set, model_set)
 
             filepath = flash_io.dat_filepath(model_set=dat_model_set,
-                                             mass=mass,
+                                             zams=zams,
                                              models_path=models_path,
                                              run=run)
 
@@ -86,21 +86,21 @@ for mixing in config['snow']['mixing']:
                                                         mixing=mixing)
 
             write_files.write_fluence_files(model_set=model_set,
-                                            mass=mass,
+                                            zams=zams,
                                             t_bins=t_bins,
                                             e_bins=e_bins,
                                             fluences_mixed=fluences_mixed)
 
             print('=== Running snowglobes ===')
             run_snowglobes.run(model_set=model_set,
-                               mass=mass,
+                               zams=zams,
                                t_bins=t_bins,
                                material=material,
                                detector=detector)
 
             print('=== Analyzing output ===')
             analysis.analyze_output(model_set=model_set,
-                                    mass=mass,
+                                    zams=zams,
                                     detector=detector,
                                     channel_groups=channel_groups,
                                     mixing=mixing)

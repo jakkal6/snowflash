@@ -200,7 +200,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
     return fig
 
 
-def plot_timebin(timebin_table, y_var, mass,
+def plot_timebin(timebin_table, y_var, zams,
                  channel='total',
                  x_scale=None,
                  y_scale=None,
@@ -217,7 +217,7 @@ def plot_timebin(timebin_table, y_var, mass,
     ----------
     timebin_table : pd.DataFrame
     y_var : 'counts' or 'energy'
-    mass : float or int
+    zams : float or int
     channel : str
     y_scale : str
     x_scale : str
@@ -231,7 +231,7 @@ def plot_timebin(timebin_table, y_var, mass,
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
 
-    table = timebin_table.sel(mass=mass)
+    table = timebin_table.sel(zams=zams)
     ax.step(table['time'], table[y_col],
             where='post',
             label=label,
@@ -247,7 +247,7 @@ def plot_timebin(timebin_table, y_var, mass,
     return fig
 
 
-def plot_cumulative(cumulative, y_var, mass,
+def plot_cumulative(cumulative, y_var, zams,
                     channel='total',
                     x_scale=None,
                     y_scale=None,
@@ -266,7 +266,7 @@ def plot_cumulative(cumulative, y_var, mass,
     cumulative : xr.Dataset
         table of cumulative quantities
     y_var : 'counts' or 'energy'
-    mass : float or int
+    zams : float or int
     channel : str
     y_scale : str
     x_scale : str
@@ -281,7 +281,7 @@ def plot_cumulative(cumulative, y_var, mass,
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     y_col = y_column(y_var=y_var, channel=channel)
 
-    table = cumulative.sel(mass=mass)
+    table = cumulative.sel(zams=zams)
     ax.step(table['time'], table[y_col],
             where='pre',
             label=label,

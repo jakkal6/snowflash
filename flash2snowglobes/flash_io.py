@@ -48,7 +48,7 @@ def read_datfile(filepath, t_start, t_end):
     return time, lum, avg, rms
 
 
-def dat_filepath(model_set, mass, models_path, run=None):
+def dat_filepath(model_set, zams, models_path, run=None):
     """Return path to dat file
 
     Returns : str
@@ -56,16 +56,16 @@ def dat_filepath(model_set, mass, models_path, run=None):
     Parameters
     ----------
     model_set : str
-    mass : str
+    zams : str
     models_path : str
     run : str
         file basename (optional)
     """
     # model_set_dir = f'run_ecrates_{model_set}'
-    model_dir = f'run_{mass}'
+    model_dir = f'run_{zams}'
 
     if run is None:
-        filename = f'stir_ecrates_{model_set}_s{mass}_alpha1.25.dat'
+        filename = f'stir_ecrates_{model_set}_s{zams}_alpha1.25.dat'
     else:
         filename = f'run.dat'
 

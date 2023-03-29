@@ -34,42 +34,42 @@ def load_integrated_table(model_set,
     return pd.read_csv(filepath, delim_whitespace=True)
 
 
-def load_all_timebin_tables(mass_list,
+def load_all_timebin_tables(zams_list,
                             model_set,
                             detector,
                             mixing):
     """Load and combine timebinned tables for all models
 
     Returns : xr.Dataset
-        3D table with dimensions (mass, n_bins)
+        3D table with dimensions (zams, n_bins)
 
     parameters
     ----------
-    mass_list : [str]
+    zams_list : [str]
     model_set : str
     detector : str
     mixing : str
     """
     tables_dict = {}
-    for j, mass in enumerate(mass_list):
-        print(f'\rLoading timebin tables: {j+1}/{len(mass_list)}', end='')
+    for j, zams in enumerate(zams_list):
+        print(f'\rLoading timebin tables: {j+1}/{len(zams_list)}', end='')
 
-        table = load_timebin_table(mass=mass,
+        table = load_timebin_table(zams=zams,
                                    model_set=model_set,
                                    detector=detector,
                                    mixing=mixing)
 
         table.set_index('time', inplace=True)
-        tables_dict[mass] = table.to_xarray()
+        tables_dict[zams] = table.to_xarray()
 
     print()
-    timebin_tables = xr.concat(tables_dict.values(), dim='mass')
-    timebin_tables.coords['mass'] = list(mass_list)
+    timebin_tables = xr.concat(tables_dict.values(), dim='zams')
+    timebin_tables.coords['zams'] = list(zams_list)
 
     return timebin_tables
 
 
-def load_timebin_table(mass,
+def load_timebin_table(zams,
                        model_set,
                        detector,
                        mixing):
@@ -79,13 +79,13 @@ def load_timebin_table(mass,
 
     parameters
     ----------
-    mass : str
+    zams : str
     model_set : str
     detector : str
     mixing : str
     """
     path = model_path(model_set=model_set, detector=detector, mixing=mixing)
-    filename = f'timebin_{detector}_{mixing}_{model_set}_m{mass}.dat'
+    filename = f'timebin_{detector}_{mixing}_{model_set}_m{zams}.dat'
 
     filepath = os.path.join(path, filename)
     table = pd.read_csv(filepath, delim_whitespace=True)
@@ -115,12 +115,12 @@ def time_integrate(timebin_tables, n_bins, channels):
     """Integrate a set of models over a given no. of time bins
 
     Returns : xr.Dataset
-        dim: [mass]
+        dim: [zams]
 
     parameters
     ----------
     timebin_tables : xr.Dataset
-        3D table of timebinned models, dim: [mass, time]
+        3D table of timebinned models, dim: [zams, time]
     n_bins : int
         no. of time bins to integrate over. Currently each bin is 5 ms
     channels : [str]
@@ -149,11 +149,11 @@ def get_cumulative(timebin_tables, max_n_bins, channels):
     """Calculate cumulative neutrino counts for each time bin
 
     Returns : xr.Dataset
-        3D table with dimensions (Mass, n_bins)
+        3D table with dimensions (zams, n_bins)
 
     parameters
     ----------
-    timebin_tables : {mass: pd.DataFrame}
+    timebin_tables : {zams: pd.DataFrame}
         collection of timebinned model tables
     max_n_bins : int
         maximum time bins to integrate up to
