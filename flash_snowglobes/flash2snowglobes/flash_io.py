@@ -134,7 +134,7 @@ def top_path():
 
     Returns : str
     """
-    path = os.path.join(os.path.dirname(__file__), '..')
+    path = os.path.join(os.path.dirname(__file__), '..', '..')
     path = os.path.abspath(path)
 
     return path

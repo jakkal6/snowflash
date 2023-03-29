@@ -296,7 +296,7 @@ def output_path(model_set, detector, mixing):
     detector : str
     mixing : str
     """
-    top_path = os.path.join(os.path.dirname(__file__), '..')
+    top_path = os.path.join(os.path.dirname(__file__), '..', '..')
 
     path = os.path.join(top_path, 'output', model_set, detector, mixing)
     path = os.path.abspath(path)
