@@ -3,7 +3,7 @@ import pandas as pd
 import xarray as xr
 
 # flash_snowglobes
-from flash_snowglobes.utils import paths
+from ..utils import paths
 
 """
 Tools for handling snowglobes data

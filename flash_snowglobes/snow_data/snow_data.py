@@ -1,12 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# snowglobes
+# flash_snowglobes
 from . import snow_tools
 from . import snow_plot
 from . import plot_tools
 from .slider import SnowSlider
-from flash_snowglobes.utils.config import Config
+from ..utils.config import Config
 
 
 class SnowData:

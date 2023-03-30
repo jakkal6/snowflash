@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # flash_snowglobes
-from flash_snowglobes.utils import paths
+from ..utils import paths
 
 
 def analyze_output(model_set,
