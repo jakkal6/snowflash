@@ -28,7 +28,7 @@ def load_integrated_table(model_set,
     time_integral : int
         time integrated over post-bounce (milliseconds)
     """
-    path = data_path()
+    path = paths.output_path()
     filename = f'{detector}_analysis_{model_set}_{time_integral}ms.dat'
     filepath = os.path.join(path, filename)
 
@@ -85,10 +85,11 @@ def load_timebin_table(zams,
     detector : str
     mixing : str
     """
-    path = model_path(model_set=model_set, detector=detector, mixing=mixing)
-    filename = f'timebin_{detector}_{mixing}_{model_set}_m{zams}.dat'
+    filepath = paths.snow_timebin_filepath(zams=zams,
+                                           model_set=model_set,
+                                           detector=detector,
+                                           mixing=mixing)
 
-    filepath = os.path.join(path, filename)
     table = pd.read_csv(filepath, delim_whitespace=True)
     
     return table
@@ -103,7 +104,7 @@ def load_prog_table(model_set):
     ----------
     model_set : str
     """
-    filepath = prog_path(model_set)
+    filepath = paths.prog_filepath(model_set)
     table = pd.read_csv(filepath)
 
     return table
@@ -198,45 +199,6 @@ def get_channel_fractions(tables, channels):
 
     frac_table.index = channels
     return frac_table
-
-
-# ===============================================================
-#                      Paths
-# ===============================================================
-def data_path():
-    """Return path to Snowglobes data directory
-
-    Returns : str
-    """
-    path = os.path.join(paths.top_path(), 'output')
-    return path
-
-
-def model_path(model_set, detector, mixing):
-    """Return path to model data
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
-    detector : str
-    mixing : str
-    """
-    path = os.path.join(data_path(), model_set, detector, mixing)
-    return path
-
-
-def prog_path(model_set):
-    """Return path to progenitor table
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
-    """
-    return os.path.join(data_path(), model_set, 'progenitor_table.dat')
 
 
 def y_column(y_var, channel):

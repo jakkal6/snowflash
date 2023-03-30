@@ -76,3 +76,59 @@ def dat_filename(model_set, zams, run=None):
         filename = f'{run}.dat'
 
     return filename
+
+
+def prog_filepath(model_set):
+    """Return path to progenitor table
+
+    Returns : str
+
+    parameters
+    ----------
+    model_set : str
+    """
+    return os.path.join(output_path(), model_set, 'progenitor_table.dat')
+
+
+# ===============================================================
+#                          Snowglobes files
+# ===============================================================
+def output_path():
+    """Return path to Snowglobes output
+
+    Returns : str
+    """
+    return os.path.join(top_path(), 'output')
+
+
+def snow_model_path(model_set, detector, mixing):
+    """Return path to model data
+
+    Returns : str
+
+    parameters
+    ----------
+    model_set : str
+    detector : str
+    mixing : str
+    """
+    return os.path.join(output_path(), model_set, detector, mixing)
+
+
+def snow_timebin_filepath(zams, model_set, detector, mixing):
+    """Return path to timebin file
+
+    Returns : str
+
+    parameters
+    ----------
+    zams :str
+    model_set : str
+    detector : str
+    mixing : str
+    """
+    model_path = snow_model_path(model_set=model_set, detector=detector, mixing=mixing)
+    filename = f'timebin_{detector}_{mixing}_{model_set}_m{zams}.dat'
+    filepath = os.path.join(model_path, filename)
+
+    return filepath
