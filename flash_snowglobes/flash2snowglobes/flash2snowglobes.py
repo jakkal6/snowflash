@@ -15,6 +15,7 @@ import run_snowglobes
 import snow_setup
 import flavor_mixing
 from flash_snowglobes.utils.config import Config
+from flash_snowglobes.utils import paths
 
 
 if len(sys.argv) != 2:
@@ -52,12 +53,12 @@ for mixing in config.mixing:
             print('=== Converting flash data ===')
             dat_model_set = config.model_set_map.get(model_set, model_set)
 
-            filepath = flash_io.dat_filepath(model_set=dat_model_set,
-                                             zams=zams,
-                                             models_path=config.paths['models'],
-                                             run=config.run)
+            dat_filepath = paths.dat_filepath(models_path=config.paths['models'],
+                                              model_set=dat_model_set,
+                                              zams=zams,
+                                              run=config.run)
 
-            time, lum, avg, rms = flash_io.read_datfile(filepath=filepath,
+            time, lum, avg, rms = flash_io.read_datfile(filepath=dat_filepath,
                                                         t_start=config.bins['t_start'],
                                                         t_end=config.bins['t_end'])
 

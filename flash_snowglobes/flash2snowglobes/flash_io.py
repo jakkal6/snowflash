@@ -46,32 +46,6 @@ def read_datfile(filepath, t_start, t_end):
     return time, lum, avg, rms
 
 
-def dat_filepath(model_set, zams, models_path, run=None):
-    """Return path to dat file
-
-    Returns : str
-
-    Parameters
-    ----------
-    model_set : str
-    zams : str
-    models_path : str
-    run : str
-        file basename (optional)
-    """
-    # model_set_dir = f'run_ecrates_{model_set}'
-    model_dir = f'run_{zams}'
-
-    if run is None:
-        filename = f'stir_ecrates_{model_set}_s{zams}_alpha1.25.dat'
-    else:
-        filename = f'run.dat'
-
-    filepath = os.path.join(models_path, model_set, model_dir, filename)
-
-    return filepath
-
-
 def get_slice_idxs(time, rshock,
                    t_start=0.0,
                    t_end=1.0):

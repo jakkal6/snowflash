@@ -33,3 +33,46 @@ def config_filepath(name):
         raise FileNotFoundError(f'Config file not found: {filepath}')
 
     return filepath
+
+
+# ===============================================================
+#                          FLASH files
+# ===============================================================
+def dat_filepath(models_path, model_set, zams, run=None):
+    """Return .dat filename
+
+    Returns : str
+
+    Parameters
+    ----------
+    models_path : str
+    model_set : str
+    zams : str
+    run : str
+        file basename (optional)
+    """
+    model_dir = f'run_{zams}'
+    filename = dat_filename(model_set=model_set, zams=zams, run=run)
+    filepath = os.path.join(models_path, model_set, model_dir, filename)
+
+    return filepath
+
+
+def dat_filename(model_set, zams, run=None):
+    """Return .dat filename
+
+    Returns : str
+
+    Parameters
+    ----------
+    model_set : str
+    zams : str
+    run : str
+        file basename (optional)
+    """
+    if run is None:
+        filename = f'stir_ecrates_{model_set}_s{zams}_alpha1.25.dat'
+    else:
+        filename = f'{run}.dat'
+
+    return filename
