@@ -102,7 +102,7 @@ def output_path():
 
 
 def snow_model_path(model_set, detector, mixing):
-    """Return path to model data
+    """Return path to snowglobes model data
 
     Returns : str
 
@@ -132,3 +132,31 @@ def snow_timebin_filepath(zams, model_set, detector, mixing):
     filepath = os.path.join(model_path, filename)
 
     return filepath
+
+
+def snow_channel_dat_filepath(channel, i, model_set, zams, detector):
+    """Return filepath to snowglobes output file
+
+    Parameters
+    ----------
+    channel : str
+    i : int
+    model_set : str
+    zams : str, int or float
+    detector : str
+    """
+    filename = f'pinched_{model_set}_m{zams}_{i}_{channel}_{detector}_events_smeared.dat'
+    filepath = os.path.join('./out', filename)
+
+    return filepath
+
+
+def snow_channel_dat_key_filepath(zams, model_set):
+    """Return filepath to snowglobes output key file
+
+    Parameters
+    ----------
+    zams : str, int or float
+    model_set : str
+    """
+    return os.path.join('./fluxes', f'pinched_{model_set}_m{zams}_key.dat')

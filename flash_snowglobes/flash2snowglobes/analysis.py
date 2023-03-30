@@ -1,5 +1,4 @@
 import numpy as np
-import os
 import pandas as pd
 
 # flash_snowglobes
@@ -26,18 +25,18 @@ def analyze_output(model_set,
     """
     channels = get_all_channels(channel_groups)
 
-    time_filepath = os.path.join('./fluxes/', f'pinched_{model_set}_m{zams}_key.dat')
-    time = np.loadtxt(time_filepath,
+    filepath = paths.snow_channel_dat_key_filepath(zams=zams, model_set=model_set)
+    time = np.loadtxt(filepath,
                       skiprows=1,
                       usecols=[1],
                       unpack=True)
-    n_time = len(time)
 
     energy_bins = load_energy_bins(channel=channels[0],
                                    i=1,
                                    model_set=model_set,
                                    zams=zams,
                                    detector=detector)
+    n_time = len(time)
     n_bins = len(energy_bins)
 
     time_totals = {'total': np.zeros(n_time)}
@@ -127,34 +126,17 @@ def load_channel_dat(channel, i, model_set, zams, detector):
     zams : str, int or float
     detector : str
     """
-    filepath = channel_dat_filepath(channel=channel,
-                                    i=i,
-                                    model_set=model_set,
-                                    zams=zams,
-                                    detector=detector)
+    filepath = paths.snow_channel_dat_filepath(channel=channel,
+                                               i=i,
+                                               model_set=model_set,
+                                               zams=zams,
+                                               detector=detector)
 
     dat = np.genfromtxt(filepath,
                         skip_footer=2,
                         usecols=[1],
                         unpack=True)
     return dat
-
-
-def channel_dat_filepath(channel, i, model_set, zams, detector):
-    """Return filepath to snowglobes output file
-
-    Parameters
-    ----------
-    channel : str
-    i : int
-    model_set : str
-    zams : str, int or float
-    detector : str
-    """
-    filename = f'pinched_{model_set}_m{zams}_{i}_{channel}_{detector}_events_smeared.dat'
-    filepath = os.path.join('./out', filename)
-
-    return filepath
 
 
 def load_energy_bins(channel, i, model_set, zams, detector):
@@ -168,11 +150,11 @@ def load_energy_bins(channel, i, model_set, zams, detector):
     zams : str, int or float
     detector : str
     """
-    filepath = channel_dat_filepath(channel=channel,
-                                    i=i,
-                                    model_set=model_set,
-                                    zams=zams,
-                                    detector=detector)
+    filepath = paths.snow_channel_dat_filepath(channel=channel,
+                                               i=i,
+                                               model_set=model_set,
+                                               zams=zams,
+                                               detector=detector)
 
     energy_bins = np.genfromtxt(filepath,
                                 skip_footer=2,
@@ -280,28 +262,12 @@ def save_timebin_table(table, detector, model_set, zams, mixing):
     zams : str, int or float
     mixing : str
     """
-    path = output_path(model_set=model_set, detector=detector, mixing=mixing)
-    filename = f"timebin_{detector}_{mixing}_{model_set}_m{zams}.dat"
-    filepath = os.path.join(path, filename)
+    filepath = paths.snow_timebin_filepath(zams=zams,
+                                           model_set=model_set,
+                                           detector=detector,
+                                           mixing=mixing)
 
     string = table.to_string(index=False, justify='left')
 
     with open(filepath, 'w') as f:
         f.write(string)
-
-
-def output_path(model_set, detector, mixing):
-    """Returns path to output data
-
-    Parameters
-    ----------
-    model_set : str
-    detector : str
-    mixing : str
-    """
-    path = os.path.join(paths.top_path(), 'output', model_set, detector, mixing)
-
-    if not os.path.isdir(path):
-        os.makedirs(path)
-
-    return path
