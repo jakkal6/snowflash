@@ -7,16 +7,16 @@ import sys
 from astropy import units
 
 # flash_snowglobes
-from .flash2snowglobes import flash_io
-from .flash2snowglobes import snow_cleanup
-from .flash2snowglobes import convert
-from .flash2snowglobes import write_files
-from .flash2snowglobes import analysis
-from .flash2snowglobes import run_snowglobes
-from .flash2snowglobes import snow_setup
-from .flash2snowglobes import flavor_mixing
-from .utils.config import Config
-from .utils import paths
+from flash2snowglobes import flash_io
+from flash2snowglobes import snow_cleanup
+from flash2snowglobes import convert
+from flash2snowglobes import write_files
+from flash2snowglobes import analysis
+from flash2snowglobes import run_snowglobes
+from flash2snowglobes import snow_setup
+from flash2snowglobes import flavor_mixing
+from utils.config import Config
+from utils import paths
 
 
 if len(sys.argv) != 2:
