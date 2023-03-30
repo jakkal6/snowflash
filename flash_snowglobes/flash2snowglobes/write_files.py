@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
-import os
+
+# flash_snowglobes
+from flash_snowglobes.utils import paths
 
 
 def write_fluence_files(model_set,
@@ -26,18 +28,18 @@ def write_fluence_files(model_set,
         neutrino fluences over all time and energy bins [GeV/s/cm^2]
     """
     t_step = np.diff(t_bins)[0]
-    path = './fluxes'
 
     # write key table
     key_table = get_key_table(t_bins=t_bins, t_step=t_step)
-    key_filepath = os.path.join(path, f'pinched_{model_set}_m{zams}_key.dat')
+    key_filepath = paths.snow_channel_dat_key_filepath(zams=zams, model_set=model_set)
 
     with open(key_filepath, 'w') as keyfile:
         key_table.to_string(keyfile, index=False)
 
     # write fluence files
     for i in range(len(t_bins)):
-        out_filepath = os.path.join(path, f'pinched_{model_set}_m{zams}_{i + 1}.dat')
+        out_filepath = paths.snow_fluence_filepath(i=i+1, zams=zams, model_set=model_set)
+
         table = format_fluence_table(time_i=i,
                                      e_bins=e_bins,
                                      fluences_mixed=fluences_mixed)

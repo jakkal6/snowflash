@@ -152,7 +152,7 @@ def snow_channel_dat_filepath(channel, i, model_set, zams, detector):
 
 
 def snow_channel_dat_key_filepath(zams, model_set):
-    """Return filepath to snowglobes output key file
+    """Return filepath to snowglobes key file
 
     Parameters
     ----------
@@ -160,3 +160,18 @@ def snow_channel_dat_key_filepath(zams, model_set):
     model_set : str
     """
     return os.path.join('./fluxes', f'pinched_{model_set}_m{zams}_key.dat')
+
+
+def snow_fluence_filepath(i, zams, model_set):
+    """Return filepath to snowglobes fluence input file
+
+    Parameters
+    ----------
+    i : int
+    zams : str, int or float
+    model_set : str
+    """
+    filename = f'pinched_{model_set}_m{zams}_{i}.dat'
+    filepath = os.path.join('./fluxes', filename)
+
+    return filepath
