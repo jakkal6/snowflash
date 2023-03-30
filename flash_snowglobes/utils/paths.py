@@ -51,31 +51,15 @@ def dat_filepath(models_path, model_set, zams, run=None):
     run : str
         file basename (optional)
     """
-    model_dir = f'run_{zams}'
-    filename = dat_filename(model_set=model_set, zams=zams, run=run)
-    filepath = os.path.join(models_path, model_set, model_dir, filename)
-
-    return filepath
-
-
-def dat_filename(model_set, zams, run=None):
-    """Return .dat filename
-
-    Returns : str
-
-    Parameters
-    ----------
-    model_set : str
-    zams : str
-    run : str
-        file basename (optional)
-    """
     if run is None:
         filename = f'stir_ecrates_{model_set}_s{zams}_alpha1.25.dat'
     else:
         filename = f'{run}.dat'
 
-    return filename
+    model_dir = f'run_{zams}'
+    filepath = os.path.join(models_path, model_set, model_dir, filename)
+
+    return filepath
 
 
 def prog_filepath(model_set):
