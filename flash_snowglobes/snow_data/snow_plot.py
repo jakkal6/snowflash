@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 
 # snowglobes
-from . import plot_tools
-from .snow_tools import y_column
+from flash_snowglobes.snow_data import plot_tools, snow_tools
 
 
 def plot_integrated(integrated, y_var, prog_table,
@@ -45,7 +44,7 @@ def plot_integrated(integrated, y_var, prog_table,
     data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
-    y_col = y_column(y_var=y_var, channel=channel)
+    y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
     ax.plot(prog_table[x_var], integrated[y_col],
             marker=marker,
@@ -170,7 +169,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
     ref_table = tables[ref_model_set]
     x = prog_table[x_var]
-    y_col = y_column(y_var=y_var, channel=channel)
+    y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
     for model_set, table in tables.items():
         if model_set == ref_model_set:
@@ -225,7 +224,7 @@ def plot_timebin(timebin_table, y_var, zams,
     data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
-    y_col = y_column(y_var=y_var, channel=channel)
+    y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
     table = timebin_table.sel(zams=zams)
     ax.step(table['time'], table[y_col],
@@ -275,7 +274,7 @@ def plot_cumulative(cumulative, y_var, zams,
     data_only : bool
     """
     fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
-    y_col = y_column(y_var=y_var, channel=channel)
+    y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
     table = cumulative.sel(zams=zams)
     ax.step(table['time'], table[y_col],

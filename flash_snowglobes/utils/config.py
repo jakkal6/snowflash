@@ -4,7 +4,7 @@ from configparser import ConfigParser
 import ast
 
 # flash_snowglobes
-from . import paths
+from flash_snowglobes.utils import paths
 
 
 class ConfigError(Exception):
