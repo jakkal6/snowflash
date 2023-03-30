@@ -8,6 +8,7 @@ from . import plot_tools
 from .slider import SnowSlider
 from flash_snowglobes.utils.config import Config
 
+
 class SnowData:
     def __init__(self,
                  config_name,
@@ -51,17 +52,6 @@ class SnowData:
     # ===============================================================
     #                      Load Tables
     # ===============================================================
-    def load_integrated_tables(self):
-        """Load all time-integrated tables
-        """
-        print('Loading integrated tables')
-        tables = dict.fromkeys(self.model_sets)
-
-        for model_set in self.model_sets:
-            tables[model_set] = snow_tools.load_integrated_table(model_set=model_set,
-                                                                 detector=self.detector)
-        self.integrated_tables = tables
-
     def load_timebin_tables(self):
         """Load timebinned tables for all models
         """

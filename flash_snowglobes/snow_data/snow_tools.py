@@ -1,4 +1,3 @@
-import os
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -14,27 +13,6 @@ Tools for handling snowglobes data
 # ===============================================================
 #                      Load Tables
 # ===============================================================
-def load_integrated_table(model_set,
-                          detector,
-                          time_integral=30):
-    """Load time-integrated table containing all models
-
-    Returns : pd.DataFrame
-
-    parameters
-    ----------
-    model_set : str
-    detector : str
-    time_integral : int
-        time integrated over post-bounce (milliseconds)
-    """
-    path = paths.output_path()
-    filename = f'{detector}_analysis_{model_set}_{time_integral}ms.dat'
-    filepath = os.path.join(path, filename)
-
-    return pd.read_csv(filepath, delim_whitespace=True)
-
-
 def load_all_timebin_tables(zams_list,
                             model_set,
                             detector,

@@ -1,4 +1,3 @@
-import numpy as np
 from matplotlib.widgets import Slider
 import matplotlib.pyplot as plt
 
