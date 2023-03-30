@@ -2,6 +2,9 @@ import numpy as np
 import os
 import pandas as pd
 
+# flash_snowglobes
+from flash_snowglobes.utils import paths
+
 
 def analyze_output(model_set,
                    zams,
@@ -296,10 +299,7 @@ def output_path(model_set, detector, mixing):
     detector : str
     mixing : str
     """
-    top_path = os.path.join(os.path.dirname(__file__), '..', '..')
-
-    path = os.path.join(top_path, 'output', model_set, detector, mixing)
-    path = os.path.abspath(path)
+    path = os.path.join(paths.top_path(), 'output', model_set, detector, mixing)
 
     if not os.path.isdir(path):
         os.makedirs(path)

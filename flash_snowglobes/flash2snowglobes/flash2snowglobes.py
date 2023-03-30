@@ -14,6 +14,7 @@ import analysis
 import run_snowglobes
 import snow_setup
 import flavor_mixing
+from flash_snowglobes.utils.config import Config
 
 
 if len(sys.argv) != 2:
@@ -26,53 +27,39 @@ else:
 
 
 # ===== config and setup =====
-config = flash_io.load_config(config_name)
-detector_config = flash_io.load_config('detectors')
+config = Config(config_name)
 
-snowglobes_path = config['paths']['snowglobes']
-models_path = config['paths']['models']
+distance = config.distance * units.kpc.to(units.cm)
 
-run = config['models']['run']
-model_sets = config['models']['model_sets']
-model_set_map = config['models']['model_set_map']
-zams_list = config['models']['zams']
+t_bins = convert.get_bins(x0=config.bins['t_start'],
+                          x1=config.bins['t_end'],
+                          dx=config.bins['t_step'],
+                          endpoint=False)
 
-t_start = config['bins']['t_start']
-t_end = config['bins']['t_end']
-t_step = config['bins']['t_step']
-
-e_start = config['bins']['e_start']
-e_end = config['bins']['e_end']
-e_step = config['bins']['e_step']
-
-detector = config['snow']['detector']
-material = detector_config['materials'][detector]
-channel_groups = detector_config['channel_groups'][material]
-
-distance = config['snow']['distance'] * units.kpc.to(units.cm)
-
-t_bins = convert.get_bins(x0=t_start, x1=t_end, dx=t_step, endpoint=False)
-e_bins = convert.get_bins(x0=e_start, x1=e_end, dx=e_step, endpoint=True)
+e_bins = convert.get_bins(x0=config.bins['e_start'],
+                          x1=config.bins['e_end'],
+                          dx=config.bins['e_step'],
+                          endpoint=True)
 
 
 print('=== Copying snowglobes install ===')
-snow_setup.copy_snowglobes(snowglobes_path)
+snow_setup.copy_snowglobes(config.paths['snowglobes'])
 
 
-for mixing in config['snow']['mixing']:
-    for model_set in model_sets:
-        for zams in zams_list:
+for mixing in config.mixing:
+    for model_set in config.model_sets:
+        for zams in config.zams_list:
             print('=== Converting flash data ===')
-            dat_model_set = model_set_map.get(model_set, model_set)
+            dat_model_set = config.model_set_map.get(model_set, model_set)
 
             filepath = flash_io.dat_filepath(model_set=dat_model_set,
                                              zams=zams,
-                                             models_path=models_path,
-                                             run=run)
+                                             models_path=config.paths['models'],
+                                             run=config.run)
 
             time, lum, avg, rms = flash_io.read_datfile(filepath=filepath,
-                                                        t_start=t_start,
-                                                        t_end=t_end)
+                                                        t_start=config.bins['t_start'],
+                                                        t_end=config.bins['t_end'])
 
             fluences = convert.get_fluences(time=time,
                                             lum=lum,
@@ -95,14 +82,14 @@ for mixing in config['snow']['mixing']:
             run_snowglobes.run(model_set=model_set,
                                zams=zams,
                                t_bins=t_bins,
-                               material=material,
-                               detector=detector)
+                               material=config.material,
+                               detector=config.detector)
 
             print('=== Analyzing output ===')
             analysis.analyze_output(model_set=model_set,
                                     zams=zams,
-                                    detector=detector,
-                                    channel_groups=channel_groups,
+                                    detector=config.detector,
+                                    channel_groups=config.channel_groups,
                                     mixing=mixing)
 
             print('=== Cleaning up model ===')

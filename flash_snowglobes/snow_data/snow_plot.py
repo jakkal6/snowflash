@@ -2,9 +2,7 @@ import matplotlib.pyplot as plt
 
 # snowglobes
 from . import plot_tools
-from .snow_tools import y_column, load_config
-
-config = load_config('plotting')
+from .snow_tools import y_column
 
 
 def plot_integrated(integrated, y_var, prog_table,
@@ -178,15 +176,13 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
         if model_set == ref_model_set:
             continue
 
-        ax.plot(x, table[y_col] - ref_table[y_col],
+        ax.plot(x=x,
+                y=table[y_col] - ref_table[y_col],
                 marker=marker,
                 ls='none',
-                label=model_set,
-                color=config['plot']['colors'].get(model_set))
+                label=model_set)
 
-    ax.hlines(0, x.min(), x.max(),
-              linestyles='--',
-              colors=config['plot']['colors'].get(ref_model_set))
+    ax.hlines(0, x.min(), x.max(), linestyles='--')
 
     plot_tools.set_ax_all(ax=ax,
                           x_var=x_var,

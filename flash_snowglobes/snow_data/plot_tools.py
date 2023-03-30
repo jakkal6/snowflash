@@ -1,11 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# snowglobes
-from . import snow_tools
-
-config = snow_tools.load_config('plotting')
-
 """
 Generalised plotting wrappers
 """
@@ -80,30 +75,24 @@ def set_ax_all(ax,
     title : bool
     title_str : str
     """
-    set_ax_scales(ax, x_var=x_var, y_var=y_var, x_scale=x_scale, y_scale=y_scale)
-    set_ax_labels(ax, y_var=y_var, x_var=x_var, y_label=y_label, x_label=x_label)
-    set_ax_lims(ax, x_var=x_var, y_var=y_var, x_lims=x_lims, y_lims=y_lims)
+    set_ax_scales(ax, x_scale=x_scale, y_scale=y_scale)
+    set_ax_labels(ax, y_label=y_label, x_label=x_label)
+    set_ax_lims(ax, x_lims=x_lims, y_lims=y_lims)
     set_ax_legend(ax, legend=legend, loc=legend_loc)
     set_ax_title(ax, string=title_str, title=title)
 
 
-def set_ax_scales(ax,
-                  x_var=None, y_var=None,
-                  x_scale=None, y_scale=None):
+def set_ax_scales(ax, x_scale=None, y_scale=None):
     """Set axis scales (linear, log)
 
     parameters
     ----------
     ax : pyplot Axis
-    x_var : str
-    y_var : str
     x_scale : str
     y_scale : str
     """
-    if x_scale is None:
-        x_scale = config['plot']['ax_scales'].get(x_var, 'linear')
-    if y_scale is None:
-        y_scale = config['plot']['ax_scales'].get(y_var, 'linear')
+    x_scale = {None: 'linear'}.get(x_scale, x_scale)
+    y_scale = {None: 'linear'}.get(y_scale, y_scale)
 
     ax.set_xscale(x_scale)
     ax.set_yscale(y_scale)
@@ -122,46 +111,28 @@ def set_ax_title(ax, string, title):
         ax.set_title(string)
 
 
-def set_ax_lims(ax,
-                x_var=None, y_var=None,
-                x_lims=None, y_lims=None):
+def set_ax_lims(ax, x_lims=None, y_lims=None):
     """Set x and y axis limits
 
     parameters
     ----------
     ax : pyplot Axis
-    x_var : str
-    y_var : str
     x_lims : [min, max]
     y_lims : [min, max]
     """
-    if x_lims is None:
-        x_lims = config['plot']['ax_lims'].get(x_var)
-    if y_lims is None:
-        y_lims = config['plot']['ax_lims'].get(y_var)
-
     ax.set_xlim(x_lims)
     ax.set_ylim(y_lims)
 
 
-def set_ax_labels(ax,
-                  x_var=None, y_var=None,
-                  x_label=None, y_label=None):
+def set_ax_labels(ax, x_label=None, y_label=None):
     """Set x and y axis limits
 
     parameters
     ----------
     ax : pyplot Axis
-    x_var : str
-    y_var : str
     x_label : str
     y_label : str
     """
-    if y_label is None:
-        y_label = config['plot']['ax_labels'].get(y_var, y_var)
-    if x_label is None:
-        x_label = config['plot']['ax_labels'].get(x_var, x_var)
-
     ax.set_ylabel(y_label)
     ax.set_xlabel(x_label)
 

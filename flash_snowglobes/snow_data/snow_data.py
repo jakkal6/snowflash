@@ -6,7 +6,7 @@ from . import snow_tools
 from . import snow_plot
 from . import plot_tools
 from .slider import SnowSlider
-
+from flash_snowglobes.utils.config import Config
 
 class SnowData:
     def __init__(self,
@@ -25,19 +25,15 @@ class SnowData:
             immediately load all data
         mixing : str
         """
-        self.config_plot = snow_tools.load_config('plotting')
-        self.plot_colors = self.config_plot['plot']['colors']
-        self.config_detector = snow_tools.load_config('detectors')
-        self.config = snow_tools.load_config(config_name)
+        self.config = Config(config_name)
 
-        self.detector = self.config['snow']['detector']
-        self.material = self.config_detector['materials'][self.detector]
-        channel_groups = self.config_detector['channel_groups'][self.material]
-        self.channels = list(channel_groups.keys())
+        self.detector = self.config.detector
+        self.material = self.config.material
+        self.channels = self.config.channels
 
-        self.model_sets = self.config['models']['model_sets']
-        self.zams_list = self.config['models']['zams']
-        self.n_integrate = self.config['bins']['n_integrate']
+        self.model_sets = self.config.model_sets
+        self.zams_list = self.config.zams_list
+        self.n_integrate = self.config.bins['n_integrate']
         self.mixing = mixing
 
         self.integrated_tables = None
@@ -175,7 +171,7 @@ class SnowData:
                                       marker=marker,
                                       ax=ax,
                                       label=model_set,
-                                      color=self.plot_colors.get(model_set),
+                                      color=self.config.color(model_set),
                                       data_only=True)
 
         if not data_only:
@@ -238,7 +234,7 @@ class SnowData:
                                     marker=marker,
                                     figsize=figsize,
                                     label=model_set,
-                                    color=self.plot_colors.get(model_set),
+                                    color=self.config.color(model_set),
                                     legend=False,
                                     axes=axes,
                                     data_only=True)
@@ -331,7 +327,7 @@ class SnowData:
                                    y_var=y_var,
                                    zams=zams,
                                    label=model_set,
-                                   color=self.plot_colors.get(model_set),
+                                   color=self.config.color(model_set),
                                    channel=channel,
                                    ax=ax,
                                    data_only=True)
@@ -384,7 +380,7 @@ class SnowData:
                                       y_scale=y_scale,
                                       ax=ax,
                                       label=model_set,
-                                      color=self.plot_colors.get(model_set),
+                                      color=self.config.color(model_set),
                                       linestyle=linestyle,
                                       data_only=True)
 

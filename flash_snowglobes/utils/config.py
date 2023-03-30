@@ -95,6 +95,17 @@ class Config:
     # ===============================================================
     #                  plot parameters
     # ===============================================================
+    def color(self, model_set):
+        """Get color for given model_set
+
+        Returns : str
+
+        parameters
+        ----------
+        model_set : str
+        """
+        return self.get_param('plot', 'plot', 'colors').get(model_set)
+
     def ax_scale(self, var):
         """Get axis scale for given section, default to 'linear'
 
