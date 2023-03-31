@@ -161,18 +161,3 @@ def load_config(name):
             config[section][option] = ast.literal_eval(ini.get(section, option))
 
     return config
-
-
-def check_config(config):
-    """Check provided config, load if necessary
-
-    Returns : Config
-
-    Parameters
-    ----------
-    config: str or Config
-    """
-    if (config is None) or (type(config) is str):
-        config = Config(name=config)
-
-    return config
