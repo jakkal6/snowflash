@@ -1,5 +1,7 @@
 import os
 
+from flash_snowglobes.utils import paths
+
 
 def run(model_set, zams, n_bins, material, detector):
     """Runs snowglobes on generated 'pinched' files
@@ -12,6 +14,9 @@ def run(model_set, zams, n_bins, material, detector):
     material : str
     detector : str
     """
+    runtime_path = paths.snowglobes_runtime_path()
+    os.system(f'cd {runtime_path}')
+
     for n in range(n_bins):
         input_file = f'pinched_{model_set}_m{zams}_{n + 1}'
         run_str = f'./supernova.pl {input_file} {material} {detector}'

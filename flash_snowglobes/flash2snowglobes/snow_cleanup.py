@@ -1,6 +1,10 @@
 import os
 import shutil
 
+from flash_snowglobes.utils import paths
+
+runtime_path = paths.snowglobes_runtime_path()
+
 
 def clean_model():
     """Clean up snowglobes input and output files
@@ -8,7 +12,7 @@ def clean_model():
     dirs = ['fluxes', 'out']
 
     for d in dirs:
-        clear_dir(f'./{d}')
+        clear_dir(os.path.join(runtime_path, d))
 
 
 def clean_all():
@@ -22,12 +26,13 @@ def clean_all():
 
     # Delete directories
     for d in rm_dirs:
-        shutil.rmtree(f'./{d}', ignore_errors=True)
+        shutil.rmtree(os.path.join(runtime_path, d), ignore_errors=True)
 
     # Delete files
     for f in rm_files:
+        filepath = os.path.join(runtime_path, f)
         try:
-            os.remove(f)
+            os.remove(filepath)
         except FileNotFoundError:
             pass
 
@@ -41,7 +46,7 @@ def clear_dir(path):
     """
     files = os.listdir(path)
     for file in files:
-        os.remove(f"{path}/" + file)
+        os.remove(os.path.join(path, file))
 
 
 if __name__ == '__main__':

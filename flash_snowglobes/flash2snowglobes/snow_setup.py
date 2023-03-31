@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from flash_snowglobes.utils import paths
+
 
 def copy_snowglobes(snowglobes_path):
     """Copies snowglobes installation into working directory
@@ -12,13 +14,13 @@ def copy_snowglobes(snowglobes_path):
     snowglobes_path : str
         directory path to snowglobes installation
     """
-    local_path = "./"
+    runtime_path = paths.snowglobes_runtime_path()
 
     # create local dirs
     new_folders = ['fluxes', 'out']
 
     for folder in new_folders:
-        fullpath = os.path.join(local_path, folder)
+        fullpath = os.path.join(runtime_path, folder)
 
         if not os.path.isdir(fullpath):
             os.makedirs(fullpath)
@@ -29,7 +31,7 @@ def copy_snowglobes(snowglobes_path):
 
     for folder in copy_folders:
         src = os.path.join(snowglobes_path, folder)
-        dest = os.path.join(local_path, folder)
+        dest = os.path.join(runtime_path, folder)
 
         if os.path.isdir(dest):
             shutil.rmtree(dest)
@@ -41,7 +43,7 @@ def copy_snowglobes(snowglobes_path):
     
     for filename in ln_files:
         src = os.path.join(snowglobes_path, filename)
-        dest = os.path.join(local_path, filename)
+        dest = os.path.join(runtime_path, filename)
 
         if os.path.isfile(dest):
             os.remove(dest)

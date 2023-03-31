@@ -24,9 +24,7 @@ else:
 
 # ===== config and setup =====
 config = utils.config.Config(config_name)
-
 distance = config.distance * units.kpc.to(units.cm)
-
 
 print('=== Copying snowglobes install ===')
 snow_setup.copy_snowglobes(config.paths['snowglobes'])
