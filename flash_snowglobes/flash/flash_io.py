@@ -24,7 +24,7 @@ def read_datfile(filepath, t_start, t_end):
         start of time slice (relative to bounce)
     t_end : float
         end of time slice (relative to bounce)
-    """    
+    """
     print(f'Reading flash neutrino output: {filepath}')
     cols = [0, 11, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
@@ -114,7 +114,7 @@ def write_fluence_files(model_set,
 
     # write fluence files
     for i in range(len(t_bins)):
-        out_filepath = paths.snow_fluence_filepath(i=i+1, zams=zams, model_set=model_set)
+        out_filepath = paths.snow_fluence_filepath(i=i + 1, zams=zams, model_set=model_set)
 
         table = format_fluence_table(time_i=i,
                                      e_bins=e_bins,
