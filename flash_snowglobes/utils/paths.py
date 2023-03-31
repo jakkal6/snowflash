@@ -85,6 +85,14 @@ def output_path():
     return os.path.join(top_path(), 'output')
 
 
+def snowglobes_runtime_path():
+    """Return path to temp Snowglobes dir
+
+    Returns : str
+    """
+    return os.path.join(top_path(), 'snowglobes')
+
+
 def snow_model_path(model_set, detector, mixing):
     """Return path to snowglobes model data
 
