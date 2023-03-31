@@ -21,7 +21,7 @@ def read_datfile(filepath, t_start, t_end):
     t_end : float
         end of time slice (relative to bounce)
     """    
-    print(f'Reading: {filepath}')
+    print(f'Reading flash output: {filepath}')
     cols = [0, 11, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
     dat_raw = np.loadtxt(filepath, usecols=cols)

@@ -1,1 +1,1 @@
-from flash_model import FlashModel
+from .flash_model import FlashModel
