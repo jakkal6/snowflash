@@ -1,7 +1,7 @@
 
 # flash_snowglobes
 from flash_snowglobes.utils import config, paths
-from flash_snowglobes.flash.flash_io import read_datfile
+from flash_snowglobes.flash.flash_io import read_datfile, write_fluence_files
 from flash_snowglobes.flash.flash_fluences import get_fluences, get_bins
 from flash_snowglobes.flash.flash_mixing import mix_fluences
 
@@ -23,15 +23,14 @@ class FlashModel:
         run : str or None
         config_name : str
         """
+        self.config = config.Config(config_name)
         self.zams = zams
         self.model_set = model_set
         self.run = run
-
-        self.config = config.Config(config_name)
         self.models_path = self.config.paths['models']
-
         self.dat_filepath = None
         self.dat = None
+
         self.t_bins = None
         self.e_bins = None
         self.fluences = None
@@ -42,7 +41,11 @@ class FlashModel:
         self.get_bins()
         self.get_fluences()
         self.mix_fluences()
+        self.write_fluences()
 
+    # =======================================================
+    #                 Flash data
+    # =======================================================
     def read_datfile(self):
         """Read time-dependent neutrino data from flash dat file
         """
@@ -55,6 +58,9 @@ class FlashModel:
                                 t_start=self.config.bins['t_start'],
                                 t_end=self.config.bins['t_end'])
 
+    # =======================================================
+    #                 Fluence data
+    # =======================================================
     def get_bins(self):
         """Generate time and energy bins
         """
@@ -86,3 +92,14 @@ class FlashModel:
         for mixing in self.config.mixing:
             self.fluences_mixed[mixing] = mix_fluences(fluences=self.fluences,
                                                        mixing=mixing)
+
+    def write_fluences(self):
+        """Write fluence tables to file
+        """
+        print('Writing fluences to file')
+        for mixing in self.config.mixing:
+            write_fluence_files(model_set=self.model_set,
+                                zams=self.zams,
+                                t_bins=self.t_bins,
+                                e_bins=self.e_bins,
+                                fluences_mixed=self.fluences_mixed[mixing])
