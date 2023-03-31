@@ -30,7 +30,34 @@ class FlashModel:
         self.config = config.Config(config_name)
         self.models_path = self.config.paths['models']
 
+        self.dat_filepath = None
+        self.dat = None
+        self.t_bins = None
+        self.e_bins = None
+        self.fluences = None
         self.fluences_mixed = {}
+
+        # run analysis
+        self.read_datfile()
+        self.get_bins()
+        self.get_fluences()
+        self.mix_fluences()
+
+    def read_datfile(self):
+        """Read time-dependent neutrino data from flash dat file
+        """
+        self.dat_filepath = paths.dat_filepath(models_path=self.models_path,
+                                               zams=self.zams,
+                                               model_set=self.model_set,
+                                               run=self.run)
+
+        self.dat = read_datfile(filepath=self.dat_filepath,
+                                t_start=self.config.bins['t_start'],
+                                t_end=self.config.bins['t_end'])
+
+    def get_bins(self):
+        """Generate time and energy bins
+        """
         self.t_bins = get_bins(x0=self.config.bins['t_start'],
                                x1=self.config.bins['t_end'],
                                dx=self.config.bins['t_step'],
@@ -41,15 +68,9 @@ class FlashModel:
                                dx=self.config.bins['e_step'],
                                endpoint=True)
 
-        self.dat_filepath = paths.dat_filepath(models_path=self.models_path,
-                                               zams=self.zams,
-                                               model_set=self.model_set,
-                                               run=self.run)
-
-        self.dat = read_datfile(filepath=self.dat_filepath,
-                                t_start=self.config.bins['t_start'],
-                                t_end=self.config.bins['t_end'])
-
+    def get_fluences(self):
+        """Calculate neutrino fluences for each flavor in all time and energy bins
+        """
         self.fluences = get_fluences(time=self.dat['time'],
                                      lum=self.dat['lum'],
                                      avg=self.dat['avg'],
@@ -57,8 +78,6 @@ class FlashModel:
                                      distance=self.config.distance,
                                      t_bins=self.t_bins,
                                      e_bins=self.e_bins)
-
-        self.mix_fluences()
 
     def mix_fluences(self):
         """Apply flavor mixing to neutrino fluences
