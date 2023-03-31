@@ -19,5 +19,5 @@ def run(model_set, zams, n_bins, material, detector):
 
     for n in range(n_bins):
         input_file = f'pinched_{model_set}_m{zams}_{n + 1}'
-        run_str = f'./supernova.pl {input_file} {material} {detector}'
+        run_str = f'{runtime_path}/supernova.pl {input_file} {material} {detector}'
         os.system(run_str)
