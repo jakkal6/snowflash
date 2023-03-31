@@ -7,8 +7,8 @@ import sys
 from astropy import units
 
 # flash_snowglobes
-from flash_snowglobes.flash2snowglobes import analysis, convert
-from flash_snowglobes.flash2snowglobes import flavor_mixing, flash_io, write_files
+from flash_snowglobes.flash import FlashModel
+from flash_snowglobes.flash2snowglobes import analysis
 from flash_snowglobes.flash2snowglobes import snow_setup, run_snowglobes, snow_cleanup
 from flash_snowglobes import utils
 
@@ -27,16 +27,6 @@ config = utils.config.Config(config_name)
 
 distance = config.distance * units.kpc.to(units.cm)
 
-t_bins = convert.get_bins(x0=config.bins['t_start'],
-                          x1=config.bins['t_end'],
-                          dx=config.bins['t_step'],
-                          endpoint=False)
-
-e_bins = convert.get_bins(x0=config.bins['e_start'],
-                          x1=config.bins['e_end'],
-                          dx=config.bins['e_step'],
-                          endpoint=True)
-
 
 print('=== Copying snowglobes install ===')
 snow_setup.copy_snowglobes(config.paths['snowglobes'])
@@ -46,38 +36,17 @@ for mixing in config.mixing:
     for model_set in config.model_sets:
         for zams in config.zams_list:
             print('=== Converting flash data ===')
-            dat_model_set = config.model_set_map.get(model_set, model_set)
+            flash_model = FlashModel(zams=zams,
+                                     model_set=model_set,
+                                     run=config.run,
+                                     config_name=config_name)
 
-            dat_filepath = utils.paths.dat_filepath(models_path=config.paths['models'],
-                                                    model_set=dat_model_set,
-                                                    zams=zams,
-                                                    run=config.run)
-
-            time, lum, avg, rms = flash_io.read_datfile(filepath=dat_filepath,
-                                                        t_start=config.bins['t_start'],
-                                                        t_end=config.bins['t_end'])
-
-            fluences = convert.get_fluences(time=time,
-                                            lum=lum,
-                                            avg=avg,
-                                            rms=rms,
-                                            distance=distance,
-                                            t_bins=t_bins,
-                                            e_bins=e_bins)
-
-            fluences_mixed = flavor_mixing.mix_fluences(fluences=fluences,
-                                                        mixing=mixing)
-
-            write_files.write_fluence_files(model_set=model_set,
-                                            zams=zams,
-                                            t_bins=t_bins,
-                                            e_bins=e_bins,
-                                            fluences_mixed=fluences_mixed)
+            flash_model.write_fluences(mixing)
 
             print('=== Running snowglobes ===')
             run_snowglobes.run(model_set=model_set,
                                zams=zams,
-                               t_bins=t_bins,
+                               t_bins=flash_model.t_bins,
                                material=config.material,
                                detector=config.detector)
 
