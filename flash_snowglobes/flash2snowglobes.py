@@ -7,11 +7,10 @@ import sys
 from astropy import units
 
 # flash_snowglobes
-from flash2snowglobes import flash_io, snow_cleanup, convert
-from flash2snowglobes import write_files, analysis, run_snowglobes
-from flash2snowglobes import snow_setup, flavor_mixing
-from utils.config import Config
-from utils import paths
+from flash_snowglobes.flash2snowglobes import analysis, convert
+from flash_snowglobes.flash2snowglobes import flavor_mixing, flash_io, write_files
+from flash_snowglobes.flash2snowglobes import snow_setup, run_snowglobes, snow_cleanup
+from flash_snowglobes import utils
 
 
 if len(sys.argv) != 2:
@@ -24,7 +23,7 @@ else:
 
 
 # ===== config and setup =====
-config = Config(config_name)
+config = utils.config.Config(config_name)
 
 distance = config.distance * units.kpc.to(units.cm)
 
@@ -49,10 +48,10 @@ for mixing in config.mixing:
             print('=== Converting flash data ===')
             dat_model_set = config.model_set_map.get(model_set, model_set)
 
-            dat_filepath = paths.dat_filepath(models_path=config.paths['models'],
-                                              model_set=dat_model_set,
-                                              zams=zams,
-                                              run=config.run)
+            dat_filepath = utils.paths.dat_filepath(models_path=config.paths['models'],
+                                                    model_set=dat_model_set,
+                                                    zams=zams,
+                                                    run=config.run)
 
             time, lum, avg, rms = flash_io.read_datfile(filepath=dat_filepath,
                                                         t_start=config.bins['t_start'],
