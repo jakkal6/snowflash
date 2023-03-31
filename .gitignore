@@ -6,3 +6,4 @@ analysis/
 timebin/
 output
 slurm*.out
+*.nc
