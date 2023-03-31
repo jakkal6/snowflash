@@ -46,7 +46,7 @@ for mixing in config.mixing:
             print('=== Running snowglobes ===')
             run_snowglobes.run(model_set=model_set,
                                zams=zams,
-                               t_bins=flash_model.t_bins,
+                               n_bins=len(flash_model.t_bins),
                                material=config.material,
                                detector=config.detector)
 
