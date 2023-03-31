@@ -8,8 +8,7 @@ from astropy import units
 
 # flash_snowglobes
 from flash_snowglobes.flash import FlashModel
-from flash_snowglobes.flash2snowglobes import analysis
-from flash_snowglobes.flash2snowglobes import run_snowglobes, snow_cleanup
+from flash_snowglobes.flash2snowglobes import analysis, snow_run, snow_cleanup
 from flash_snowglobes import utils
 
 
@@ -27,7 +26,7 @@ config = utils.config.Config(config_name)
 distance = config.distance * units.kpc.to(units.cm)
 
 print('=== Copying snowglobes install ===')
-run_snowglobes.copy_snowglobes(config.paths['snowglobes'])
+snow_run.copy_snowglobes(config.paths['snowglobes'])
 
 
 for mixing in config.mixing:
@@ -42,11 +41,11 @@ for mixing in config.mixing:
             flash_model.write_fluences(mixing)
 
             print('=== Running snowglobes ===')
-            run_snowglobes.run(model_set=model_set,
-                               zams=zams,
-                               n_bins=len(flash_model.t_bins),
-                               material=config.material,
-                               detector=config.detector)
+            snow_run.run(model_set=model_set,
+                         zams=zams,
+                         n_bins=len(flash_model.t_bins),
+                         material=config.material,
+                         detector=config.detector)
 
             print('=== Analyzing output ===')
             analysis.analyze_output(model_set=model_set,
