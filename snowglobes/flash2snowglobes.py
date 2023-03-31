@@ -9,7 +9,7 @@ from astropy import units
 # flash_snowglobes
 from flash_snowglobes.flash import FlashModel
 from flash_snowglobes.flash2snowglobes import analysis
-from flash_snowglobes.flash2snowglobes import snow_setup, run_snowglobes, snow_cleanup
+from flash_snowglobes.flash2snowglobes import run_snowglobes, snow_cleanup
 from flash_snowglobes import utils
 
 
@@ -27,7 +27,7 @@ config = utils.config.Config(config_name)
 distance = config.distance * units.kpc.to(units.cm)
 
 print('=== Copying snowglobes install ===')
-snow_setup.copy_snowglobes(config.paths['snowglobes'])
+run_snowglobes.copy_snowglobes(config.paths['snowglobes'])
 
 
 for mixing in config.mixing:
