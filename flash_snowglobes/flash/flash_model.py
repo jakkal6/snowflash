@@ -41,7 +41,6 @@ class FlashModel:
         self.get_bins()
         self.get_fluences()
         self.mix_fluences()
-        self.write_fluences()
 
     # =======================================================
     #                 Flash data
@@ -93,13 +92,16 @@ class FlashModel:
             self.fluences_mixed[mixing] = mix_fluences(fluences=self.fluences,
                                                        mixing=mixing)
 
-    def write_fluences(self):
-        """Write fluence tables to file
+    def write_fluences(self, mixing):
+        """Write fluence tables to file for snowglobes input
+
+        Parameters
+        ----------
+        mixing : str
         """
         print('Writing fluences to file')
-        for mixing in self.config.mixing:
-            write_fluence_files(model_set=self.model_set,
-                                zams=self.zams,
-                                t_bins=self.t_bins,
-                                e_bins=self.e_bins,
-                                fluences_mixed=self.fluences_mixed[mixing])
+        write_fluence_files(model_set=self.model_set,
+                            zams=self.zams,
+                            t_bins=self.t_bins,
+                            e_bins=self.e_bins,
+                            fluences_mixed=self.fluences_mixed[mixing])
