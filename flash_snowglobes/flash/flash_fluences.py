@@ -169,7 +169,7 @@ def get_phi(e_bin, avg, alpha):
     return phi
 
 
-def get_bins(x0, x1, dx, endpoint):
+def get_bins(x0, x1, dx, endpoint, decimals=5):
     """Divide x into dx-spaced bins
 
     Returns: []
@@ -184,13 +184,18 @@ def get_bins(x0, x1, dx, endpoint):
         bin size
     endpoint : bool
         whether to include endpoint
+    decimals : int
+        number of decimals to round to
     """
     n_bins = round((x1 - x0) / dx)
 
     if endpoint:
         n_bins += 1
 
-    return np.linspace(x0, x1, num=n_bins, endpoint=endpoint)
+    bins = np.linspace(x0, x1, num=n_bins, endpoint=endpoint)
+    bins = np.round(bins, decimals)
+
+    return bins
 
 
 def get_alpha(avg, rms):

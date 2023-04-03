@@ -60,18 +60,25 @@ class FlashModel:
     # =======================================================
     #                 Fluence data
     # =======================================================
-    def get_bins(self):
-        """Generate time and energy bins
+    def get_bins(self, decimals=5):
+        """Generate time and energy bin coordinates
+
+        Parameters
+        ----------
+        decimals : int
+            number of decimals to round to
         """
         self.t_bins = get_bins(x0=self.config.bins['t_start'],
                                x1=self.config.bins['t_end'],
                                dx=self.config.bins['t_step'],
-                               endpoint=False)
+                               endpoint=False,
+                               decimals=decimals)
 
         self.e_bins = get_bins(x0=self.config.bins['e_start'],
                                x1=self.config.bins['e_end'],
                                dx=self.config.bins['e_step'],
-                               endpoint=True)
+                               endpoint=True,
+                               decimals=decimals)
 
     def get_fluences(self):
         """Calculate neutrino fluences for each flavor in all time and energy bins
