@@ -11,7 +11,7 @@ def mix_fluences(fluences, mixing):
     Parameters
     ----------
     fluences : {flavor: [t_bins, e_bins]}
-    mixing : 'normal', 'inverted', or 'none'
+    mixing : 'normal', 'inverted', or 'nomix'
     """
     fluence_mix = {}
     p, pbar = mixing_fractions(mixing=mixing)

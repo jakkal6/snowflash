@@ -1,8 +1,8 @@
 
 # flash_snowglobes
 from flash_snowglobes.utils import config, paths
+from flash_snowglobes.flash import flash_fluences
 from flash_snowglobes.flash.flash_io import read_datfile, write_fluence_files
-from flash_snowglobes.flash.flash_fluences import get_fluences, get_bins
 from flash_snowglobes.flash.flash_mixing import mix_fluences
 
 
@@ -68,17 +68,17 @@ class FlashModel:
         decimals : int
             number of decimals to round to
         """
-        self.t_bins = get_bins(x0=self.config.bins['t_start'],
-                               x1=self.config.bins['t_end'],
-                               dx=self.config.bins['t_step'],
-                               endpoint=False,
-                               decimals=decimals)
+        self.t_bins = flash_fluences.get_bins(x0=self.config.bins['t_start'],
+                                              x1=self.config.bins['t_end'],
+                                              dx=self.config.bins['t_step'],
+                                              endpoint=False,
+                                              decimals=decimals)
 
-        self.e_bins = get_bins(x0=self.config.bins['e_start'],
-                               x1=self.config.bins['e_end'],
-                               dx=self.config.bins['e_step'],
-                               endpoint=True,
-                               decimals=decimals)
+        self.e_bins = flash_fluences.get_bins(x0=self.config.bins['e_start'],
+                                              x1=self.config.bins['e_end'],
+                                              dx=self.config.bins['e_step'],
+                                              endpoint=True,
+                                              decimals=decimals)
 
     def get_fluences(self):
         """Calculate neutrino fluences for each flavor in all time and energy bins
