@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -262,6 +264,10 @@ def save_timebin_table(table, detector, model_set, zams, mixing):
     zams : str, int or float
     mixing : str
     """
+    path = paths.snow_model_path(model_set=model_set, detector=detector, mixing=mixing)
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
     filepath = paths.snow_timebin_filepath(zams=zams,
                                            model_set=model_set,
                                            detector=detector,
