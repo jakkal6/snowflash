@@ -1,4 +1,5 @@
 import numpy as np
+import xarray as xr
 from scipy.special import gamma
 from scipy.integrate import trapz
 
@@ -7,6 +8,28 @@ Note on docstrings:
     array parameters are specified by shape.
     e.g. [timesteps, flavors] --> array of shape [len(timesteps), len(flavors)]
 """
+
+
+def fluences_to_xarray(fluences, t_bins, e_bins):
+    """Construct xarray Dataset from fluences dict
+
+    Parameters
+    ----------
+    fluences : {flav: [t_bins, e_bins]}
+    t_bins : []
+    e_bins : []
+    """
+    x_arrays = {}
+
+    for flav, array in fluences.items():
+        x_arrays[flav] = xr.DataArray(array,
+                                      coords=[t_bins, e_bins],
+                                      dims=['time', 'energy'])
+
+    fx = xr.concat(x_arrays.values(), dim='flav')
+    fx.coords['flav'] = list(x_arrays.keys())
+
+    return fx
 
 
 def get_fluences(time, lum, avg, rms, distance, t_bins, e_bins):
