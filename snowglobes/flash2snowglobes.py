@@ -25,7 +25,7 @@ else:
 config = utils.config.Config(config_name)
 distance = config.distance * units.kpc.to(units.cm)
 
-print('=== Copying snowglobes install ===')
+print('=== Setting up snowglobes ===')
 snow_run.setup_snowglobes(config.paths['snowglobes'])
 
 
@@ -54,5 +54,5 @@ for mixing in config.mixing:
                                     channel_groups=config.channel_groups,
                                     mixing=mixing)
 
-            print('=== Cleaning up model ===')
+            print('=== Cleaning up files ===')
             snow_cleanup.clean_model()
