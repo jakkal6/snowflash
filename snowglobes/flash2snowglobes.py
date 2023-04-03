@@ -26,7 +26,7 @@ config = utils.config.Config(config_name)
 distance = config.distance * units.kpc.to(units.cm)
 
 print('=== Copying snowglobes install ===')
-snow_run.copy_snowglobes(config.paths['snowglobes'])
+snow_run.setup_snowglobes(config.paths['snowglobes'])
 
 
 for mixing in config.mixing:

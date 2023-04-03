@@ -24,10 +24,8 @@ def run(model_set, zams, n_bins, material, detector):
         os.system(run_str)
 
 
-def copy_snowglobes(snowglobes_path):
+def setup_snowglobes(snowglobes_path):
     """Copies snowglobes installation into working directory
-    Couldn't find a way around this without going into the snowglobes code
-    and altering directory paths
 
     Parameters
     ----------
@@ -53,10 +51,8 @@ def copy_snowglobes(snowglobes_path):
         src = os.path.join(snowglobes_path, folder)
         dest = os.path.join(runtime_path, folder)
 
-        if os.path.isdir(dest):
-            shutil.rmtree(dest)
-
-        shutil.copytree(src, dest)
+        if not os.path.isdir(dest):
+            shutil.copytree(src, dest)
 
     # link files
     ln_files = ['supernova.pl', 'detector_configurations.dat', 'make_event_table.pl']
@@ -65,7 +61,5 @@ def copy_snowglobes(snowglobes_path):
         src = os.path.join(snowglobes_path, filename)
         dest = os.path.join(runtime_path, filename)
 
-        if os.path.isfile(dest):
-            os.remove(dest)
-
-        os.symlink(src, dest)
+        if not os.path.isfile(dest):
+            os.symlink(src, dest)
