@@ -12,6 +12,7 @@ class SnowData:
                  config_name,
                  load_data=True,
                  mixing='nomix',
+                 load_prog=False,
                  ):
         """Collection of SnowGlobes data
 
@@ -23,6 +24,7 @@ class SnowData:
         load_data : bool
             immediately load all data
         mixing : str
+        load_prog : bool
         """
         self.config = Config(config_name)
 
@@ -44,8 +46,10 @@ class SnowData:
         if load_data:
             self.load_timebin_tables()
             self.integrate_timebins()
-            self.load_prog_table()
             self.get_channel_fractions()
+
+            if load_prog:
+                self.load_prog_table()
 
     # ===============================================================
     #                      Load Tables
