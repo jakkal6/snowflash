@@ -56,6 +56,3 @@ for mixing in config.mixing:
 
             print('=== Cleaning up model ===')
             snow_cleanup.clean_model()
-
-print('=== Final cleanup ===')
-snow_cleanup.clean_all()
