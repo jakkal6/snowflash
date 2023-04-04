@@ -1,3 +1,24 @@
+import xarray as xr
+
+
+def mixed_to_xarray(fluences_mixed):
+    """Construct xarray Dataset from mixed fluences dicts
+
+    Parameters
+    ----------
+    fluences_mixed : {mixing: {flav: xr.DataArray}}
+    """
+    x_arrays = {}
+
+    for mixing, flav in fluences_mixed.items():
+        fmix = fluences_mixed[mixing]
+        x_arrays[mixing] = xr.concat(fmix.values(), dim='flav')
+        x_arrays[mixing].coords['flav'] = list(fmix.keys())
+
+    fx = xr.concat(x_arrays.values(), dim='mix')
+    fx.coords['mix'] = list(x_arrays.keys())
+
+    return fx
 
 
 def mix_fluences(fluences, mixing):
