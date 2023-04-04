@@ -16,11 +16,15 @@ def mix_fluences(fluences, mixing):
     fluence_mix = {}
     p, pbar = mixing_fractions(mixing=mixing)
 
-    # Note: input heavy flavor x=xbar is assumed
-    fluence_mix['e'] = p*fluences['e'] + (1 - p)*fluences['x']
-    fluence_mix['a'] = pbar*fluences['a'] + (1 - pbar)*fluences['x']
-    fluence_mix['x'] = 0.5*(1 - p)*fluences['e'] + 0.5*(1 + p)*fluences['x']
-    fluence_mix['ax'] = 0.5*(1 - pbar)*fluences['a'] + 0.5*(1 + pbar)*fluences['x']
+    flu_e = fluences.sel(flav='e')
+    flu_a = fluences.sel(flav='a')
+    flu_x = fluences.sel(flav='x')
+
+    # Note: assumed input heavy flavor x=xbar
+    fluence_mix['e'] = p * flu_e + (1 - p) * flu_x
+    fluence_mix['a'] = pbar * flu_a + (1 - pbar)*flu_x
+    fluence_mix['x'] = 0.5 * (1 - p) * flu_e + 0.5 * (1 + p) * flu_x
+    fluence_mix['ax'] = 0.5 * (1 - pbar) * flu_a + 0.5 * (1 + pbar) * flu_x
 
     return fluence_mix
 
