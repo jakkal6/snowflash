@@ -1,53 +1,55 @@
 import xarray as xr
 
 
-def mixed_to_xarray(fluences_mixed):
-    """Construct xarray Dataset from mixed fluences dicts
+def mix_fluences(fluences, mixing):
+    """Do mixing of flunce flavors for all mixing cases
+
+    Returns: xr.Dataset
 
     Parameters
     ----------
-    fluences_mixed : {mixing: {flav: xr.DataArray}}
+    fluences : {flav: [t_bins, e_bins]}
+    mixing : [str]
+        'normal', 'inverted', and/or 'nomix'
     """
-    x_arrays = {}
+    mixed = {}
 
-    for mixing, flav in fluences_mixed.items():
-        fmix = fluences_mixed[mixing]
-        x_arrays[mixing] = xr.concat(fmix.values(), dim='flav')
-        x_arrays[mixing].coords['flav'] = list(fmix.keys())
+    for mix in mixing:
+        mixed[mix] = mix_flavors(flu_e=fluences.sel(flav='e'),
+                                 flu_a=fluences.sel(flav='a'),
+                                 flu_x=fluences.sel(flav='x'),
+                                 mixing=mix)
 
-    fx = xr.concat(x_arrays.values(), dim='mix')
-    fx.coords['mix'] = list(x_arrays.keys())
+    fmixed = mixed_to_xarray(mixed)
 
-    return fx
+    return fmixed
 
 
-def mix_fluences(fluences, mixing):
+def mix_flavors(flu_e, flu_a, flu_x, mixing):
     """Mix neutrino flavors for MSW oscillations
         See also:
             - Dighe & Smirnov (2000),
             - Nagakura et al. (2021)
 
-    Returns: fluence_mix {flavor: [t_bins, e_bins]}
+    Returns: {flavor: arraylike}
 
     Parameters
     ----------
-    fluences : {flavor: [t_bins, e_bins]}
+    flu_e : arraylike
+    flu_a : arraylike
+    flu_x : arraylike
+        Note: assumed x=xbar for input heavy flavor
     mixing : 'normal', 'inverted', or 'nomix'
     """
-    fluence_mix = {}
+    mixed = {}
     p, pbar = mixing_fractions(mixing=mixing)
 
-    flu_e = fluences.sel(flav='e')
-    flu_a = fluences.sel(flav='a')
-    flu_x = fluences.sel(flav='x')
+    mixed['e'] = p * flu_e + (1 - p) * flu_x
+    mixed['a'] = pbar * flu_a + (1 - pbar)*flu_x
+    mixed['x'] = 0.5 * (1 - p) * flu_e + 0.5 * (1 + p) * flu_x
+    mixed['ax'] = 0.5 * (1 - pbar) * flu_a + 0.5 * (1 + pbar) * flu_x
 
-    # Note: assumed input heavy flavor x=xbar
-    fluence_mix['e'] = p * flu_e + (1 - p) * flu_x
-    fluence_mix['a'] = pbar * flu_a + (1 - pbar)*flu_x
-    fluence_mix['x'] = 0.5 * (1 - p) * flu_e + 0.5 * (1 + p) * flu_x
-    fluence_mix['ax'] = 0.5 * (1 - pbar) * flu_a + 0.5 * (1 + pbar) * flu_x
-
-    return fluence_mix
+    return mixed
 
 
 def mixing_fractions(mixing):
@@ -83,3 +85,23 @@ def mixing_fractions(mixing):
         raise ValueError("mixing must be one of ['normal', 'inverted', 'nomix']")
     
     return p, pbar
+
+
+def mixed_to_xarray(fluences_mixed):
+    """Construct xarray Dataset from mixed fluences dicts
+
+    Parameters
+    ----------
+    fluences_mixed : {mixing: {flav: xr.DataArray}}
+    """
+    x_arrays = {}
+
+    for mixing, flav in fluences_mixed.items():
+        fmix = fluences_mixed[mixing]
+        x_arrays[mixing] = xr.concat(fmix.values(), dim='flav')
+        x_arrays[mixing].coords['flav'] = list(fmix.keys())
+
+    fx = xr.concat(x_arrays.values(), dim='mix')
+    fx.coords['mix'] = list(x_arrays.keys())
+
+    return fx

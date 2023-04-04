@@ -1,4 +1,3 @@
-
 # flash_snowglobes
 from flash_snowglobes.utils import config, paths
 from flash_snowglobes.flash import flash_fluences, flash_mixing
@@ -8,6 +7,7 @@ from flash_snowglobes.flash.flash_io import read_datfile, write_fluence_files
 class FlashModel:
     """Object representing single FLASH simulation
     """
+
     def __init__(self,
                  zams,
                  model_set,
@@ -98,12 +98,8 @@ class FlashModel:
         """Apply flavor mixing to neutrino fluences
         """
         print('Applying flavor mixing to fluences')
-        mixed = {}
-        for mixing in self.config.mixing:
-            mixed[mixing] = flash_mixing.mix_fluences(fluences=self.fluences,
-                                                      mixing=mixing)
-
-        self.fluences_mixed = flash_mixing.mixed_to_xarray(mixed)
+        self.fluences_mixed = flash_mixing.mix_fluences(fluences=self.fluences,
+                                                        mixing=self.config.mixing)
 
     def write_fluences(self, mixing):
         """Write fluence tables to file for snowglobes input
