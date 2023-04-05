@@ -46,7 +46,7 @@ def output_path():
 # ===============================================================
 #                          FLASH files
 # ===============================================================
-def dat_filepath(models_path, model_set, zams, run=None):
+def flash_dat_filepath(models_path, model_set, zams, run=None):
     """Return .dat filename
 
     Returns : str

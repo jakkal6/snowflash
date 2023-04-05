@@ -47,10 +47,10 @@ class FlashModel:
     def read_datfile(self):
         """Read time-dependent neutrino data from flash dat file
         """
-        self.dat_filepath = paths.dat_filepath(models_path=self.models_path,
-                                               zams=self.zams,
-                                               model_set=self.model_set,
-                                               run=self.run)
+        self.dat_filepath = paths.flash_dat_filepath(models_path=self.models_path,
+                                                     zams=self.zams,
+                                                     model_set=self.model_set,
+                                                     run=self.run)
 
         self.dat = read_datfile(filepath=self.dat_filepath,
                                 t_start=self.config.bins['t_start'],
