@@ -109,6 +109,17 @@ class FlashModel:
                                model_set=self.model_set,
                                flu_type=flu_type)
 
+    def load_fluences(self, flu_type):
+        """Load fluences from file
+
+        Parameters
+        ----------
+        flu_type : 'raw' or 'mixed'
+        """
+        self.fluences[flu_type] = flash_io.load_fluences(zams=self.zams,
+                                                         model_set=self.model_set,
+                                                         flu_type=flu_type)
+
     def write_snow_fluences(self, mixing):
         """Write fluence tables to file for snowglobes input
 
