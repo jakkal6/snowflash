@@ -63,7 +63,7 @@ def get_fluences(time, lum, avg, rms, distance, t_bins, e_bins):
     t_step = np.diff(t_bins)[0]
     full_timebins = np.append(t_bins, t_bins[-1] + t_step)
 
-    fluences = {f: np.zeros([n_timebins, n_ebins]) for f in flavors}
+    flu_dict = {f: np.zeros([n_timebins, n_ebins]) for f in flavors}
 
     for i in range(n_timebins):
         bin_edges = full_timebins[[i, i+1]]
@@ -81,7 +81,9 @@ def get_fluences(time, lum, avg, rms, distance, t_bins, e_bins):
         fluence = trapz(flux_spectrum, x=t_sliced, axis=0)
 
         for j, flav in enumerate(flavors):
-            fluences[flav][i, :] = fluence[j, :]
+            flu_dict[flav][i, :] = fluence[j, :]
+
+    fluences = fluences_to_xarray(flu_dict, t_bins=t_bins, e_bins=e_bins)
 
     return fluences
 

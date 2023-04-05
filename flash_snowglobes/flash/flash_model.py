@@ -80,17 +80,13 @@ class FlashModel:
     def get_fluences(self):
         """Calculate neutrino fluences for each flavor in all time and energy bins
         """
-        fluences = flash_fluences.get_fluences(time=self.dat['time'],
-                                               lum=self.dat['lum'],
-                                               avg=self.dat['avg'],
-                                               rms=self.dat['rms'],
-                                               distance=self.config.distance,
-                                               t_bins=self.t_bins,
-                                               e_bins=self.e_bins)
-
-        self.fluences['raw'] = flash_fluences.fluences_to_xarray(fluences=fluences,
-                                                                 t_bins=self.t_bins,
-                                                                 e_bins=self.e_bins)
+        self.fluences['raw'] = flash_fluences.get_fluences(time=self.dat['time'],
+                                                           lum=self.dat['lum'],
+                                                           avg=self.dat['avg'],
+                                                           rms=self.dat['rms'],
+                                                           distance=self.config.distance,
+                                                           t_bins=self.t_bins,
+                                                           e_bins=self.e_bins)
 
     def mix_fluences(self):
         """Apply flavor mixing to neutrino fluences
