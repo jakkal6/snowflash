@@ -32,7 +32,7 @@ def fluences_to_xarray(fluences, t_bins, e_bins):
     return fx
 
 
-def get_fluences(time, lum, avg, rms, distance, t_bins, e_bins):
+def calc_fluences(time, lum, avg, rms, distance, t_bins, e_bins):
     """Calculate pinched neutrino fluences at Earth for snowglobes input
 
     Returns: fluences : {flav: [t_bins, e_bins]}
