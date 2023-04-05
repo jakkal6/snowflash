@@ -77,6 +77,14 @@ class FlashModel:
                                               endpoint=True,
                                               decimals=decimals)
 
+    def get_fluences(self):
+        """Calculate neutrino fluences from flash in time and energy bins
+        """
+        try:
+            self.load_fluences('raw')
+        except FileNotFoundError:
+            self.calc_fluences()
+
     def calc_fluences(self):
         """Calculate neutrino fluences from flash in time and energy bins
         """
@@ -87,7 +95,8 @@ class FlashModel:
                                                             distance=self.config.distance,
                                                             t_bins=self.t_bins,
                                                             e_bins=self.e_bins)
-
+        self.save_fluences('raw')
+        
     def mix_fluences(self):
         """Apply flavor mixing to neutrino fluences
         """
