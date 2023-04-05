@@ -15,7 +15,7 @@ def run(model_set, zams, n_bins, material, detector):
     material : str
     detector : str
     """
-    runtime_path = paths.snowglobes_runtime_path()
+    runtime_path = paths.snow_runtime_path()
     os.system(f'cd {runtime_path}')
 
     for n in range(n_bins):
@@ -32,7 +32,7 @@ def setup_snowglobes(snowglobes_path):
     snowglobes_path : str
         directory path to snowglobes installation
     """
-    runtime_path = paths.snowglobes_runtime_path()
+    runtime_path = paths.snow_runtime_path()
 
     # create local dirs
     new_folders = ['fluxes', 'out']

@@ -112,7 +112,7 @@ def model_fluences_path(model_set):
 # ===============================================================
 #                          Snowglobes files
 # ===============================================================
-def snowglobes_runtime_path():
+def snow_runtime_path():
     """Return path to temp Snowglobes dir
 
     Returns : str
@@ -164,7 +164,7 @@ def snow_channel_dat_filepath(channel, i, model_set, zams, detector):
     zams : str, int or float
     detector : str
     """
-    runtime_path = snowglobes_runtime_path()
+    runtime_path = snow_runtime_path()
     filename = f'pinched_{model_set}_m{zams}_{i}_{channel}_{detector}_events_smeared.dat'
     filepath = os.path.join(runtime_path, 'out', filename)
 
@@ -179,7 +179,7 @@ def snow_channel_dat_key_filepath(zams, model_set):
     zams : str, int or float
     model_set : str
     """
-    runtime_path = snowglobes_runtime_path()
+    runtime_path = snow_runtime_path()
     filename = f'pinched_{model_set}_m{zams}_key.dat'
     filepath = os.path.join(runtime_path, 'fluxes', filename)
 
@@ -195,7 +195,7 @@ def snow_fluence_filepath(i, zams, model_set):
     zams : str, int or float
     model_set : str
     """
-    runtime_path = snowglobes_runtime_path()
+    runtime_path = snow_runtime_path()
     filename = f'pinched_{model_set}_m{zams}_{i}.dat'
     filepath = os.path.join(runtime_path, 'fluxes', filename)
 

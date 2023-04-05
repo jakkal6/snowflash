@@ -3,7 +3,7 @@ import shutil
 
 from flash_snowglobes.utils import paths
 
-runtime_path = paths.snowglobes_runtime_path()
+runtime_path = paths.snow_runtime_path()
 
 
 def clean_model():
