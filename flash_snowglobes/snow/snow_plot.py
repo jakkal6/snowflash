@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 # snowglobes
-from flash_snowglobes.snow_data import plot_tools, snow_tools
+from flash_snowglobes.snow import plot_tools, snow_tools
 
 
 def plot_integrated(integrated, y_var, prog_table,

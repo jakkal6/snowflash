@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # flash_snowglobes
-from flash_snowglobes.snow_data import snow_tools, snow_plot, plot_tools
-from flash_snowglobes.snow_data.slider import SnowSlider
+from flash_snowglobes.snow import snow_tools, snow_plot, plot_tools
+from flash_snowglobes.snow.slider import SnowSlider
 from flash_snowglobes.utils.config import Config
 
 
