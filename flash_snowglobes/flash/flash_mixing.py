@@ -4,7 +4,7 @@ import xarray as xr
 def mix_fluences(fluences, mixing):
     """Do mixing of flunce flavors for all mixing cases
 
-    Returns: xr.Dataset
+    Returns: xr.DataArray
 
     Parameters
     ----------
@@ -88,7 +88,7 @@ def mixing_fractions(mixing):
 
 
 def mixed_to_xarray(fluences_mixed):
-    """Construct xarray Dataset from mixed fluences dicts
+    """Construct xarray DataArray from mixed fluences dicts
 
     Parameters
     ----------

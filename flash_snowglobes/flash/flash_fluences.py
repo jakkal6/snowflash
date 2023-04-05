@@ -11,8 +11,9 @@ Note on docstrings:
 
 
 def fluences_to_xarray(fluences, t_bins, e_bins):
-    """Construct xarray Dataset from fluences dict
+    """Construct DataArray from fluences dict
 
+    Returns: xr.DataArray
     Parameters
     ----------
     fluences : {flav: [t_bins, e_bins]}
@@ -35,7 +36,7 @@ def fluences_to_xarray(fluences, t_bins, e_bins):
 def calc_fluences(time, lum, avg, rms, distance, t_bins, e_bins):
     """Calculate pinched neutrino fluences at Earth for snowglobes input
 
-    Returns: fluences : {flav: [t_bins, e_bins]}
+    Returns: xr.DataArray
 
     Parameters
     ----------
