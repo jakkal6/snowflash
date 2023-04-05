@@ -46,6 +46,13 @@ def config_filepath(name):
     return filepath
 
 
+def check_dir_exists(path):
+    """Create directory (tree) if it doesn't exist
+    """
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+
 # ===============================================================
 #                          FLASH files
 # ===============================================================
