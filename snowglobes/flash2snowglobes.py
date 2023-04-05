@@ -38,7 +38,7 @@ for mixing in config.mixing:
                                      run=config.run,
                                      config_name=config_name)
 
-            flash_model.write_fluences(mixing)
+            flash_model.write_snow_fluences(mixing)
 
             print('=== Running snowglobes ===')
             snow_run.run(model_set=model_set,

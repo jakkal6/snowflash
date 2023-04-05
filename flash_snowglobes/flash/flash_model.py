@@ -101,7 +101,7 @@ class FlashModel:
         self.fluences = flash_mixing.mix_fluences(fluences=self.fluences_raw,
                                                   mixing=self.config.mixing)
 
-    def write_fluences(self, mixing):
+    def write_snow_fluences(self, mixing):
         """Write fluence tables to file for snowglobes input
 
         Parameters
