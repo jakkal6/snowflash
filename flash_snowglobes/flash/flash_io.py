@@ -1,5 +1,5 @@
 import os
-
+import xarray as xr
 import numpy as np
 from astropy import units
 import pandas as pd
@@ -97,6 +97,21 @@ def save_fluences_raw(fluences, zams, model_set):
 
     print(f'Saving raw fluence data to: {filepath}')
     fluences.to_netcdf(filepath)
+
+
+def load_fluences_raw(zams, model_set):
+    """Load raw fluences data from file
+
+    Parameters
+    ----------
+    model_set : str
+    zams : float
+    """
+    filepath = paths.model_fluences_raw_filepath(model_set=model_set, zams=zams)
+    print(f'Loading raw fluences from: {filepath}')
+    fluences = xr.load_dataarray(filepath)
+
+    return fluences
 
 
 def write_snow_fluences(model_set,
