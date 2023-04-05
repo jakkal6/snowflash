@@ -109,6 +109,30 @@ def model_fluences_path(model_set):
     return os.path.join(model_set_path(model_set), 'fluences')
 
 
+def model_fluences_raw_path(model_set):
+    """Return path to model fluence files
+
+    Returns : str
+
+    parameters
+    ----------
+    model_set : str
+    """
+    return os.path.join(model_fluences_path(model_set), 'raw')
+
+
+def model_fluences_mixed_path(model_set):
+    """Return path to model fluence files
+
+    Returns : str
+
+    parameters
+    ----------
+    model_set : str
+    """
+    return os.path.join(model_fluences_path(model_set), 'mixed')
+
+
 # ===============================================================
 #                          Snowglobes files
 # ===============================================================
