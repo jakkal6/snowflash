@@ -1,10 +1,21 @@
 import os
 
+"""
+Functions that return paths to files and directories
 
+NOTE: Unless stated otherwise, all inputs/outputs are strings
+
+Nomenclature
+    - path: path str to a directory
+    - filepath: path str to a specific file
+"""
+
+
+# ===============================================================
+#                          General
+# ===============================================================
 def top_path():
     """Return path to top-level repo directory
-
-    Returns : str
     """
     path = os.path.join(os.path.dirname(__file__), '..', '..')
     path = os.path.abspath(path)
@@ -12,14 +23,14 @@ def top_path():
     return path
 
 
+def output_path():
+    """Return path to top-level output directory
+    """
+    return os.path.join(top_path(), 'output')
+
+
 def config_filepath(name):
     """Return path to config file
-
-    Returns : str
-
-    parameters
-    ----------
-    name : str
     """
     filename = f'{name}.ini'
     filepath = os.path.join(top_path(), 'config', filename)
@@ -35,29 +46,11 @@ def config_filepath(name):
     return filepath
 
 
-def output_path():
-    """Return path to Snowglobes output
-
-    Returns : str
-    """
-    return os.path.join(top_path(), 'output')
-
-
 # ===============================================================
 #                          FLASH files
 # ===============================================================
 def flash_dat_filepath(models_path, model_set, zams, run=None):
-    """Return .dat filename
-
-    Returns : str
-
-    Parameters
-    ----------
-    models_path : str
-    model_set : str
-    zams : str
-    run : str
-        file basename (optional)
+    """Return filepath to flash simulation .dat
     """
     if run is None:
         filename = f'stir_ecrates_{model_set}_s{zams}_alpha1.25.dat'
@@ -71,13 +64,7 @@ def flash_dat_filepath(models_path, model_set, zams, run=None):
 
 
 def prog_filepath(model_set):
-    """Return path to progenitor table
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
+    """Return filepath to progenitor table
     """
     return os.path.join(output_path(), model_set, 'progenitor_table.dat')
 
@@ -86,49 +73,25 @@ def prog_filepath(model_set):
 #                          Model set files
 # ===============================================================
 def model_set_path(model_set):
-    """Return path to model set dir
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
+    """Return path to model set directory
     """
     return os.path.join(output_path(), model_set)
 
 
 def model_fluences_path(model_set):
-    """Return path to model fluence files
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
+    """Return path to model fluences directory
     """
     return os.path.join(model_set_path(model_set), 'fluences')
 
 
 def model_fluences_raw_path(model_set):
-    """Return path to model fluence files
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
+    """Return path to raw fluences directory
     """
     return os.path.join(model_fluences_path(model_set), 'raw')
 
 
 def model_fluences_mixed_path(model_set):
-    """Return path to model fluence files
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
+    """Return path to mixed fluences directory
     """
     return os.path.join(model_fluences_path(model_set), 'mixed')
 
@@ -137,38 +100,19 @@ def model_fluences_mixed_path(model_set):
 #                          Snowglobes files
 # ===============================================================
 def snow_runtime_path():
-    """Return path to temp Snowglobes dir
-
-    Returns : str
+    """Return path to temporary snowglobes runtime directory
     """
     return os.path.join(top_path(), 'snowglobes')
 
 
 def snow_model_path(model_set, detector, mixing):
-    """Return path to snowglobes model data
-
-    Returns : str
-
-    parameters
-    ----------
-    model_set : str
-    detector : str
-    mixing : str
+    """Return path to snowglobes model output directory
     """
     return os.path.join(model_set_path(model_set), detector, mixing)
 
 
 def snow_timebin_filepath(zams, model_set, detector, mixing):
-    """Return path to timebin file
-
-    Returns : str
-
-    parameters
-    ----------
-    zams :str
-    model_set : str
-    detector : str
-    mixing : str
+    """Return path to snowglobes timebin file
     """
     model_path = snow_model_path(model_set=model_set, detector=detector, mixing=mixing)
     filename = f'timebin_{detector}_{mixing}_{model_set}_m{zams}.dat'
@@ -179,14 +123,6 @@ def snow_timebin_filepath(zams, model_set, detector, mixing):
 
 def snow_channel_dat_filepath(channel, i, model_set, zams, detector):
     """Return filepath to snowglobes output file
-
-    Parameters
-    ----------
-    channel : str
-    i : int
-    model_set : str
-    zams : str, int or float
-    detector : str
     """
     runtime_path = snow_runtime_path()
     filename = f'pinched_{model_set}_m{zams}_{i}_{channel}_{detector}_events_smeared.dat'
@@ -197,11 +133,6 @@ def snow_channel_dat_filepath(channel, i, model_set, zams, detector):
 
 def snow_channel_dat_key_filepath(zams, model_set):
     """Return filepath to snowglobes key file
-
-    Parameters
-    ----------
-    zams : str, int or float
-    model_set : str
     """
     runtime_path = snow_runtime_path()
     filename = f'pinched_{model_set}_m{zams}_key.dat'
@@ -211,13 +142,7 @@ def snow_channel_dat_key_filepath(zams, model_set):
 
 
 def snow_fluence_filepath(i, zams, model_set):
-    """Return filepath to snowglobes fluence input file
-
-    Parameters
-    ----------
-    i : int
-    zams : str, int or float
-    model_set : str
+    """Return filepath to snowglobes fluence (flux) input
     """
     runtime_path = snow_runtime_path()
     filename = f'pinched_{model_set}_m{zams}_{i}.dat'
