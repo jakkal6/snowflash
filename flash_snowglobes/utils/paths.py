@@ -35,6 +35,14 @@ def config_filepath(name):
     return filepath
 
 
+def output_path():
+    """Return path to Snowglobes output
+
+    Returns : str
+    """
+    return os.path.join(top_path(), 'output')
+
+
 # ===============================================================
 #                          FLASH files
 # ===============================================================
@@ -75,16 +83,35 @@ def prog_filepath(model_set):
 
 
 # ===============================================================
-#                          Snowglobes files
+#                          Model set files
 # ===============================================================
-def output_path():
-    """Return path to Snowglobes output
+def model_set_path(model_set):
+    """Return path to model set dir
 
     Returns : str
+
+    parameters
+    ----------
+    model_set : str
     """
-    return os.path.join(top_path(), 'output')
+    return os.path.join(output_path(), model_set)
 
 
+def model_fluences_path(model_set):
+    """Return path to model fluence files
+
+    Returns : str
+
+    parameters
+    ----------
+    model_set : str
+    """
+    return os.path.join(model_set_path(model_set), 'fluences')
+
+
+# ===============================================================
+#                          Snowglobes files
+# ===============================================================
 def snowglobes_runtime_path():
     """Return path to temp Snowglobes dir
 
@@ -104,7 +131,7 @@ def snow_model_path(model_set, detector, mixing):
     detector : str
     mixing : str
     """
-    return os.path.join(output_path(), model_set, detector, mixing)
+    return os.path.join(model_set_path(model_set), detector, mixing)
 
 
 def snow_timebin_filepath(zams, model_set, detector, mixing):
