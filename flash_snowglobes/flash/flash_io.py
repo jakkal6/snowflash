@@ -85,7 +85,7 @@ def write_fluence_files(model_set,
                         zams,
                         t_bins,
                         e_bins,
-                        fluences_mixed):
+                        fluences):
     """Writes input files for snowglobes in fluxes directory
 
     Creates key file to indicate how file index is related to time
@@ -100,7 +100,7 @@ def write_fluence_files(model_set,
         time bins (leftside) for fluences [s]
     e_bins : []
         energy bins (leftside) for neutrino spectra [GeV]
-    fluences_mixed : {flavor: [t_bins, e_bins]}
+    fluences : xr.Dataset
         neutrino fluences over all time and energy bins [GeV/s/cm^2]
     """
     t_step = np.diff(t_bins)[0]
@@ -118,7 +118,7 @@ def write_fluence_files(model_set,
 
         table = format_fluence_table(time_i=i,
                                      e_bins=e_bins,
-                                     fluences_mixed=fluences_mixed)
+                                     fluences=fluences)
 
         with open(out_filepath, 'w') as outfile:
             table.to_string(outfile, header=None, index=False)
@@ -144,7 +144,7 @@ def get_key_table(t_bins, t_step):
 
 def format_fluence_table(time_i,
                          e_bins,
-                         fluences_mixed):
+                         fluences):
     """Return fluence table for given timestep
 
     Returns: pd.DataFrame
@@ -154,7 +154,7 @@ def format_fluence_table(time_i,
     time_i : int
         timestep index
     e_bins : []
-    fluences_mixed : {flavor: [t_bins, e_bins]}
+    fluences : {flavor: [t_bins, e_bins]}
     """
     flavor_map = {'e': 'e',
                   'mu': 'x',
@@ -167,6 +167,6 @@ def format_fluence_table(time_i,
     table['E_nu'] = e_bins
 
     for flavor, key in flavor_map.items():
-        table[flavor] = fluences_mixed[key][time_i]
+        table[flavor] = fluences[key][time_i]
 
     return table

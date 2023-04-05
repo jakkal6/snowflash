@@ -32,8 +32,8 @@ class FlashModel:
 
         self.t_bins = None
         self.e_bins = None
+        self.fluences_raw = None
         self.fluences = None
-        self.fluences_mixed = {}
 
         # run analysis
         self.read_datfile()
@@ -90,16 +90,16 @@ class FlashModel:
                                                t_bins=self.t_bins,
                                                e_bins=self.e_bins)
 
-        self.fluences = flash_fluences.fluences_to_xarray(fluences=fluences,
-                                                          t_bins=self.t_bins,
-                                                          e_bins=self.e_bins)
+        self.fluences_raw = flash_fluences.fluences_to_xarray(fluences=fluences,
+                                                              t_bins=self.t_bins,
+                                                              e_bins=self.e_bins)
 
     def mix_fluences(self):
         """Apply flavor mixing to neutrino fluences
         """
         print('Applying flavor mixing to fluences')
-        self.fluences_mixed = flash_mixing.mix_fluences(fluences=self.fluences,
-                                                        mixing=self.config.mixing)
+        self.fluences = flash_mixing.mix_fluences(fluences=self.fluences_raw,
+                                                  mixing=self.config.mixing)
 
     def write_fluences(self, mixing):
         """Write fluence tables to file for snowglobes input
@@ -113,4 +113,4 @@ class FlashModel:
                             zams=self.zams,
                             t_bins=self.t_bins,
                             e_bins=self.e_bins,
-                            fluences_mixed=self.fluences_mixed[mixing])
+                            fluences=self.fluences.sel(mix=mixing))
