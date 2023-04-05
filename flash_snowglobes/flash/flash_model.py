@@ -26,7 +26,6 @@ class FlashModel:
         self.model_set = model_set
         self.run = run
         self.models_path = self.config.paths['models']
-        self.dat_filepath = None
         self.dat = None
 
         self.t_bins = None
@@ -45,12 +44,12 @@ class FlashModel:
     def read_datfile(self):
         """Read time-dependent neutrino data from flash dat file
         """
-        self.dat_filepath = paths.flash_dat_filepath(models_path=self.models_path,
-                                                     zams=self.zams,
-                                                     model_set=self.model_set,
-                                                     run=self.run)
+        filepath = paths.flash_dat_filepath(models_path=self.models_path,
+                                            zams=self.zams,
+                                            model_set=self.model_set,
+                                            run=self.run)
 
-        self.dat = flash_io.read_datfile(filepath=self.dat_filepath,
+        self.dat = flash_io.read_datfile(filepath=filepath,
                                          t_start=self.config.bins['t_start'],
                                          t_end=self.config.bins['t_end'])
 
@@ -96,7 +95,7 @@ class FlashModel:
                                                             t_bins=self.t_bins,
                                                             e_bins=self.e_bins)
         self.save_fluences('raw')
-        
+
     def mix_fluences(self):
         """Apply flavor mixing to neutrino fluences
         """
