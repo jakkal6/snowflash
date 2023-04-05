@@ -6,6 +6,22 @@ Generalised plotting wrappers
 """
 
 
+def setup_fig_ax(ax, figsize):
+    """Setup fig, ax, checking if ax already provided
+
+    parameters
+    ----------
+    ax : Axes
+    figsize : [width, height]
+    """
+    fig = None
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize)
+
+    return fig, ax
+
+
 def setup_subplots(n_sub,
                    max_cols=1,
                    sub_figsize=(6, 5),

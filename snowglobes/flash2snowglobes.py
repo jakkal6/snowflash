@@ -9,7 +9,7 @@ from astropy import units
 # flash_snowglobes
 from flash_snowglobes.flash import FlashModel
 from flash_snowglobes.flash2snowglobes import analysis, snow_run, snow_cleanup
-from flash_snowglobes import utils
+from flash_snowglobes.utils import Config
 
 
 if len(sys.argv) != 2:
@@ -22,7 +22,7 @@ else:
 
 
 # ===== config and setup =====
-config = utils.config.Config(config_name)
+config = Config(config_name)
 distance = config.distance * units.kpc.to(units.cm)
 
 print('=== Setting up snowglobes ===')

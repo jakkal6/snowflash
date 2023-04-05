@@ -44,7 +44,7 @@ def plot_integrated(integrated, y_var, prog_table,
     color : str
     data_only : bool
     """
-    fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
+    fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
     y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
     ax.plot(prog_table[x_var], integrated[y_col],
@@ -167,7 +167,7 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
     legend : bool
     figsize : (width, height)
     """
-    fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
+    fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
     ref_table = tables[ref_model_set]
     x = prog_table[x_var]
     y_col = snow_tools.y_column(y_var=y_var, channel=channel)
@@ -224,7 +224,7 @@ def plot_timebin(timebin_table, y_var, zams,
     color : str
     data_only : bool
     """
-    fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
+    fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
     y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
     table = timebin_table.sel(zams=zams)
@@ -274,7 +274,7 @@ def plot_cumulative(cumulative, y_var, zams,
     figsize : (width, height)
     data_only : bool
     """
-    fig, ax = setup_fig_ax(ax=ax, figsize=figsize)
+    fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
     y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
     table = cumulative.sel(zams=zams)
@@ -293,22 +293,3 @@ def plot_cumulative(cumulative, y_var, zams,
                         legend=legend)
 
     return fig
-
-
-# ===============================================================
-#                      Misc.
-# ===============================================================
-def setup_fig_ax(ax, figsize):
-    """Setup fig, ax, checking if ax already provided
-
-    parameters
-    ----------
-    ax : Axes
-    figsize : [width, height]
-    """
-    fig = None
-
-    if ax is None:
-        fig, ax = plt.subplots(figsize=figsize)
-
-    return fig, ax

@@ -152,7 +152,7 @@ class SnowData:
         ax : Axis
         data_only : bool
         """
-        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=figsize)
+        fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
 
         for model_set, integrated in self.integrated_tables.items():
             snow_plot.plot_integrated(integrated=integrated,
@@ -312,7 +312,7 @@ class SnowData:
         legend : bool
         data_only : bool
         """
-        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=None)
+        fig, ax = plot.setup_fig_ax(ax=ax, figsize=None)
 
         for model_set, timebin_table in self.timebin_tables.items():
             snow_plot.plot_timebin(timebin_table=timebin_table,
@@ -361,7 +361,7 @@ class SnowData:
             print('Need to extract cumulative data!')
             self.get_cumulative()
 
-        fig, ax = snow_plot.setup_fig_ax(ax=ax, figsize=None)
+        fig, ax = plot.setup_fig_ax(ax=ax, figsize=None)
 
         for model_set, cumulative in self.cumulative.items():
             snow_plot.plot_cumulative(cumulative=cumulative,
