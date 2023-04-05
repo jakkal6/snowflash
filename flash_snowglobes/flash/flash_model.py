@@ -33,7 +33,6 @@ class FlashModel:
         self.fluences = {}
 
         # run analysis
-        self.read_datfile()
         self.get_bins()
         self.get_fluences()
         self.mix_fluences()
@@ -82,6 +81,8 @@ class FlashModel:
         try:
             self.load_fluences('raw')
         except FileNotFoundError:
+            print('No raw fluence file found. Calculating from scratch')
+            self.read_datfile()
             self.calc_fluences()
 
     def calc_fluences(self):

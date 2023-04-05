@@ -88,7 +88,7 @@ def save_fluences(fluences, zams, model_set, flu_type):
 
     Parameters
     ----------
-    fluences : xr.Dataset
+    fluences : xr.DataArray
     model_set : str
     zams : float
     flu_type : 'raw' or 'mixed'
@@ -98,12 +98,14 @@ def save_fluences(fluences, zams, model_set, flu_type):
                                              flu_type=flu_type)
 
     paths.check_dir_exists(os.path.dirname(filepath))
-    print(f'Saving {flu_type} fluences to: {filepath}')
+    print(f'Saving {flu_type} fluences: {filepath}')
     fluences.to_netcdf(filepath)
 
 
 def load_fluences(zams, model_set, flu_type):
     """Load raw fluences data from file
+
+    Returns: xr.DataArray
 
     Parameters
     ----------
@@ -115,7 +117,7 @@ def load_fluences(zams, model_set, flu_type):
                                              zams=zams,
                                              flu_type=flu_type)
 
-    print(f'Loading raw fluences from: {filepath}')
+    print(f'Loading raw fluences: {filepath}')
     fluences = xr.load_dataarray(filepath)
 
     return fluences
@@ -140,7 +142,7 @@ def write_snow_fluences(model_set,
         time bins (leftside) for fluences [s]
     e_bins : []
         energy bins (leftside) for neutrino spectra [GeV]
-    fluences : xr.Dataset
+    fluences : xr.DataArray
         neutrino fluences over all time and energy bins [GeV/s/cm^2]
     """
     t_step = np.diff(t_bins)[0]
