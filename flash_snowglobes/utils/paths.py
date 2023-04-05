@@ -78,16 +78,10 @@ def model_set_path(model_set):
     return os.path.join(output_path(), model_set)
 
 
-def model_fluences_path(model_set):
-    """Return path to model fluences directory
-    """
-    return os.path.join(model_set_path(model_set), 'fluences')
-
-
 def model_fluences_raw_filepath(model_set, zams):
     """Return filepath to raw fluences
     """
-    path = os.path.join(model_fluences_path(model_set), 'raw')
+    path = os.path.join(model_set_path(model_set), 'fluences', 'raw')
     filename = f'fluences_raw_{model_set}_{zams}.nc'
 
     return os.path.join(path, filename)
@@ -96,7 +90,7 @@ def model_fluences_raw_filepath(model_set, zams):
 def model_fluences_mixed_filepath(model_set, zams):
     """Return filepath to mixed fluences
     """
-    path = os.path.join(model_fluences_path(model_set), 'mixed')
+    path = os.path.join(model_set_path(model_set), 'fluences', 'mixed')
     filename = f'fluences_mixed_{model_set}_{zams}.nc'
 
     return os.path.join(path, filename)
