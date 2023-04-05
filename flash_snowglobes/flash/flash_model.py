@@ -31,8 +31,7 @@ class FlashModel:
 
         self.t_bins = None
         self.e_bins = None
-        self.fluences_raw = None
-        self.fluences = None
+        self.fluences = {}
 
         # run analysis
         self.read_datfile()
@@ -89,23 +88,30 @@ class FlashModel:
                                                t_bins=self.t_bins,
                                                e_bins=self.e_bins)
 
-        self.fluences_raw = flash_fluences.fluences_to_xarray(fluences=fluences,
-                                                              t_bins=self.t_bins,
-                                                              e_bins=self.e_bins)
+        self.fluences['raw'] = flash_fluences.fluences_to_xarray(fluences=fluences,
+                                                                 t_bins=self.t_bins,
+                                                                 e_bins=self.e_bins)
 
     def mix_fluences(self):
         """Apply flavor mixing to neutrino fluences
         """
         print('Applying flavor mixing to fluences')
-        self.fluences = flash_mixing.mix_fluences(fluences=self.fluences_raw,
-                                                  mixing=self.config.mixing)
+        self.fluences['mixed'] = flash_mixing.mix_fluences(fluences=self.fluences['raw'],
+                                                           mixing=self.config.mixing)
 
-    def save_fluences_raw(self):
-        """Save raw fluence data to file
+    def save_fluences(self, flu_type):
+        """Save fluences to file
+
+        Parameters
+        ----------
+        flu_type : 'raw' or 'mixed'
         """
-        flash_io.save_fluences_raw(fluences=self.fluences_raw,
-                                   zams=self.zams,
-                                   model_set=self.model_set)
+        fluences = {'raw': self.fluences['raw'], 'mixed': self.fluences}[flu_type]
+
+        flash_io.save_fluences(fluences=fluences,
+                               zams=self.zams,
+                               model_set=self.model_set,
+                               flu_type=flu_type)
 
     def write_snow_fluences(self, mixing):
         """Write fluence tables to file for snowglobes input
@@ -119,4 +125,4 @@ class FlashModel:
                                      zams=self.zams,
                                      t_bins=self.t_bins,
                                      e_bins=self.e_bins,
-                                     fluences=self.fluences.sel(mix=mixing))
+                                     fluences=self.fluences['mixed'].sel(mix=mixing))

@@ -83,7 +83,7 @@ def get_slice_idxs(time, rshock,
 # =======================================================
 #                 Fluence files
 # =======================================================
-def save_fluences_raw(fluences, zams, model_set):
+def save_fluences(fluences, zams, model_set, flu_type):
     """Write raw fluences data to file
 
     Parameters
@@ -91,23 +91,30 @@ def save_fluences_raw(fluences, zams, model_set):
     fluences : xr.Dataset
     model_set : str
     zams : float
+    flu_type : 'raw' or 'mixed'
     """
-    filepath = paths.model_fluences_raw_filepath(model_set=model_set, zams=zams)
-    paths.check_dir_exists(os.path.dirname(filepath))
+    filepath = paths.model_fluences_filepath(model_set=model_set,
+                                             zams=zams,
+                                             flu_type=flu_type)
 
-    print(f'Saving raw fluence data to: {filepath}')
+    paths.check_dir_exists(os.path.dirname(filepath))
+    print(f'Saving {flu_type} fluences to: {filepath}')
     fluences.to_netcdf(filepath)
 
 
-def load_fluences_raw(zams, model_set):
+def load_fluences(zams, model_set, flu_type):
     """Load raw fluences data from file
 
     Parameters
     ----------
     model_set : str
     zams : float
+    flu_type : 'raw' or 'mixed'
     """
-    filepath = paths.model_fluences_raw_filepath(model_set=model_set, zams=zams)
+    filepath = paths.model_fluences_filepath(model_set=model_set,
+                                             zams=zams,
+                                             flu_type=flu_type)
+
     print(f'Loading raw fluences from: {filepath}')
     fluences = xr.load_dataarray(filepath)
 
