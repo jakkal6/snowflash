@@ -115,7 +115,7 @@ class FlashModel:
         mixing : str
         """
         print('Writing fluences to file')
-        flash_io.write_fluence_files(model_set=self.model_set,
+        flash_io.write_snow_fluences(model_set=self.model_set,
                                      zams=self.zams,
                                      t_bins=self.t_bins,
                                      e_bins=self.e_bins,

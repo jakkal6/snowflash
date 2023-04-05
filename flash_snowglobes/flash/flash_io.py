@@ -99,7 +99,7 @@ def save_fluences_raw(fluences, zams, model_set):
     fluences.to_netcdf(filepath)
 
 
-def write_fluence_files(model_set,
+def write_snow_fluences(model_set,
                         zams,
                         t_bins,
                         e_bins,
