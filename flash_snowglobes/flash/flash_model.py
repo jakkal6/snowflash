@@ -1,6 +1,20 @@
 # flash_snowglobes
-from flash_snowglobes.utils import config, paths
+from flash_snowglobes.utils import Config, paths, plot
 from flash_snowglobes.flash import flash_fluences, flash_mixing, flash_io
+
+
+def _check_bin_args(t_bin, e_bin):
+    if ((t_bin is None) and (e_bin is None)) \
+            or ((t_bin is not None) and (e_bin is not None)):
+        raise ValueError('Must specify exactly one of t_bin or e_bin')
+
+    bin_sel = None
+    if isinstance(t_bin, int) or isinstance(e_bin, int):
+        bin_sel = 'index'
+    elif isinstance(t_bin, float) or isinstance(e_bin, float):
+        bin_sel = 'value'
+
+    return bin_sel
 
 
 class FlashModel:
@@ -21,7 +35,7 @@ class FlashModel:
         run : str or None
         config_name : str
         """
-        self.config = config.Config(config_name)
+        self.config = Config(config_name)
         self.zams = zams
         self.model_set = model_set
         self.run = run
@@ -53,7 +67,7 @@ class FlashModel:
                                          t_end=self.config.bins['t_end'])
 
     # =======================================================
-    #                 Fluence data
+    #                 Fluences
     # =======================================================
     def get_bins(self, decimals=5):
         """Generate time and energy bin coordinates
@@ -142,3 +156,36 @@ class FlashModel:
                                      t_bins=self.t_bins,
                                      e_bins=self.e_bins,
                                      fluences=self.fluences['mixed'].sel(mix=mixing))
+
+    # =======================================================
+    #                 Plotting
+    # =======================================================
+    def plot_fluences_raw(self, t_bin=None, e_bin=None, ax=None, figsize=None):
+        """Plot neutrino fluences versus time or energy bins
+
+        Parameters
+        ----------
+        t_bin : int or flt
+        e_bin : int or flt
+        ax
+        figsize
+        """
+        bin_sel = _check_bin_args(t_bin, e_bin)
+        fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
+
+        fluences = None
+        if bin_sel == 'index':
+            if t_bin is None:
+                fluences = self.fluences['raw'].isel(energy=e_bin)
+            else:
+                fluences = self.fluences['raw'].isel(time=t_bin)
+        elif bin_sel == 'value':
+            if t_bin is None:
+                fluences = self.fluences['raw'].sel(energy=e_bin)
+            else:
+                fluences = self.fluences['raw'].sel(time=t_bin)
+
+        for flav in fluences.flav.values:
+            ax.step(fluences.energy, fluences.sel(flav=flav), where='pre', label=flav)
+
+        ax.legend()
