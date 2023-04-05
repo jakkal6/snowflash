@@ -96,6 +96,20 @@ def model_fluences_mixed_path(model_set):
     return os.path.join(model_fluences_path(model_set), 'mixed')
 
 
+def model_fluences_raw_filepath(model_set, zams):
+    """Return filepath to raw fluences
+    """
+    filename = f'fluences_raw_{model_set}_{zams}.nc'
+    return os.path.join(model_fluences_raw_path(model_set), filename)
+
+
+def model_fluences_mixed_filepath(model_set, zams):
+    """Return filepath to mixed fluences
+    """
+    filename = f'fluences_mixed_{model_set}_{zams}.nc'
+    return os.path.join(model_fluences_mixed_path(model_set), filename)
+
+
 # ===============================================================
 #                          Snowglobes files
 # ===============================================================
