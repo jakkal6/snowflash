@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 
 # snowglobes
-from flash_snowglobes.snow import plot_tools, snow_tools
+from flash_snowglobes.snow import snow_tools
+from flash_snowglobes.utils import plot
 
 
 def plot_integrated(integrated, y_var, prog_table,
@@ -53,15 +54,15 @@ def plot_integrated(integrated, y_var, prog_table,
             color=color)
 
     if not data_only:
-        plot_tools.set_ax_all(ax=ax,
-                              x_var=x_var,
-                              y_var=y_var,
-                              x_scale=x_scale,
-                              y_scale=y_scale,
-                              x_lims=x_lims,
-                              y_lims=y_lims,
-                              legend=legend,
-                              legend_loc=legend_loc)
+        plot.set_ax_all(ax=ax,
+                        x_var=x_var,
+                        y_var=y_var,
+                        x_scale=x_scale,
+                        y_scale=y_scale,
+                        x_lims=x_lims,
+                        y_lims=y_lims,
+                        legend=legend,
+                        legend_loc=legend_loc)
 
     return fig
 
@@ -119,14 +120,14 @@ def plot_channels(integrated, y_var, prog_table, channels,
                         data_only=True)
 
         if not data_only:
-            plot_tools.set_ax_all(ax=axes[i],
-                                  x_var=x_var,
-                                  y_var=y_var,
-                                  x_scale=x_scale,
-                                  y_scale=y_scale,
-                                  x_lims=x_lims,
-                                  y_lims=y_lims,
-                                  y_label=f'{y_var} ({channel})')
+            plot.set_ax_all(ax=axes[i],
+                            x_var=x_var,
+                            y_var=y_var,
+                            x_scale=x_scale,
+                            y_scale=y_scale,
+                            x_lims=x_lims,
+                            y_lims=y_lims,
+                            y_label=f'{y_var} ({channel})')
     if legend:
         axes[0].legend(loc=legend_loc)
 
@@ -183,14 +184,14 @@ def plot_difference(tables, y_var, prog_table, ref_model_set,
 
     ax.hlines(0, x.min(), x.max(), linestyles='--')
 
-    plot_tools.set_ax_all(ax=ax,
-                          x_var=x_var,
-                          y_var=y_var,
-                          x_scale=x_scale,
-                          y_scale=y_scale,
-                          x_lims=x_lims,
-                          y_lims=y_lims,
-                          legend=legend)
+    plot.set_ax_all(ax=ax,
+                    x_var=x_var,
+                    y_var=y_var,
+                    x_scale=x_scale,
+                    y_scale=y_scale,
+                    x_lims=x_lims,
+                    y_lims=y_lims,
+                    legend=legend)
 
     return fig
 
@@ -233,12 +234,12 @@ def plot_timebin(timebin_table, y_var, zams,
             color=color)
 
     if not data_only:
-        plot_tools.set_ax_all(ax=ax,
-                              x_var='time',
-                              y_var=y_var,
-                              x_scale=x_scale,
-                              y_scale=y_scale,
-                              legend=legend)
+        plot.set_ax_all(ax=ax,
+                        x_var='time',
+                        y_var=y_var,
+                        x_scale=x_scale,
+                        y_scale=y_scale,
+                        legend=legend)
     return fig
 
 
@@ -284,12 +285,12 @@ def plot_cumulative(cumulative, y_var, zams,
             linestyle=linestyle)
 
     if not data_only:
-        plot_tools.set_ax_all(ax=ax,
-                              x_var='time',
-                              y_var=y_var,
-                              x_scale=x_scale,
-                              y_scale=y_scale,
-                              legend=legend)
+        plot.set_ax_all(ax=ax,
+                        x_var='time',
+                        y_var=y_var,
+                        x_scale=x_scale,
+                        y_scale=y_scale,
+                        legend=legend)
 
     return fig
 

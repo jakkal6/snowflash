@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # flash_snowglobes
-from flash_snowglobes.snow import snow_tools, snow_plot, plot_tools
+from flash_snowglobes.snow import snow_tools, snow_plot
 from flash_snowglobes.snow.slider import SnowSlider
-from flash_snowglobes.utils.config import Config
+from flash_snowglobes.utils import Config, plot
 
 
 class SnowData:
@@ -167,15 +167,15 @@ class SnowData:
                                       data_only=True)
 
         if not data_only:
-            plot_tools.set_ax_all(ax=ax,
-                                  x_var=x_var,
-                                  y_var=y_var,
-                                  x_scale=x_scale,
-                                  y_scale=y_scale,
-                                  x_lims=x_lims,
-                                  y_lims=y_lims,
-                                  legend=legend,
-                                  legend_loc=legend_loc)
+            plot.set_ax_all(ax=ax,
+                            x_var=x_var,
+                            y_var=y_var,
+                            x_scale=x_scale,
+                            y_scale=y_scale,
+                            x_lims=x_lims,
+                            y_lims=y_lims,
+                            legend=legend,
+                            legend_loc=legend_loc)
         return fig
 
     def plot_channels(self, y_var,
@@ -233,14 +233,14 @@ class SnowData:
 
         if not data_only:
             for i, channel in enumerate(channels):
-                plot_tools.set_ax_all(ax=axes[i],
-                                      x_var=x_var,
-                                      y_var=y_var,
-                                      x_scale=x_scale,
-                                      y_scale=y_scale,
-                                      x_lims=x_lims,
-                                      y_lims=y_lims,
-                                      y_label=f'{y_var} ({channel})')
+                plot.set_ax_all(ax=axes[i],
+                                x_var=x_var,
+                                y_var=y_var,
+                                x_scale=x_scale,
+                                y_scale=y_scale,
+                                x_lims=x_lims,
+                                y_lims=y_lims,
+                                y_label=f'{y_var} ({channel})')
         if legend:
             axes[0].legend(loc=legend_loc)
 
@@ -325,12 +325,12 @@ class SnowData:
                                    data_only=True)
 
         if not data_only:
-            plot_tools.set_ax_all(ax=ax,
-                                  x_var='time',
-                                  y_var=y_var,
-                                  x_scale=x_scale,
-                                  y_scale=y_scale,
-                                  legend=legend)
+            plot.set_ax_all(ax=ax,
+                            x_var='time',
+                            y_var=y_var,
+                            x_scale=x_scale,
+                            y_scale=y_scale,
+                            legend=legend)
 
         return fig
 
@@ -377,12 +377,12 @@ class SnowData:
                                       data_only=True)
 
         if not data_only:
-            plot_tools.set_ax_all(ax=ax,
-                                  x_var='time',
-                                  y_var=y_var,
-                                  x_scale=x_scale,
-                                  y_scale=y_scale,
-                                  legend=legend)
+            plot.set_ax_all(ax=ax,
+                            x_var='time',
+                            y_var=y_var,
+                            x_scale=x_scale,
+                            y_scale=y_scale,
+                            legend=legend)
         return fig
 
     # ===============================================================
@@ -440,7 +440,7 @@ class SnowData:
         y_col = snow_tools.y_column(y_var=y_var, channel=channel)
 
         slider = SnowSlider(y_vars=[y_col],
-                            n_integrate=np.arange(1, self.n_integrate-1),
+                            n_integrate=np.arange(1, self.n_integrate - 1),
                             model_sets=self.model_sets,
                             x_factor=x_factor,
                             y_factor=y_factor)
@@ -477,5 +477,5 @@ class SnowData:
         ref_table = self.timebin_tables[model_set].sel(zams=zams)
 
         t0 = ref_table.time.values[0]
-        t1 = ref_table.time.values[n_bins-1]
+        t1 = ref_table.time.values[n_bins - 1]
         print(f'Using timebins from {t0:.2f} to {t1:.2f} s')
