@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from astropy import units
 import pandas as pd
@@ -81,6 +83,22 @@ def get_slice_idxs(time, rshock,
 # =======================================================
 #                 Fluence files
 # =======================================================
+def save_fluences_raw(fluences, zams, model_set):
+    """Write raw fluences data to file
+
+    Parameters
+    ----------
+    fluences : xr.Dataset
+    model_set : str
+    zams : float
+    """
+    filepath = paths.model_fluences_raw_filepath(model_set=model_set, zams=zams)
+    paths.check_dir_exists(os.path.dirname(filepath))
+
+    print(f'Saving raw fluence data to: {filepath}')
+    fluences.to_netcdf(filepath)
+
+
 def write_fluence_files(model_set,
                         zams,
                         t_bins,

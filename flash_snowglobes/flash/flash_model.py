@@ -1,7 +1,6 @@
 # flash_snowglobes
 from flash_snowglobes.utils import config, paths
-from flash_snowglobes.flash import flash_fluences, flash_mixing
-from flash_snowglobes.flash.flash_io import read_datfile, write_fluence_files
+from flash_snowglobes.flash import flash_fluences, flash_mixing, flash_io
 
 
 class FlashModel:
@@ -52,9 +51,9 @@ class FlashModel:
                                                      model_set=self.model_set,
                                                      run=self.run)
 
-        self.dat = read_datfile(filepath=self.dat_filepath,
-                                t_start=self.config.bins['t_start'],
-                                t_end=self.config.bins['t_end'])
+        self.dat = flash_io.read_datfile(filepath=self.dat_filepath,
+                                         t_start=self.config.bins['t_start'],
+                                         t_end=self.config.bins['t_end'])
 
     # =======================================================
     #                 Fluence data
@@ -101,6 +100,13 @@ class FlashModel:
         self.fluences = flash_mixing.mix_fluences(fluences=self.fluences_raw,
                                                   mixing=self.config.mixing)
 
+    def save_fluences_raw(self):
+        """Save raw fluence data to file
+        """
+        flash_io.save_fluences_raw(fluences=self.fluences_raw,
+                                   zams=self.zams,
+                                   model_set=self.model_set)
+
     def write_snow_fluences(self, mixing):
         """Write fluence tables to file for snowglobes input
 
@@ -109,8 +115,8 @@ class FlashModel:
         mixing : str
         """
         print('Writing fluences to file')
-        write_fluence_files(model_set=self.model_set,
-                            zams=self.zams,
-                            t_bins=self.t_bins,
-                            e_bins=self.e_bins,
-                            fluences=self.fluences.sel(mix=mixing))
+        flash_io.write_fluence_files(model_set=self.model_set,
+                                     zams=self.zams,
+                                     t_bins=self.t_bins,
+                                     e_bins=self.e_bins,
+                                     fluences=self.fluences.sel(mix=mixing))
