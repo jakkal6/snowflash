@@ -1,9 +1,12 @@
 temp/
+.temp/
 cache/
 output_*/
 fluxes/
 analysis/
 timebin/
-output
+output/
+snowglobes/
+!snowglobes/flash2snowglobes.py
 slurm*.out
 *.nc
