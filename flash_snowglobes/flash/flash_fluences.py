@@ -56,7 +56,7 @@ def calc_fluences(time, lum, avg, rms, distance, t_bins, e_bins):
         neutrino energy bins to sample [GeV]
     """
     print('Calculating neutrino fluences')
-    flavors = ['e', 'a', 'x']  # nu_e, nu_ebar, nu_x
+    flavors = ['e', 'eb', 'x']  # nu_e, nu_ebar, nu_x
 
     n_timebins = len(t_bins)
     n_ebins = len(e_bins)

@@ -16,7 +16,7 @@ def mix_fluences(fluences, mixing):
 
     for mix in mixing:
         mixed[mix] = mix_flavors(flu_e=fluences.sel(flav='e'),
-                                 flu_a=fluences.sel(flav='a'),
+                                 flu_eb=fluences.sel(flav='eb'),
                                  flu_x=fluences.sel(flav='x'),
                                  mixing=mix)
 
@@ -25,7 +25,7 @@ def mix_fluences(fluences, mixing):
     return fmixed
 
 
-def mix_flavors(flu_e, flu_a, flu_x, mixing):
+def mix_flavors(flu_e, flu_eb, flu_x, mixing):
     """Mix neutrino flavors for MSW oscillations
         See also:
             - Dighe & Smirnov (2000),
@@ -36,18 +36,18 @@ def mix_flavors(flu_e, flu_a, flu_x, mixing):
     Parameters
     ----------
     flu_e : arraylike
-    flu_a : arraylike
+    flu_eb : arraylike
     flu_x : arraylike
-        Note: assumed x=xbar for input heavy flavor
+        Note: assumed x=xb for input heavy flavor
     mixing : 'normal', 'inverted', or 'nomix'
     """
     mixed = {}
     p, pbar = mixing_fractions(mixing=mixing)
 
     mixed['e'] = p * flu_e + (1 - p) * flu_x
-    mixed['a'] = pbar * flu_a + (1 - pbar)*flu_x
+    mixed['eb'] = pbar * flu_eb + (1 - pbar)*flu_x
     mixed['x'] = 0.5 * (1 - p) * flu_e + 0.5 * (1 + p) * flu_x
-    mixed['ax'] = 0.5 * (1 - pbar) * flu_a + 0.5 * (1 + pbar) * flu_x
+    mixed['xb'] = 0.5 * (1 - pbar) * flu_eb + 0.5 * (1 + pbar) * flu_x
 
     return mixed
 

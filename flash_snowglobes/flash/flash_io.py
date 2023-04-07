@@ -201,9 +201,9 @@ def format_fluence_table(time_i,
     flavor_map = {'e': 'e',
                   'mu': 'x',
                   'tau': 'x',
-                  'ebar': 'a',
-                  'mubar': 'ax',
-                  'taubar': 'ax',
+                  'ebar': 'eb',
+                  'mubar': 'xb',
+                  'taubar': 'xb',
                   }
     table = pd.DataFrame()
     table['E_nu'] = e_bins
