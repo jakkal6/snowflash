@@ -20,5 +20,5 @@ module load GSL
 conda activate flash_snowglobes
 
 python flash2snowglobes.py "${CONFIG}"
- 
+
 scontrol show job "${SLURM_JOB_ID}"    # write job information to output file
