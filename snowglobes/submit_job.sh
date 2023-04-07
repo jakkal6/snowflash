@@ -8,11 +8,17 @@
 #SBATCH --job-name snow      # you can give your job a name for easier identification (same as -J)
 #SBATCH --account=snaphu
 ########## Command Lines to Run ##########
+if [ -z "${CONFIG}" ]; then
+  echo "Must provide config name, e.g.
+        sbatch --export=CONFIG='sn1987a' submit_job.sb"
+  exit 1
+fi
+
 module purge
 module load intel/2018b
 module load GSL
 conda activate flash_snowglobes
 
-python flash2snowglobes.py sn1987a
+python flash2snowglobes.py "${CONFIG}"
  
 scontrol show job "${SLURM_JOB_ID}"    # write job information to output file
