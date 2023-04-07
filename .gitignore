@@ -1,7 +1,8 @@
 /temp
 /.temp
 /output
-/snowglobes/
+/snowglobes/*
 !/snowglobes/flash2snowglobes.py
+!/snowglobes/submit_job.sh
 slurm*.out
 *.nc
