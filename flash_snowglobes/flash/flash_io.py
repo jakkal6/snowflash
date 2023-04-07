@@ -209,6 +209,6 @@ def format_fluence_table(time_i,
     table['E_nu'] = e_bins
 
     for flavor, key in flavor_map.items():
-        table[flavor] = fluences[key][time_i]
+        table[flavor] = fluences.isel(time=time_i).sel(flav=key)
 
     return table
