@@ -6,18 +6,8 @@ Tools for running [SNOwGLoBES](https://github.com/SNOwGLoBES/snowglobes) on FLAS
 
 You may also want to check out [SNEWPY](https://github.com/SNEWS2/snewpy), an implementation of the SNOwGLoBES pipeline for multiple CCSN codes.
 
-`flash_snowglobes` contains two modules:
+Credit: Portions are adapted from scripts written by [MacKenzie Warren](https://github.com/mackenzie-warren).
 
-## 1. flash2snowglobes
-Modules to convert FLASH data to neutrino fluxes and run snowglobes.
+The main script is `snowglobes/flash2snowglobes.py`, which takes FLASH output, converts it to neutrino fluences at Earth for snowglobes, runs snowglobes on each time bin, and extracts the output. 
 
-Credit: Adapted from scripts written by [MacKenzie Warren](https://github.com/mackenzie-warren).
-
-The main loop is `flash2snowglobes.py`, which takes FLASH input, converts it to the neutrino fluences for snowglobes, runs snowglobes on each time bin, then extracts the output. Currently defaults to 5ms time bins. The extracted output is in the form of average detected energies and neutrino counts.
-
-
-## 2. snow_data
-
-Subpackage for handling and plotting snowglobes output, as used in the electron-capture rate project.
-
-The main class is `snow_data.SnowData`.
+The extracted output is in the form of average detected energies and neutrino counts.
