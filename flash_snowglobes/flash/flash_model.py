@@ -117,6 +117,7 @@ class FlashModel:
         print('Applying flavor mixing to fluences')
         self.fluences['mixed'] = flash_mixing.mix_fluences(fluences=self.fluences['raw'],
                                                            mixing=self.config.mixing)
+        self.save_fluences('mixed')
 
     def save_fluences(self, flu_type):
         """Save fluences to file
@@ -125,9 +126,7 @@ class FlashModel:
         ----------
         flu_type : 'raw' or 'mixed'
         """
-        fluences = {'raw': self.fluences['raw'], 'mixed': self.fluences}[flu_type]
-
-        flash_io.save_fluences(fluences=fluences,
+        flash_io.save_fluences(fluences=self.fluences[flu_type],
                                zams=self.zams,
                                model_set=self.model_set,
                                flu_type=flu_type)
