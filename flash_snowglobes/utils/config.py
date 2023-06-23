@@ -2,9 +2,12 @@
 """
 from configparser import ConfigParser
 import ast
+from astropy import units
 
 # flash_snowglobes
 from flash_snowglobes.utils import paths
+
+kpc_to_cm = units.kpc.to(units.cm)
 
 
 class ConfigError(Exception):
@@ -35,7 +38,7 @@ class Config:
 
         self.bins = self.get_section('models', 'bins')
         self.mixing = self.get_param('models', 'snow', 'mixing')
-        self.distance = self.get_param('models', 'snow', 'distance')
+        self.distance = self.get_param('models', 'snow', 'distance') * kpc_to_cm
 
         self.detector = self.get_param('models', 'snow', 'detector')
         self.material = self.get_param('detectors', 'materials', self.detector)

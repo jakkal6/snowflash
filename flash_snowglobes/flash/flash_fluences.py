@@ -137,7 +137,7 @@ def get_flux_spectrum(e_bins, lum, avg, rms, distance):
 
     flux_spectrum = np.zeros([n_time, n_flavors, n_ebins])
     alpha = get_alpha(avg=avg, rms=rms)
-    lum_to_flux = 1 / (4 * np.pi * distance ** 2)
+    lum_to_flux = 1 / (4 * np.pi * distance**2)
 
     for i, e_bin in enumerate(e_bins):
         phi = get_phi(e_bin=e_bin, avg=avg, alpha=alpha)
