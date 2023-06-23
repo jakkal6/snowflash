@@ -146,6 +146,40 @@ def get_flux_spectrum(e_bins, lum, avg, rms, distance):
     return flux_spectrum
 
 
+def get_alpha(avg, rms):
+    """Calculate pinch parameter from average and RMS neutrino energies
+
+    Returns: [timesteps, flavors]
+
+    Parameters
+    ----------
+    avg : [timesteps, flavors]
+    rms : [timesteps, flavors]
+    """
+    return (rms**2 - 2.0*avg**2) / (avg**2 - rms**2)
+
+
+def get_phi(e_bin, avg, alpha):
+    """Calculate phi spectral parameter
+
+    Returns : [timesteps, flavors]
+        phi parameter for flux calculation
+
+    Parameters
+    ----------
+    e_bin : float
+        neutrino energy bin [GeV]
+    avg : [timesteps, flavors]
+        average neutrino energy [GeV]
+    alpha : [timesteps, flavors]
+        pinch parameter
+    """
+    n = ((alpha + 1) ** (alpha + 1)) / (avg * gamma(alpha + 1))
+    phi = n * ((e_bin / avg)**alpha) * np.exp(-(alpha + 1) * e_bin / avg)
+
+    return phi
+
+
 def interpolate_time(t, time, y_var):
     """Linearly-interpolate values at given time points
 
@@ -172,27 +206,6 @@ def interpolate_time(t, time, y_var):
     y_out = (y0*(t1 - t) + y1*(t - t0)) / (t1 - t0)
 
     return y_out.transpose()
-
-
-def get_phi(e_bin, avg, alpha):
-    """Calculate phi spectral parameter
-
-    Returns : [timesteps]
-        phi parameter for flux calculation
-
-    Parameters
-    ----------
-    e_bin : float
-        neutrino energy bin [GeV]
-    avg : [timesteps]
-        average neutrino energy [GeV]
-    alpha : [timesteps]
-        pinch parameter
-    """
-    n = ((alpha + 1) ** (alpha + 1)) / (avg * gamma(alpha + 1))
-    phi = n * ((e_bin / avg)**alpha) * np.exp(-(alpha + 1) * e_bin / avg)
-
-    return phi
 
 
 def get_bins(x0, x1, dx, endpoint, decimals=5):
@@ -222,16 +235,3 @@ def get_bins(x0, x1, dx, endpoint, decimals=5):
     bins = np.round(bins, decimals)
 
     return bins
-
-
-def get_alpha(avg, rms):
-    """Calculate pinch parameter from average and RMS neutrino energies
-
-    Returns: [timesteps]
-
-    Parameters
-    ----------
-    avg : [timesteps]
-    rms : [timesteps]
-    """
-    return (rms*rms - 2.0*avg*avg) / (avg*avg - rms*rms)
