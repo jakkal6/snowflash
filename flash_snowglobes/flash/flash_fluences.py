@@ -120,7 +120,7 @@ def get_flux_spectrum(e_bins, lum, avg, rms, distance):
     """Calculate pinched flux spectrum
 
     Returns: [timesteps, flavors, e_bins]
-        neutrino flux at Earth (neutrinos per second) for each energy bin
+        neutrino flux at Earth (neutrinos/s/cm^2) for each energy bin
         at each timepoint
 
     Parameters
@@ -136,35 +136,17 @@ def get_flux_spectrum(e_bins, lum, avg, rms, distance):
     e_binsize = np.diff(e_bins)[0]
 
     flux_spectrum = np.zeros([n_time, n_flavors, n_ebins])
-    alpha = (rms**2 - 2.0*avg**2) / (avg**2 - rms**2)
     lum_to_flux = 1 / (4 * np.pi * distance**2)
 
+    # spectral parameters
+    alpha = (rms**2 - 2.0*avg**2) / (avg**2 - rms**2)
+    n = ((alpha + 1) ** (alpha + 1)) / (avg * gamma(alpha + 1))
+
     for i, e_bin in enumerate(e_bins):
-        phi = get_phi(e_bin=e_bin, avg=avg, alpha=alpha)
+        phi = n * ((e_bin / avg)**alpha) * np.exp(-(alpha + 1) * e_bin / avg)
         flux_spectrum[:, :, i] = lum_to_flux * (lum / avg) * phi * e_binsize
 
     return flux_spectrum
-
-
-def get_phi(e_bin, avg, alpha):
-    """Calculate phi spectral parameter
-
-    Returns : [timesteps, flavors]
-        phi parameter for flux calculation
-
-    Parameters
-    ----------
-    e_bin : float
-        neutrino energy bin [GeV]
-    avg : [timesteps, flavors]
-        average neutrino energy [GeV]
-    alpha : [timesteps, flavors]
-        pinch parameter
-    """
-    n = ((alpha + 1) ** (alpha + 1)) / (avg * gamma(alpha + 1))
-    phi = n * ((e_bin / avg)**alpha) * np.exp(-(alpha + 1) * e_bin / avg)
-
-    return phi
 
 
 def interpolate_time(t, time, y_var):
