@@ -4,7 +4,6 @@
 # run snowglobes, extract the output, and clean up files
 
 import sys
-from astropy import units
 
 # flash_snowglobes
 from flash_snowglobes.flash import FlashModel
@@ -23,7 +22,6 @@ else:
 
 # ===== config and setup =====
 config = Config(config_name)
-distance = config.distance * units.kpc.to(units.cm)
 
 print('=== Setting up snowglobes ===')
 snow_run.setup_snowglobes(config.paths['snowglobes'])
