@@ -136,7 +136,7 @@ def get_flux_spectrum(e_bins, lum, avg, rms, distance):
     e_binsize = np.diff(e_bins)[0]
 
     flux_spectrum = np.zeros([n_time, n_flavors, n_ebins])
-    alpha = get_alpha(avg=avg, rms=rms)
+    alpha = (rms**2 - 2.0*avg**2) / (avg**2 - rms**2)
     lum_to_flux = 1 / (4 * np.pi * distance**2)
 
     for i, e_bin in enumerate(e_bins):
@@ -144,19 +144,6 @@ def get_flux_spectrum(e_bins, lum, avg, rms, distance):
         flux_spectrum[:, :, i] = lum_to_flux * (lum / avg) * phi * e_binsize
 
     return flux_spectrum
-
-
-def get_alpha(avg, rms):
-    """Calculate pinch parameter from average and RMS neutrino energies
-
-    Returns: [timesteps, flavors]
-
-    Parameters
-    ----------
-    avg : [timesteps, flavors]
-    rms : [timesteps, flavors]
-    """
-    return (rms**2 - 2.0*avg**2) / (avg**2 - rms**2)
 
 
 def get_phi(e_bin, avg, alpha):
