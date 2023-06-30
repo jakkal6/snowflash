@@ -45,8 +45,8 @@ for mixing in config.mixing:
                          material=config.material,
                          detector=config.detector)
 
-            print('=== Analyzing output ===')
-            analysis.analyze_output(model_set=model_set,
+            print('=== Extracting output ===')
+            analysis.extract_counts(model_set=model_set,
                                     zams=zams,
                                     detector=config.detector,
                                     channel_groups=config.channel_groups,

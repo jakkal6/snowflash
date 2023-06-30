@@ -1,7 +1,7 @@
 import os
-
 import numpy as np
 import pandas as pd
+import xarray as xr
 
 # flash_snowglobes
 from flash_snowglobes.utils import paths
@@ -77,6 +77,63 @@ def analyze_output(model_set,
                        model_set=model_set,
                        zams=zams,
                        mixing=mixing)
+
+
+def extract_counts(model_set,
+                   zams,
+                   detector,
+                   channel_groups,
+                   mixing):
+    """Extract snowglobes output counts and write to file
+
+    parameters
+    ----------
+    model_set : str
+    zams : float or int
+    detector : str
+    channel_groups : {}
+    mixing : str
+    """
+    channels = get_all_channels(channel_groups)
+
+    filepath = paths.snow_channel_dat_key_filepath(zams=zams, model_set=model_set)
+    t_bins = np.loadtxt(filepath, skiprows=1, usecols=[1], unpack=True)
+
+    e_bins = load_energy_bins(channel=channels[0],
+                              i=1,
+                              model_set=model_set,
+                              zams=zams,
+                              detector=detector)
+    n_tbins = len(t_bins)
+    n_ebins = len(e_bins)
+    n_groups = len(channel_groups)
+
+    count_array = np.zeros((n_tbins, n_groups, n_ebins))
+
+    for i in range(n_tbins):
+        channel_counts = load_channel_counts(channels=channels,
+                                             i=i + 1,
+                                             model_set=model_set,
+                                             zams=zams,
+                                             detector=detector)
+
+        group_counts = get_group_counts(channel_counts,
+                                        groups=channel_groups,
+                                        n_bins=n_ebins)
+
+        count_array[i, :, :] = np.stack(list(group_counts.values()))
+
+    counts = xr.DataArray(count_array,
+                          dims=['time', 'channel', 'energy'],
+                          coords={'time': t_bins,
+                                  'channel': list(channel_groups.keys()),
+                                  'energy': e_bins})
+
+    save_counts(counts,
+                detector=detector,
+                model_set=model_set,
+                zams=zams,
+                mixing=mixing)
 
 
 # ===========================================================
@@ -179,7 +236,8 @@ def get_group_counts(channel_counts, groups, n_bins):
     groups : {}
     n_bins : int
     """
-    group_counts = {'total': np.zeros(n_bins)}
+    # group_counts = {'total': np.zeros(n_bins)}
+    group_counts = {}
 
     for group, sub_channels in groups.items():
         counts = np.zeros(n_bins)
@@ -187,7 +245,7 @@ def get_group_counts(channel_counts, groups, n_bins):
         for chan in sub_channels:
             counts += channel_counts[chan]
 
-        group_counts['total'] += counts
+        # group_counts['total'] += counts
         group_counts[group] = counts
 
     return group_counts
@@ -277,3 +335,26 @@ def save_timebin_table(table, detector, model_set, zams, mixing):
 
     with open(filepath, 'w') as f:
         f.write(string)
+
+
+def save_counts(counts, detector, model_set, zams, mixing):
+    """Save count table to file
+
+    Parameters
+    ----------
+    counts : xr.DataArray
+    detector : str
+    model_set : str
+    zams : str, int or float
+    mixing : str
+    """
+    path = paths.snow_model_path(model_set=model_set, detector=detector, mixing=mixing)
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+    filepath = paths.snow_counts_filepath(zams=zams,
+                                          model_set=model_set,
+                                          detector=detector,
+                                          mixing=mixing)
+
+    counts.to_netcdf(filepath)
