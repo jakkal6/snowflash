@@ -4,8 +4,8 @@ from configparser import ConfigParser
 import ast
 from astropy import units
 
-# flash_snowglobes
-from flash_snowglobes.utils import paths
+# snowflash
+from snowflash.utils import paths
 
 kpc_to_cm = units.kpc.to(units.cm)
 

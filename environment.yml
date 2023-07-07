@@ -1,4 +1,4 @@
-name: flash_snowglobes
+name: snowflash
 dependencies:
   - python=3.8
   - astropy=5.1

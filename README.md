@@ -1,4 +1,4 @@
-# flash_snowglobes
+# snowflash
 
 [![DOI](https://zenodo.org/badge/342716130.svg)](https://zenodo.org/badge/latestdoi/342716130)
 

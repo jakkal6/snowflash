@@ -17,7 +17,7 @@ fi
 module purge
 module load intel/2018b
 module load GSL
-conda activate flash_snowglobes
+conda activate snowflash
 
 python flash2snowglobes.py "${CONFIG}"
 

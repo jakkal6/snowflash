@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from flash_snowglobes.utils import paths
+from snowflash.utils import paths
 
 
 def run(model_set, zams, n_bins, material, detector):

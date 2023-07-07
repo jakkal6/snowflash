@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from flash_snowglobes.utils import paths
+from snowflash.utils import paths
 
 runtime_path = paths.snow_runtime_path()
 

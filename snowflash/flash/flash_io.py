@@ -4,8 +4,8 @@ import numpy as np
 from astropy import units
 import pandas as pd
 
-# flash_snowglobes
-from flash_snowglobes.utils import paths
+# snowflash
+from snowflash.utils import paths
 
 
 # =======================================================

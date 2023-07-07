@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# flash_snowglobes
-from flash_snowglobes.snow import snow_tools, snow_plot
-from flash_snowglobes.snow.slider import SnowSlider
-from flash_snowglobes.utils import Config, plot
+# snowflash
+from snowflash.snow import snow_tools, snow_plot
+from snowflash.snow.slider import SnowSlider
+from snowflash.utils import Config, plot
 
 
 class SnowData:
@@ -19,7 +19,7 @@ class SnowData:
         parameters
         ----------
         config_name : str
-            name of config file used in 'flash_snowglobes/config/models/'
+            name of config file used in 'snowflash/config/models/'
                 e.g. config_name='sn1987a'
         load_data : bool
             immediately load all data

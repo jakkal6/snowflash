@@ -5,15 +5,15 @@
 
 import sys
 
-# flash_snowglobes
-from flash_snowglobes.flash import FlashModel
-from flash_snowglobes.flash2snowglobes import analysis, snow_run, snow_cleanup
-from flash_snowglobes.utils import Config
+# snowflash
+from snowflash.flash import FlashModel
+from snowflash.flash2snowglobes import analysis, snow_run, snow_cleanup
+from snowflash.utils import Config
 
 
 if len(sys.argv) != 2:
     print('Must provide parameter(s):'
-          + '\n1. config_name    # must match a file in flash_snowglobes/config/models/'
+          + '\n1. config_name    # must match a file in snowflash/config/models/'
           )
     sys.exit(0)
 else:

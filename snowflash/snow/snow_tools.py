@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-# flash_snowglobes
-from flash_snowglobes.utils import paths
+# snowflash
+from snowflash.utils import paths
 
 """
 Tools for handling snowglobes data

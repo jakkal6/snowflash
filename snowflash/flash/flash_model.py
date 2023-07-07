@@ -1,6 +1,6 @@
-# flash_snowglobes
-from flash_snowglobes.utils import Config, paths, plot
-from flash_snowglobes.flash import flash_fluences, flash_mixing, flash_io
+# snowflash
+from snowflash.utils import Config, paths, plot
+from snowflash.flash import flash_fluences, flash_mixing, flash_io
 
 
 def _check_bin_args(t_bin, e_bin):
