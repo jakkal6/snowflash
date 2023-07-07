@@ -48,6 +48,31 @@ def load_all_timebin_tables(zams_list,
     return timebin_tables
 
 
+def load_counts(zams,
+                model_set,
+                detector,
+                mixing):
+    """Load time/energy binned counts for an individual model
+
+    Returns : xr.DataArray
+
+    parameters
+    ----------
+    zams : str
+    model_set : str
+    detector : str
+    mixing : str
+    """
+    filepath = paths.snow_counts_filepath(zams=zams,
+                                          model_set=model_set,
+                                          detector=detector,
+                                          mixing=mixing)
+
+    counts = xr.load_dataarray(filepath)
+
+    return counts
+
+
 def load_timebin_table(zams,
                        model_set,
                        detector,
