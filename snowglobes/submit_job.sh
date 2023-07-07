@@ -10,7 +10,7 @@
 ########## Command Lines to Run ##########
 if [ -z "${CONFIG}" ]; then
   echo "Must provide config name, e.g.
-        sbatch --export=CONFIG='sn1987a' submit_job.sb"
+        sbatch --export=CONFIG='sn1987a' submit_job.sh"
   exit 1
 fi
 
