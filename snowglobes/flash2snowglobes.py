@@ -6,9 +6,8 @@
 import sys
 
 # snowflash
-from snowflash.flash import FlashModel
+from snowflash import FlashModel, Config
 from snowflash.flash2snowglobes import analysis, snow_run, snow_cleanup
-from snowflash.utils import Config
 
 
 if len(sys.argv) != 2:
