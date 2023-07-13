@@ -51,5 +51,11 @@ for mixing in config.mixing:
                                     channel_groups=config.channel_groups,
                                     mixing=mixing)
 
+            analysis.analyze_output(model_set=model_set,
+                                    zams=zams,
+                                    detector=config.detector,
+                                    channel_groups=config.channel_groups,
+                                    mixing=mixing)
+
             print('=== Cleaning up files ===')
             snow_cleanup.clean_model()
