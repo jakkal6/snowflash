@@ -48,6 +48,39 @@ def load_all_timebin_tables(zams_list,
     return timebin_tables
 
 
+def load_all_counts(zams_list,
+                    model_set,
+                    detector,
+                    mixing):
+    """Load and combine binned counts for all models
+
+    Returns : xr.Dataset
+
+    parameters
+    ----------
+    zams_list : [str]
+    model_set : str
+    detector : str
+    mixing : str
+    """
+    counts = []
+    for j, zams in enumerate(zams_list):
+        print(f'\rLoading model counts: {j+1}/{len(zams_list)}', end='')
+
+        counts += [load_counts(zams=zams,
+                               model_set=model_set,
+                               detector=detector,
+                               mixing=mixing)]
+
+    print()
+    counts_array = xr.concat(counts, dim='zams')
+    counts_array.coords['zams'] = list(zams_list)
+
+    counts_set = xr.Dataset(data_vars={'counts': counts_array})
+
+    return counts_set
+
+
 def load_counts(zams,
                 model_set,
                 detector,
