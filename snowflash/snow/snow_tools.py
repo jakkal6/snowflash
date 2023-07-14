@@ -188,33 +188,23 @@ def time_integrate(timebin_tables, n_bins, channels):
     return table
 
 
-def get_cumulative(timebin_tables, max_n_bins, channels):
+def get_cumulative(counts):
     """Calculate cumulative neutrino counts for each time bin
 
-    Returns : xr.Dataset
-        3D table with dimensions (zams, n_bins)
+    Returns : xr.DataArray
 
     parameters
     ----------
-    timebin_tables : {zams: pd.DataFrame}
-        collection of timebinned model tables
-    max_n_bins : int
-        maximum time bins to integrate up to
-    channels : [str]
-        list of channel names
+    counts : xr.DataArray
     """
-    bins = np.arange(1, max_n_bins+1)
-    cumulative = {}
+    integrated = counts.copy()
+    integrated[:] = 0
 
-    for b in bins:
-        print(f'\rIntegrating bins: {b}/{max_n_bins}', end='')
-        cumulative[b] = time_integrate(timebin_tables, n_bins=b, channels=channels)
+    integrated[0] = counts[0]
+    for i in range(1, len(counts)):
+        integrated[i] = integrated[i-1] + counts[i]
 
-    print()
-    x = xr.concat(cumulative.values(), dim='time')
-    x.coords['time'] = np.array(timebin_tables['time'])[1:]
-    
-    return x
+    return integrated
 
 
 def get_channel_fractions(tables, channels):
