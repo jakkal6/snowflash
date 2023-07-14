@@ -236,7 +236,6 @@ def get_group_counts(channel_counts, groups, n_bins):
     groups : {}
     n_bins : int
     """
-    # group_counts = {'total': np.zeros(n_bins)}
     group_counts = {}
 
     for group, sub_channels in groups.items():
@@ -245,7 +244,6 @@ def get_group_counts(channel_counts, groups, n_bins):
         for chan in sub_channels:
             counts += channel_counts[chan]
 
-        # group_counts['total'] += counts
         group_counts[group] = counts
 
     return group_counts

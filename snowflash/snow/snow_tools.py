@@ -102,6 +102,11 @@ def load_counts(zams,
                                           mixing=mixing)
 
     counts = xr.load_dataarray(filepath)
+    
+    # get sum of all channels
+    tot = counts.sum('channel')
+    tot.coords['channel'] = 'all'
+    counts = xr.concat([tot, counts], dim='channel')
 
     return counts
 
