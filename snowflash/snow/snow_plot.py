@@ -5,24 +5,24 @@ from snowflash.snow import snow_tools
 from snowflash.utils import plot
 
 
-def plot_bins(counts,
-              x_bin,
-              fixed_bin=None,
-              fixed_value=None,
-              channels=None,
-              x_scale=None,
-              y_scale=None,
-              x_lims=None,
-              y_lims=None,
-              ax=None,
-              legend=True,
-              legend_loc=None,
-              figsize=None,
-              color=None,
-              title=True,
-              data_only=False,
-              ):
-    """Plot binned counts over time or energy
+def plot_bin(counts,
+             x_bin,
+             fixed_bin=None,
+             fixed_value=None,
+             channels=None,
+             x_scale=None,
+             y_scale=None,
+             x_lims=None,
+             y_lims=None,
+             ax=None,
+             legend=True,
+             legend_loc=None,
+             figsize=None,
+             color=None,
+             title=True,
+             data_only=False,
+             ):
+    """Plot a single time or energy bin
 
     parameters
     ----------

@@ -44,32 +44,35 @@ class SnowModel:
     # ===============================================================
     #                      Plotting
     # ===============================================================
-    def plot_energy(self,
-                    t_bin,
-                    channels=None,
-                    ax=None,
-                    title=True,
-                    data_only=False,
-                    ):
+    def plot_bin(self,
+                 x_bin,
+                 fixed_bin,
+                 fixed_value,
+                 channels=None,
+                 ax=None,
+                 title=True,
+                 data_only=False,
+                 ):
         """Plot energy bins for given time
 
         parameters
         ----------
-        t_bin : flt
-            time bin to plot
+        x_bin : flt
+        fixed_bin :str
+        fixed_value :flt
         channels : [str]
         ax : Axis
         title : bool
         data_only : bool
         """
-        snow_plot.plot_bins(counts=self.counts,
-                            x_bin='energy',
-                            fixed_bin='time',
-                            fixed_value=t_bin,
-                            channels=channels,
-                            ax=ax,
-                            title=title,
-                            data_only=data_only)
+        snow_plot.plot_bin(counts=self.counts,
+                           x_bin=x_bin,
+                           fixed_bin=fixed_bin,
+                           fixed_value=fixed_value,
+                           channels=channels,
+                           ax=ax,
+                           title=title,
+                           data_only=data_only)
 
     def plot_sum(self,
                  x_bin,
@@ -88,9 +91,9 @@ class SnowModel:
         ax : Axis
         data_only : bool
         """
-        snow_plot.plot_bins(counts=self.counts.sum(sum_bin),
-                            x_bin=x_bin,
-                            channels=channels,
-                            ax=ax,
-                            title=False,
-                            data_only=data_only)
+        snow_plot.plot_bin(counts=self.counts.sum(sum_bin),
+                           x_bin=x_bin,
+                           channels=channels,
+                           ax=ax,
+                           title=False,
+                           data_only=data_only)
