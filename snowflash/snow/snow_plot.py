@@ -5,6 +5,73 @@ from snowflash.snow import snow_tools
 from snowflash.utils import plot
 
 
+def plot_bins(counts,
+              x_bin,
+              fixed_bin,
+              fixed_value,
+              channels=None,
+              x_scale=None,
+              y_scale=None,
+              x_lims=None,
+              y_lims=None,
+              ax=None,
+              legend=True,
+              legend_loc=None,
+              figsize=None,
+              color=None,
+              title=True,
+              data_only=False,
+              ):
+    """Plot binned counts over time or energy
+
+    parameters
+    ----------
+    counts : xr.Dataset
+        counts binned by time and energy for all channels
+    x_bin : str
+    fixed_bin : str
+    fixed_value : flt
+    channels : [str]
+    x_scale : str
+    y_scale : str
+    x_lims : [low, high]
+    y_lims : [low, high]
+    ax : Axis
+    legend : bool
+    legend_loc : int or str
+    figsize : (width, height)
+    color : str
+    title : bool
+    data_only : bool
+    """
+    fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
+
+    if channels is None:
+        channels = counts.channel.values
+
+    for channel in channels:
+        ax.step(x=counts[x_bin],
+                y=counts.sel({fixed_bin: fixed_value, 'channel': channel}),
+                label=channel,
+                color=color,
+                where='mid')
+
+    if not data_only:
+        plot.set_ax_all(ax=ax,
+                        x_var=x_bin,
+                        y_var='counts',
+                        x_scale=x_scale,
+                        y_scale=y_scale,
+                        x_lims=x_lims,
+                        y_lims=y_lims,
+                        legend=legend,
+                        legend_loc=legend_loc,
+                        title=title,
+                        title_str=f'{fixed_bin} = {fixed_value}')
+
+    return fig
+
+
 def plot_integrated(integrated, y_var, prog_table,
                     channel='total',
                     x_var='m_fe',
