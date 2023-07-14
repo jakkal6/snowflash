@@ -1,5 +1,5 @@
 # snowflash
-from snowflash.snow import snow_tools
+from snowflash.snow import snow_tools, snow_plot
 
 
 class SnowModel:
@@ -44,3 +44,38 @@ class SnowModel:
     # ===============================================================
     #                      Plotting
     # ===============================================================
+    def plot_energy(self,
+                    t_bin,
+                    channels=None,
+                    x_lims=None,
+                    y_lims=None,
+                    ax=None,
+                    legend=True,
+                    title=True,
+                    data_only=False,
+                    ):
+        """Plot energy bins for given time
+
+        parameters
+        ----------
+        t_bin : flt
+            time bin to plot
+        channels : [str]
+        x_lims : [low, high]
+        y_lims : [low, high]
+        ax : Axis
+        legend : bool
+        title : bool
+        data_only : bool
+        """
+        snow_plot.plot_bins(counts=self.counts,
+                            x_bin='energy',
+                            fixed_bin='time',
+                            fixed_value=t_bin,
+                            channels=channels,
+                            x_lims=x_lims,
+                            y_lims=y_lims,
+                            ax=ax,
+                            legend=legend,
+                            title=title,
+                            data_only=data_only)
