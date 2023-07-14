@@ -7,7 +7,7 @@ from snowflash.snow.slider import SnowSlider
 from snowflash.utils import Config, plot
 
 
-class SnowData:
+class SnowModelSet:
     def __init__(self,
                  config_name,
                  load_data=True,
