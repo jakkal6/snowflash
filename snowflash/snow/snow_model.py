@@ -45,7 +45,6 @@ class SnowModel:
     #                      Plotting
     # ===============================================================
     def plot_bin(self,
-                 x_bin,
                  fixed_bin,
                  fixed_value,
                  channels=None,
@@ -57,7 +56,6 @@ class SnowModel:
 
         parameters
         ----------
-        x_bin : flt
         fixed_bin :str
         fixed_value :flt
         channels : [str]
@@ -65,6 +63,8 @@ class SnowModel:
         title : bool
         data_only : bool
         """
+        x_bin = {'energy': 'time', 'time': 'energy'}[fixed_bin]
+
         snow_plot.plot_bin(counts=self.counts,
                            x_bin=x_bin,
                            fixed_bin=fixed_bin,
