@@ -24,7 +24,10 @@ class SnowModel:
         self.mixing = mixing
 
         self.counts = None
+        self.cumulative = None
+
         self.load_counts()
+        self.get_cumulative()
 
     # ===============================================================
     #                      Load Tables
@@ -40,6 +43,10 @@ class SnowModel:
     # ===============================================================
     #                      Analysis
     # ===============================================================
+    def get_cumulative(self):
+        """Calculate cumulative neutrino counts for each time bin
+        """
+        self.cumulative = snow_tools.get_cumulative(self.counts)
 
     # ===============================================================
     #                      Plotting
@@ -47,6 +54,7 @@ class SnowModel:
     def plot_bin(self,
                  fixed_bin,
                  fixed_value,
+                 cumulative=False,
                  channels=None,
                  ax=None,
                  title=True,
@@ -58,6 +66,7 @@ class SnowModel:
         ----------
         fixed_bin :str
         fixed_value :flt
+        cumulative : bool
         channels : [str]
         ax : Axis
         title : bool
@@ -65,7 +74,12 @@ class SnowModel:
         """
         x_bin = {'energy': 'time', 'time': 'energy'}[fixed_bin]
 
-        snow_plot.plot_bin(counts=self.counts,
+        if cumulative:
+            counts = self.cumulative
+        else:
+            counts = self.counts
+
+        snow_plot.plot_bin(counts=counts,
                            x_bin=x_bin,
                            fixed_bin=fixed_bin,
                            fixed_value=fixed_value,
@@ -77,6 +91,7 @@ class SnowModel:
     def plot_sum(self,
                  x_bin,
                  sum_bin,
+                 cumulative=False,
                  channels=None,
                  ax=None,
                  data_only=False,
@@ -87,10 +102,16 @@ class SnowModel:
         ----------
         x_bin : str
         sum_bin : str
+        cumulative : bool
         channels : [str]
         ax : Axis
         data_only : bool
         """
+        if cumulative:
+            counts = self.cumulative
+        else:
+            counts = self.counts
+
         snow_plot.plot_bin(counts=self.counts.sum(sum_bin),
                            x_bin=x_bin,
                            channels=channels,
