@@ -7,8 +7,8 @@ from snowflash.utils import plot
 
 def plot_bins(counts,
               x_bin,
-              fixed_bin,
-              fixed_value,
+              fixed_bin=None,
+              fixed_value=None,
               channels=None,
               x_scale=None,
               y_scale=None,
@@ -50,8 +50,13 @@ def plot_bins(counts,
         channels = counts.channel.values
 
     for channel in channels:
+        if fixed_bin is None:
+            select = {'channel': channel}
+        else:
+            select = {fixed_bin: fixed_value, 'channel': channel}
+
         ax.step(x=counts[x_bin],
-                y=counts.sel({fixed_bin: fixed_value, 'channel': channel}),
+                y=counts.sel(select),
                 label=channel,
                 color=color,
                 where='mid')
