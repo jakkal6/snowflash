@@ -25,9 +25,11 @@ class SnowModel:
 
         self.counts = None
         self.cumulative = None
+        self.sums = {}
 
         self.load_counts()
         self.get_cumulative()
+        self.get_sums()
 
     # ===============================================================
     #                      Load Tables
@@ -44,9 +46,15 @@ class SnowModel:
     #                      Analysis
     # ===============================================================
     def get_cumulative(self):
-        """Calculate cumulative neutrino counts for each time bin
+        """Calculate cumulative neutrino counts for each time/energy bin
         """
         self.cumulative = snow_tools.get_cumulative(self.counts)
+
+    def get_sums(self):
+        """Calculate neutrino counts summed over time/energy
+        """
+        for var in ['energy', 'time']:
+            self.sums[var] = self.counts.sum(var).to_pandas()
 
     # ===============================================================
     #                      Plotting
