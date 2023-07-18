@@ -101,6 +101,7 @@ def load_counts(zams,
                                           detector=detector,
                                           mixing=mixing)
 
+    print(f'Loading counts')
     counts = xr.load_dataarray(filepath)
     
     # get sum of all channels
@@ -146,6 +147,7 @@ def load_model_data(detector,
     detector : str
     mixing : str
     """
+    print('Loading dataset')
     filepath = paths.snow_model_data_filepath(zams=zams,
                                               model_set=model_set,
                                               detector=detector,

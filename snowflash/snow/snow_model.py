@@ -52,6 +52,7 @@ class SnowModel:
             try:
                 self.load_data()
             except FileNotFoundError:
+                print('Dataset file not found; re-extracting')
                 self.extract_dataset()
 
     def load_data(self):
@@ -73,6 +74,7 @@ class SnowModel:
                                                  detector=self.detector,
                                                  mixing=self.mixing)
 
+            print('Calculating derived variables')
             self.rate = self.counts / np.diff(self.counts['time'])[0]
             self.cumulative = snow_tools.get_cumulative(self.counts)
             self.e_tot = self.counts['energy'] * self.counts
@@ -83,6 +85,7 @@ class SnowModel:
             self.e_avg = (self.e_tot.sum('energy') / self.e_sum).to_pandas()
 
         else:
+            print('Extracting derived variables')
             # 3D arrays
             self.counts = self.data.counts
             self.rate = self.data.rate
@@ -98,6 +101,8 @@ class SnowModel:
         """Build Dataset of binned variables
         """
         self.get_vars()
+
+        print('Constructing dataset')
         self.data = xr.Dataset({'counts': self.counts,
                                 'rate': self.rate,
                                 'cumulative': self.cumulative,
