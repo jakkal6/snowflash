@@ -28,8 +28,11 @@ class SnowModel:
 
         self.data = None
         self.counts = None
+        self.rate = None
         self.cumulative = None
-        self.sums = {}
+        self.e_sum = None
+        self.t_sum = None
+        self.e_avg = None
 
         self.load_counts()
         self.build_dataset()
@@ -49,18 +52,26 @@ class SnowModel:
     #                      Analysis
     # ===============================================================
     def build_dataset(self):
-        """Build a Dataset of binned variables
+        """Build Dataset of binned variables, and store 2D tables
         """
         counts = self.counts
         t_step = np.diff(counts['time'])[0]
-        e_avg = (counts['energy'] * counts).sum('energy') / counts.sum('energy')
 
-        self.data = xr.Dataset({'counts': counts,
-                                'rate': counts / t_step,
-                                'cumulative': snow_tools.get_cumulative(counts),
-                                'e_sum': counts.sum('energy'),
-                                't_sum': counts.sum('time'),
-                                'e_avg': e_avg,
+        self.rate = counts / t_step
+        self.cumulative = snow_tools.get_cumulative(counts)
+
+        self.e_sum = counts.sum('energy').to_pandas()
+        self.t_sum = counts.sum('time').to_pandas()
+
+        self.e_avg = (counts['energy'] * counts).sum('energy') / self.e_sum
+        self.e_avg = self.e_avg.to_pandas()
+
+        self.data = xr.Dataset({'counts': self.counts,
+                                'rate': self.rate,
+                                'cumulative': self.cumulative,
+                                'e_sum': self.e_sum,
+                                't_sum': self.t_sum,
+                                'e_avg': self.e_avg,
                                 })
 
     # ===============================================================
