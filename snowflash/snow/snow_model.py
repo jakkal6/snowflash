@@ -35,11 +35,19 @@ class SnowModel:
         self.e_tot = None
         self.e_avg = None
 
-        self.extract_dataset()
+        self.get_data()
 
     # ===============================================================
     #                      Loading
     # ===============================================================
+    def get_data(self):
+        """Load dataset from file or re-extract
+        """
+        try:
+            self.load_data()
+        except FileNotFoundError:
+            self.extract_dataset()
+
     def load_data(self):
         """Load complete dataset
         """
@@ -47,26 +55,43 @@ class SnowModel:
                                                model_set=self.model_set,
                                                detector=self.detector,
                                                mixing=self.mixing)
+        self.get_vars()
 
-    def extract_dataset(self):
-        """Build Dataset of binned variables, and store 2D tables
+    def get_vars(self):
+        """Set binned variables, either re-calculated or pulled from file
         """
-        self.counts = snow_tools.load_counts(zams=self.zams,
-                                             model_set=self.model_set,
-                                             detector=self.detector,
-                                             mixing=self.mixing)
+        if self.data is None:
+            # 3D arrays
+            self.counts = snow_tools.load_counts(zams=self.zams,
+                                                 model_set=self.model_set,
+                                                 detector=self.detector,
+                                                 mixing=self.mixing)
 
-        t_step = np.diff(self.counts['time'])[0]
+            self.rate = self.counts / np.diff(self.counts['time'])[0]
+            self.cumulative = snow_tools.get_cumulative(self.counts)
+            self.e_tot = self.counts['energy'] * self.counts
 
-        self.rate = self.counts / t_step
-        self.cumulative = snow_tools.get_cumulative(self.counts)
+            # 2D arrays
+            self.t_sum = self.counts.sum('time').to_pandas()
+            self.e_sum = self.counts.sum('energy').to_pandas()
+            self.e_avg = (self.e_tot.sum('energy') / self.e_sum).to_pandas()
 
-        self.t_sum = self.counts.sum('time').to_pandas()
-        
-        self.e_sum = self.counts.sum('energy').to_pandas()
-        self.e_tot = self.counts['energy'] * self.counts
-        self.e_avg = (self.e_tot.sum('energy') / self.e_sum).to_pandas()
+        else:
+            # 3D arrays
+            self.counts = self.data.counts
+            self.rate = self.data.rate
+            self.cumulative = self.data.cumulative
+            self.e_tot = self.data.e_tot
 
+            # 2D arrays
+            self.t_sum = self.data.t_sum.to_pandas()
+            self.e_sum = self.data.e_sum.to_pandas()
+            self.e_avg = self.data.e_avg.to_pandas()
+            
+    def extract_dataset(self):
+        """Build Dataset of binned variables
+        """
+        self.get_vars()
         self.data = xr.Dataset({'counts': self.counts,
                                 'rate': self.rate,
                                 'cumulative': self.cumulative,
