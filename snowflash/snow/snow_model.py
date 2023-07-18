@@ -32,6 +32,7 @@ class SnowModel:
         self.cumulative = None
         self.e_sum = None
         self.t_sum = None
+        self.e_tot = None
         self.e_avg = None
 
         self.extract_dataset()
@@ -60,17 +61,18 @@ class SnowModel:
         self.rate = self.counts / t_step
         self.cumulative = snow_tools.get_cumulative(self.counts)
 
-        self.e_sum = self.counts.sum('energy').to_pandas()
         self.t_sum = self.counts.sum('time').to_pandas()
-
-        self.e_avg = (self.counts['energy'] * self.counts).sum('energy') / self.e_sum
-        self.e_avg = self.e_avg.to_pandas()
+        
+        self.e_sum = self.counts.sum('energy').to_pandas()
+        self.e_tot = self.counts['energy'] * self.counts
+        self.e_avg = (self.e_tot.sum('energy') / self.e_sum).to_pandas()
 
         self.data = xr.Dataset({'counts': self.counts,
                                 'rate': self.rate,
                                 'cumulative': self.cumulative,
-                                'e_sum': self.e_sum,
                                 't_sum': self.t_sum,
+                                'e_sum': self.e_sum,
+                                'e_tot': self.e_tot,
                                 'e_avg': self.e_avg,
                                 })
 
