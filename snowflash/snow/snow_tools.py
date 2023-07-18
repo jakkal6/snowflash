@@ -111,6 +111,48 @@ def load_counts(zams,
     return counts
 
 
+def save_model_data(data,
+                    detector,
+                    model_set,
+                    zams,
+                    mixing):
+    """Save SnowModel.data to file
+
+    parameters
+    ----------
+    data : xr.Dataset
+    zams : str
+    model_set : str
+    detector : str
+    mixing : str
+    """
+    filepath = paths.snow_model_data_filepath(zams=zams,
+                                              model_set=model_set,
+                                              detector=detector,
+                                              mixing=mixing)
+    data.to_netcdf(filepath)
+
+
+def load_model_data(detector,
+                    model_set,
+                    zams,
+                    mixing):
+    """Save SnowModel.data to file
+
+    parameters
+    ----------
+    zams : str
+    model_set : str
+    detector : str
+    mixing : str
+    """
+    filepath = paths.snow_model_data_filepath(zams=zams,
+                                              model_set=model_set,
+                                              detector=detector,
+                                              mixing=mixing)
+    return xr.load_dataset(filepath)
+
+
 def load_timebin_table(zams,
                        model_set,
                        detector,

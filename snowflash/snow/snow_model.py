@@ -74,6 +74,12 @@ class SnowModel:
                                 'e_avg': self.e_avg,
                                 })
 
+        snow_tools.save_model_data(self.data,
+                                   detector=self.detector,
+                                   model_set=self.model_set,
+                                   zams=self.zams,
+                                   mixing=self.mixing)
+
     # ===============================================================
     #                      Plotting
     # ===============================================================

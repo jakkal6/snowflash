@@ -135,6 +135,16 @@ def snow_counts_filepath(zams, model_set, detector, mixing):
     return filepath
 
 
+def snow_model_data_filepath(zams, model_set, detector, mixing):
+    """Return path to snowglobes model data file
+    """
+    model_path = snow_model_path(model_set=model_set, detector=detector, mixing=mixing)
+    filename = f'data_{detector}_{mixing}_{model_set}_{zams}.nc'
+    filepath = os.path.join(model_path, filename)
+
+    return filepath
+
+
 def snow_channel_dat_filepath(channel, i, model_set, zams, detector):
     """Return filepath to snowglobes output file
     """
