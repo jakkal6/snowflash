@@ -9,18 +9,18 @@ import sys
 from snowflash import FlashModel, Config
 from snowflash.flash2snowglobes import analysis, snow_run, snow_cleanup
 
-reload = False
+recalc = False
 
 if len(sys.argv) not in (2, 3):
     print('Must provide parameter(s):'
           + '\n1. config_name    # must match a file in snowflash/config/models/'
-          + '\n(2. reload)'
+          + '\n(2. recalc)'
           )
     sys.exit(0)
 else:
     config_name = sys.argv[1]
     if len(sys.argv) == 3:
-        reload = (sys.argv[2].lower() == 'true')
+        recalc = (sys.argv[2].lower() == 'true')
 
 
 # ===== config and setup =====
@@ -38,7 +38,7 @@ for mixing in config.mixing:
                                      model_set=model_set,
                                      run=config.run,
                                      config_name=config_name,
-                                     reload=reload)
+                                     recalc=recalc)
 
             flash_model.write_snow_fluences(mixing)
 

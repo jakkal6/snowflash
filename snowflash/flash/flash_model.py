@@ -26,7 +26,7 @@ class FlashModel:
                  model_set,
                  run,
                  config_name,
-                 reload=False,
+                 recalc=False,
                  ):
         """
         Parameters
@@ -35,14 +35,14 @@ class FlashModel:
         model_set : str
         run : str or None
         config_name : str
-        reload : bool
+        recalc : bool
         """
         self.config = Config(config_name)
         self.zams = zams
         self.model_set = model_set
         self.run = run
         self.models_path = self.config.paths['models']
-        self.reload = reload
+        self.recalc = recalc
 
         self.dat = None
         self.t_bins = None
@@ -60,12 +60,12 @@ class FlashModel:
     def get_fluences(self):
         """Calculate neutrino fluences from flash in time and energy bins
         """
-        def reload():
+        def recalc():
             self.read_datfile()
             self.calc_fluences()
 
-        if self.reload:
-            reload()
+        if self.recalc:
+            recalc()
         else:
             try:
                 self.load_fluences('raw')
@@ -75,7 +75,7 @@ class FlashModel:
                     print('No fluence file found. Reloading dat')
                 else:
                     print('Fluence file incompatible with config. Reloading dat')
-                reload()
+                recalc()
 
     def read_datfile(self):
         """Read time-dependent neutrino data from flash dat file
