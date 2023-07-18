@@ -11,6 +11,7 @@ class SnowModel:
                  model_set,
                  detector,
                  mixing,
+                 recalc=False,
                  ):
         """Collection of SnowGlobes data
 
@@ -20,11 +21,13 @@ class SnowModel:
         model_set : str
         detector : str
         mixing : str
+        recalc : bool
         """
         self.zams = zams
         self.model_set = model_set
         self.detector = detector
         self.mixing = mixing
+        self.recalc = recalc
 
         self.data = None
         self.counts = None
@@ -43,10 +46,13 @@ class SnowModel:
     def get_data(self):
         """Load dataset from file or re-extract
         """
-        try:
-            self.load_data()
-        except FileNotFoundError:
+        if self.recalc:
             self.extract_dataset()
+        else:
+            try:
+                self.load_data()
+            except FileNotFoundError:
+                self.extract_dataset()
 
     def load_data(self):
         """Load complete dataset
@@ -87,7 +93,7 @@ class SnowModel:
             self.t_sum = self.data.t_sum.to_pandas()
             self.e_sum = self.data.e_sum.to_pandas()
             self.e_avg = self.data.e_avg.to_pandas()
-            
+
     def extract_dataset(self):
         """Build Dataset of binned variables
         """
