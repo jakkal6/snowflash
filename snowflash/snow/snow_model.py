@@ -1,3 +1,6 @@
+import numpy as np
+import xarray as xr
+
 # snowflash
 from snowflash.snow import snow_tools, snow_plot
 
@@ -23,6 +26,7 @@ class SnowModel:
         self.detector = detector
         self.mixing = mixing
 
+        self.data = None
         self.counts = None
         self.cumulative = None
         self.sums = {}
@@ -30,6 +34,7 @@ class SnowModel:
         self.load_counts()
         self.get_cumulative()
         self.get_sums()
+        self.build_dataset()
 
     # ===============================================================
     #                      Load Tables
@@ -55,6 +60,18 @@ class SnowModel:
         """
         for var in ['energy', 'time']:
             self.sums[var] = self.counts.sum(var).to_pandas()
+
+    def build_dataset(self):
+        """Build a Dataset of binned variables
+        """
+        t_step = np.diff(self.counts['time'])[0]
+
+        self.data = xr.Dataset({'counts': self.counts,
+                                'rate': self.counts / t_step,
+                                'cumulative': self.cumulative,
+                                'e_sum': self.counts.sum('energy'),
+                                't_sum': self.counts.sum('time'),
+                                })
 
     # ===============================================================
     #                      Plotting
