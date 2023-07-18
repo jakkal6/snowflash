@@ -32,8 +32,6 @@ class SnowModel:
         self.sums = {}
 
         self.load_counts()
-        self.get_cumulative()
-        self.get_sums()
         self.build_dataset()
 
     # ===============================================================
@@ -50,17 +48,6 @@ class SnowModel:
     # ===============================================================
     #                      Analysis
     # ===============================================================
-    def get_cumulative(self):
-        """Calculate cumulative neutrino counts for each time/energy bin
-        """
-        self.cumulative = snow_tools.get_cumulative(self.counts)
-
-    def get_sums(self):
-        """Calculate neutrino counts summed over time/energy
-        """
-        for var in ['energy', 'time']:
-            self.sums[var] = self.counts.sum(var).to_pandas()
-
     def build_dataset(self):
         """Build a Dataset of binned variables
         """
@@ -68,7 +55,7 @@ class SnowModel:
 
         self.data = xr.Dataset({'counts': self.counts,
                                 'rate': self.counts / t_step,
-                                'cumulative': self.cumulative,
+                                'cumulative': snow_tools.get_cumulative(self.counts),
                                 'e_sum': self.counts.sum('energy'),
                                 't_sum': self.counts.sum('time'),
                                 })
