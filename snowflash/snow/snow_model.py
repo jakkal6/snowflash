@@ -38,7 +38,7 @@ class SnowModel:
         self.build_dataset()
 
     # ===============================================================
-    #                      Load Tables
+    #                      Load Data
     # ===============================================================
     def load_counts(self):
         """Load time/energy binned count data
@@ -48,6 +48,14 @@ class SnowModel:
                                              detector=self.detector,
                                              mixing=self.mixing)
 
+    def load_data(self):
+        """Load complete dataset
+        """
+        self.data = snow_tools.load_model_data(zams=self.zams,
+                                               model_set=self.model_set,
+                                               detector=self.detector,
+                                               mixing=self.mixing)
+        
     # ===============================================================
     #                      Analysis
     # ===============================================================
