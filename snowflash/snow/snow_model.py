@@ -34,20 +34,11 @@ class SnowModel:
         self.t_sum = None
         self.e_avg = None
 
-        self.load_counts()
-        self.build_dataset()
+        self.extract_dataset()
 
     # ===============================================================
-    #                      Load Data
+    #                      Loading
     # ===============================================================
-    def load_counts(self):
-        """Load time/energy binned count data
-        """
-        self.counts = snow_tools.load_counts(zams=self.zams,
-                                             model_set=self.model_set,
-                                             detector=self.detector,
-                                             mixing=self.mixing)
-
     def load_data(self):
         """Load complete dataset
         """
@@ -55,23 +46,24 @@ class SnowModel:
                                                model_set=self.model_set,
                                                detector=self.detector,
                                                mixing=self.mixing)
-        
-    # ===============================================================
-    #                      Analysis
-    # ===============================================================
-    def build_dataset(self):
+
+    def extract_dataset(self):
         """Build Dataset of binned variables, and store 2D tables
         """
-        counts = self.counts
-        t_step = np.diff(counts['time'])[0]
+        self.counts = snow_tools.load_counts(zams=self.zams,
+                                             model_set=self.model_set,
+                                             detector=self.detector,
+                                             mixing=self.mixing)
 
-        self.rate = counts / t_step
-        self.cumulative = snow_tools.get_cumulative(counts)
+        t_step = np.diff(self.counts['time'])[0]
 
-        self.e_sum = counts.sum('energy').to_pandas()
-        self.t_sum = counts.sum('time').to_pandas()
+        self.rate = self.counts / t_step
+        self.cumulative = snow_tools.get_cumulative(self.counts)
 
-        self.e_avg = (counts['energy'] * counts).sum('energy') / self.e_sum
+        self.e_sum = self.counts.sum('energy').to_pandas()
+        self.t_sum = self.counts.sum('time').to_pandas()
+
+        self.e_avg = (self.counts['energy'] * self.counts).sum('energy') / self.e_sum
         self.e_avg = self.e_avg.to_pandas()
 
         self.data = xr.Dataset({'counts': self.counts,
