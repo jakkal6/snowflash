@@ -55,8 +55,28 @@ class FlashModel:
         self.mix_fluences()
 
     # =======================================================
-    #                 Flash data
+    #                 Loading data
     # =======================================================
+    def get_fluences(self):
+        """Calculate neutrino fluences from flash in time and energy bins
+        """
+        def reload():
+            self.read_datfile()
+            self.calc_fluences()
+
+        if self.reload:
+            reload()
+        else:
+            try:
+                self.load_fluences('raw')
+
+            except (FileNotFoundError, ValueError) as err:
+                if isinstance(err, FileNotFoundError):
+                    print('No fluence file found. Reloading dat')
+                else:
+                    print('Fluence file incompatible with config. Reloading dat')
+                reload()
+
     def read_datfile(self):
         """Read time-dependent neutrino data from flash dat file
         """
@@ -68,6 +88,52 @@ class FlashModel:
         self.dat = flash_io.read_datfile(filepath=filepath,
                                          t_start=self.config.bins['t_start'],
                                          t_end=self.config.bins['t_end'])
+
+    def load_fluences(self, flu_type):
+        """Load fluences from file
+
+        Parameters
+        ----------
+        flu_type : 'raw' or 'mixed'
+        """
+        fluences = flash_io.load_fluences(zams=self.zams,
+                                          model_set=self.model_set,
+                                          flu_type=flu_type)
+
+        if (len(self.t_bins) not in fluences.shape) \
+                or (len(self.e_bins) not in fluences.shape):
+            raise ValueError
+
+        self.fluences[flu_type] = fluences
+
+    # =======================================================
+    #                 Saving data
+    # =======================================================
+    def save_fluences(self, flu_type):
+        """Save fluences to file
+
+        Parameters
+        ----------
+        flu_type : 'raw' or 'mixed'
+        """
+        flash_io.save_fluences(fluences=self.fluences[flu_type],
+                               zams=self.zams,
+                               model_set=self.model_set,
+                               flu_type=flu_type)
+
+    def write_snow_fluences(self, mixing):
+        """Write fluence tables to file for snowglobes input
+
+        Parameters
+        ----------
+        mixing : str
+        """
+        print('Writing fluences to file')
+        flash_io.write_snow_fluences(model_set=self.model_set,
+                                     zams=self.zams,
+                                     t_bins=self.t_bins,
+                                     e_bins=self.e_bins,
+                                     fluences=self.fluences['mixed'].sel(mix=mixing))
 
     # =======================================================
     #                 Fluences
@@ -92,26 +158,6 @@ class FlashModel:
                                               endpoint=True,
                                               decimals=decimals)
 
-    def get_fluences(self):
-        """Calculate neutrino fluences from flash in time and energy bins
-        """
-        def reload():
-            self.read_datfile()
-            self.calc_fluences()
-
-        if self.reload:
-            reload()
-        else:
-            try:
-                self.load_fluences('raw')
-
-            except (FileNotFoundError, ValueError) as err:
-                if isinstance(err, FileNotFoundError):
-                    print('No fluence file found. Reloading dat')
-                else:
-                    print('Fluence file incompatible with config. Reloading dat')
-                reload()
-
     def calc_fluences(self):
         """Calculate neutrino fluences from flash in time and energy bins
         """
@@ -131,49 +177,6 @@ class FlashModel:
         self.fluences['mixed'] = flash_mixing.mix_fluences(fluences=self.fluences['raw'],
                                                            mixing=self.config.mixing)
         self.save_fluences('mixed')
-
-    def save_fluences(self, flu_type):
-        """Save fluences to file
-
-        Parameters
-        ----------
-        flu_type : 'raw' or 'mixed'
-        """
-        flash_io.save_fluences(fluences=self.fluences[flu_type],
-                               zams=self.zams,
-                               model_set=self.model_set,
-                               flu_type=flu_type)
-
-    def load_fluences(self, flu_type):
-        """Load fluences from file
-
-        Parameters
-        ----------
-        flu_type : 'raw' or 'mixed'
-        """
-        fluences = flash_io.load_fluences(zams=self.zams,
-                                          model_set=self.model_set,
-                                          flu_type=flu_type)
-
-        if (len(self.t_bins) not in fluences.shape) \
-                or (len(self.e_bins) not in fluences.shape):
-            raise ValueError
-
-        self.fluences[flu_type] = fluences
-
-    def write_snow_fluences(self, mixing):
-        """Write fluence tables to file for snowglobes input
-
-        Parameters
-        ----------
-        mixing : str
-        """
-        print('Writing fluences to file')
-        flash_io.write_snow_fluences(model_set=self.model_set,
-                                     zams=self.zams,
-                                     t_bins=self.t_bins,
-                                     e_bins=self.e_bins,
-                                     fluences=self.fluences['mixed'].sel(mix=mixing))
 
     # =======================================================
     #                 Plotting
