@@ -94,8 +94,13 @@ class FlashModel:
         """
         try:
             self.load_fluences('raw')
-        except FileNotFoundError:
-            print('No raw fluence file found. Calculating from scratch')
+
+        except (FileNotFoundError, ValueError) as err:
+            if isinstance(err, FileNotFoundError):
+                print('No fluence file found. Reloading dat')
+            else:
+                print('Fluence file incompatible with config. Reloading dat')
+
             self.read_datfile()
             self.calc_fluences()
 
@@ -138,9 +143,15 @@ class FlashModel:
         ----------
         flu_type : 'raw' or 'mixed'
         """
-        self.fluences[flu_type] = flash_io.load_fluences(zams=self.zams,
-                                                         model_set=self.model_set,
-                                                         flu_type=flu_type)
+        fluences = flash_io.load_fluences(zams=self.zams,
+                                          model_set=self.model_set,
+                                          flu_type=flu_type)
+
+        if (len(self.t_bins) not in fluences.shape) \
+                or (len(self.e_bins) not in fluences.shape):
+            raise ValueError
+
+        self.fluences[flu_type] = fluences
 
     def write_snow_fluences(self, mixing):
         """Write fluence tables to file for snowglobes input
