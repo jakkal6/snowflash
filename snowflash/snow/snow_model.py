@@ -51,13 +51,16 @@ class SnowModel:
     def build_dataset(self):
         """Build a Dataset of binned variables
         """
-        t_step = np.diff(self.counts['time'])[0]
+        counts = self.counts
+        t_step = np.diff(counts['time'])[0]
+        e_avg = (counts['energy'] * counts).sum('energy') / counts.sum('energy')
 
-        self.data = xr.Dataset({'counts': self.counts,
-                                'rate': self.counts / t_step,
-                                'cumulative': snow_tools.get_cumulative(self.counts),
-                                'e_sum': self.counts.sum('energy'),
-                                't_sum': self.counts.sum('time'),
+        self.data = xr.Dataset({'counts': counts,
+                                'rate': counts / t_step,
+                                'cumulative': snow_tools.get_cumulative(counts),
+                                'e_sum': counts.sum('energy'),
+                                't_sum': counts.sum('time'),
+                                'e_avg': e_avg,
                                 })
 
     # ===============================================================
