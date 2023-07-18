@@ -20,7 +20,7 @@ if len(sys.argv) not in (2, 3):
 else:
     config_name = sys.argv[1]
     if len(sys.argv) == 3:
-        reload = sys.argv[2]
+        reload = (sys.argv[2].lower() == 'true')
 
 
 # ===== config and setup =====
