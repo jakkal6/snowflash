@@ -127,6 +127,15 @@ class SnowModel:
                                    zams=self.zams,
                                    mixing=self.mixing)
 
+    def get_totals(self):
+        """Calculate summary stats
+        """
+        self.totals = {'counts': {}}
+        tot = self.counts.sum(['energy', 'time'])
+
+        for i, channel in enumerate(self.channels):
+            self.totals['counts'][channel] = tot.values[i]
+
     # ===============================================================
     #                      Plotting
     # ===============================================================
