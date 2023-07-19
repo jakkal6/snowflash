@@ -30,8 +30,6 @@ class SnowModel:
         self.recalc = recalc
 
         self.data = None
-        self.t_bins = None
-        self.e_bins = None
         self.counts = None
         self.rate = None
         self.cumulative = None
@@ -39,6 +37,11 @@ class SnowModel:
         self.t_sum = None
         self.e_tot = None
         self.e_avg = None
+        self.totals = None
+
+        self.t_bins = None
+        self.e_bins = None
+        self.channels = None
 
         self.get_data()
 
@@ -101,6 +104,7 @@ class SnowModel:
 
         self.t_bins = self.counts.time.to_numpy()
         self.e_bins = self.counts.energy.to_numpy()
+        self.channels = self.counts.channel.to_numpy()
 
     def extract_dataset(self):
         """Build Dataset of binned variables
