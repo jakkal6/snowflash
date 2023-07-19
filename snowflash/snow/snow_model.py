@@ -34,8 +34,8 @@ class SnowModel:
         self.counts = None
         self.rate = None
         self.cumulative = None
-        self.e_sum = None
-        self.t_sum = None
+        self.sum_e = None
+        self.sum_t = None
         self.e_tot = None
         self.e_avg = None
         self.summary = None
@@ -85,9 +85,9 @@ class SnowModel:
             self.e_tot = self.counts['energy'] * self.counts
 
             # 2D arrays
-            self.t_sum = self.counts.sum('time').to_pandas()
-            self.e_sum = self.counts.sum('energy').to_pandas()
-            self.e_avg = (self.e_tot.sum('energy') / self.e_sum).to_pandas()
+            self.sum_t = self.counts.sum('time').to_pandas()
+            self.sum_e = self.counts.sum('energy').to_pandas()
+            self.e_avg = (self.e_tot.sum('energy') / self.sum_e).to_pandas()
 
         else:
             # 3D arrays
@@ -98,8 +98,8 @@ class SnowModel:
             self.e_tot = self.data.e_tot
 
             # 2D arrays
-            self.t_sum = self.data.t_sum.to_pandas()
-            self.e_sum = self.data.e_sum.to_pandas()
+            self.sum_t = self.data.sum_t.to_pandas()
+            self.sum_e = self.data.sum_e.to_pandas()
             self.e_avg = self.data.e_avg.to_pandas()
 
         self.t_bins = self.counts.time.to_numpy()
@@ -112,14 +112,14 @@ class SnowModel:
         """Calculate summary stats
         """
         print('Calculating summary stats')
-        counts = self.e_sum.sum()
-        e_tot = (self.e_sum * self.e_avg).sum()
+        counts = self.sum_e.sum()
+        e_tot = (self.sum_e * self.e_avg).sum()
 
         self.summary = pd.DataFrame({'counts': counts,
                                      'e_tot': e_tot,
                                      'e_avg': e_tot/counts,
                                      })
-        
+
     def extract_dataset(self):
         """Build Dataset of binned variables
         """
@@ -129,8 +129,8 @@ class SnowModel:
         self.data = xr.Dataset({'counts': self.counts,
                                 'rate': self.rate,
                                 'cumulative': self.cumulative,
-                                't_sum': self.t_sum,
-                                'e_sum': self.e_sum,
+                                'sum_t': self.sum_t,
+                                'sum_e': self.sum_e,
                                 'e_tot': self.e_tot,
                                 'e_avg': self.e_avg,
                                 })
