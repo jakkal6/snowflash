@@ -37,7 +37,7 @@ class SnowModel:
         self.t_sum = None
         self.e_tot = None
         self.e_avg = None
-        self.totals = None
+        self.summary = None
 
         self.t_bins = None
         self.e_bins = None
@@ -78,7 +78,6 @@ class SnowModel:
                                                  model_set=self.model_set,
                                                  detector=self.detector,
                                                  mixing=self.mixing)
-
             print('Calculating derived variables')
             self.rate = self.counts / np.diff(self.counts['time'])[0]
             self.cumulative = snow_tools.get_cumulative(self.counts)
@@ -90,9 +89,9 @@ class SnowModel:
             self.e_avg = (self.e_tot.sum('energy') / self.e_sum).to_pandas()
 
         else:
-            print('Extracting derived variables')
             # 3D arrays
             self.counts = self.data.counts
+            print('Extracting derived variables')
             self.rate = self.data.rate
             self.cumulative = self.data.cumulative
             self.e_tot = self.data.e_tot
@@ -127,14 +126,11 @@ class SnowModel:
                                    zams=self.zams,
                                    mixing=self.mixing)
 
-    def get_totals(self):
+    def get_summary(self):
         """Calculate summary stats
         """
-        self.totals = {'counts': {}}
-        tot = self.counts.sum(['energy', 'time'])
-
-        for i, channel in enumerate(self.channels):
-            self.totals['counts'][channel] = tot.values[i]
+        self.summary = {'counts': self.counts.sum(['energy', 'time']).to_pandas(),
+                        }
 
     # ===============================================================
     #                      Plotting
