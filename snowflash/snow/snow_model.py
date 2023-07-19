@@ -12,7 +12,7 @@ class SnowModel:
                  model_set,
                  detector,
                  mixing,
-                 recalc=False,
+                 recalc=True,
                  ):
         """Collection of SnowGlobes data
 
