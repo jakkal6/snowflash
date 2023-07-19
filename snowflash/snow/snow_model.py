@@ -184,34 +184,3 @@ class SnowModel:
                            ax=ax,
                            title=title,
                            data_only=data_only)
-
-    def plot_sum(self,
-                 x_bin,
-                 sum_bin,
-                 cumulative=False,
-                 channels=None,
-                 ax=None,
-                 data_only=False,
-                 ):
-        """Plot energy bins for given time
-
-        parameters
-        ----------
-        x_bin : str
-        sum_bin : str
-        cumulative : bool
-        channels : [str]
-        ax : Axis
-        data_only : bool
-        """
-        if cumulative:
-            counts = self.cumulative_t
-        else:
-            counts = self.counts
-
-        snow_plot.plot_bin(counts=self.counts.sum(sum_bin),
-                           x_bin=x_bin,
-                           channels=channels,
-                           ax=ax,
-                           title=False,
-                           data_only=data_only)
