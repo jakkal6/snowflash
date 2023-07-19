@@ -241,14 +241,14 @@ def get_cumulative(counts):
     ----------
     counts : xr.DataArray
     """
-    integrated = counts.copy()
-    integrated[:] = 0
+    cumulative = counts.copy()
+    cumulative[:] = 0
 
-    integrated[0] = counts[0]
+    cumulative[0] = counts[0]
     for i in range(1, len(counts)):
-        integrated[i] = integrated[i-1] + counts[i]
+        cumulative[i] = cumulative[i-1] + counts[i]
 
-    return integrated
+    return cumulative
 
 
 def get_channel_fractions(tables, channels):
