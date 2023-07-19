@@ -33,7 +33,7 @@ class SnowModel:
         self.data = None
         self.counts = None
         self.rate = None
-        self.cumulative = None
+        self.cumulative_t = None
         self.sum_e = None
         self.sum_t = None
         self.e_tot = None
@@ -81,7 +81,7 @@ class SnowModel:
                                                  mixing=self.mixing)
             print('Calculating derived variables')
             self.rate = self.counts / np.diff(self.counts['time'])[0]
-            self.cumulative = snow_tools.get_cumulative(self.counts)
+            self.cumulative_t = snow_tools.get_cumulative(self.counts)
             self.e_tot = self.counts['energy'] * self.counts
 
             # 2D arrays
@@ -94,7 +94,7 @@ class SnowModel:
             self.counts = self.data.counts
             print('Extracting derived variables')
             self.rate = self.data.rate
-            self.cumulative = self.data.cumulative
+            self.cumulative_t = self.data.cumulative_t
             self.e_tot = self.data.e_tot
 
             # 2D arrays
@@ -128,7 +128,7 @@ class SnowModel:
         print('Constructing dataset')
         self.data = xr.Dataset({'counts': self.counts,
                                 'rate': self.rate,
-                                'cumulative': self.cumulative,
+                                'cumulative_t': self.cumulative_t,
                                 'sum_t': self.sum_t,
                                 'sum_e': self.sum_e,
                                 'e_tot': self.e_tot,
@@ -168,7 +168,7 @@ class SnowModel:
         x_bin = {'energy': 'time', 'time': 'energy'}[fixed_bin]
 
         if cumulative:
-            counts = self.cumulative
+            counts = self.cumulative_t
         else:
             counts = self.counts
 
@@ -201,7 +201,7 @@ class SnowModel:
         data_only : bool
         """
         if cumulative:
-            counts = self.cumulative
+            counts = self.cumulative_t
         else:
             counts = self.counts
 
