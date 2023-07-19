@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import xarray as xr
 
 # snowflash
@@ -105,6 +106,20 @@ class SnowModel:
         self.e_bins = self.counts.energy.to_numpy()
         self.channels = self.counts.channel.to_numpy()
 
+        self.get_summary()
+
+    def get_summary(self):
+        """Calculate summary stats
+        """
+        print('Calculating summary stats')
+        counts = self.e_sum.sum()
+        e_tot = (self.e_sum * self.e_avg).sum()
+
+        self.summary = pd.DataFrame({'counts': counts,
+                                     'e_tot': e_tot,
+                                     'e_avg': e_tot/counts,
+                                     })
+        
     def extract_dataset(self):
         """Build Dataset of binned variables
         """
@@ -125,17 +140,6 @@ class SnowModel:
                                    model_set=self.model_set,
                                    zams=self.zams,
                                    mixing=self.mixing)
-
-    def get_summary(self):
-        """Calculate summary stats
-        """
-        counts = self.counts.sum(['energy', 'time']).to_pandas()
-        e_tot = self.e_tot.sum(['energy', 'time']).to_pandas()
-
-        self.summary = {'counts': counts,
-                        'e_tot': e_tot,
-                        'e_avg': e_tot/counts,
-                        }
 
     # ===============================================================
     #                      Plotting
