@@ -129,7 +129,12 @@ class SnowModel:
     def get_summary(self):
         """Calculate summary stats
         """
-        self.summary = {'counts': self.counts.sum(['energy', 'time']).to_pandas(),
+        counts = self.counts.sum(['energy', 'time']).to_pandas()
+        e_tot = self.e_tot.sum(['energy', 'time']).to_pandas()
+
+        self.summary = {'counts': counts,
+                        'e_tot': e_tot,
+                        'e_avg': e_tot/counts,
                         }
 
     # ===============================================================
