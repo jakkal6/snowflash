@@ -119,8 +119,10 @@ class SnowModel:
         e_tot = (self.sum_e * self.e_avg).sum()
 
         self.summary = pd.DataFrame({'counts': counts,
-                                     'e_tot': e_tot,
                                      'e_avg': e_tot/counts,
+                                     'e_tot': e_tot,
+                                     'frac': counts/counts['all'],
+                                     'e_frac': e_tot/e_tot['all'],
                                      })
 
     def extract_dataset(self):
@@ -151,19 +153,17 @@ class SnowModel:
     def plot_bin(self,
                  fixed_bin,
                  fixed_value,
-                 cumulative=False,
                  channels=None,
                  ax=None,
                  title=True,
                  data_only=False,
                  ):
-        """Plot energy bins for given time
+        """Plot bins for given time
 
         parameters
         ----------
         fixed_bin :str
         fixed_value :flt
-        cumulative : bool
         channels : [str]
         ax : Axis
         title : bool
@@ -171,12 +171,7 @@ class SnowModel:
         """
         x_bin = {'energy': 'time', 'time': 'energy'}[fixed_bin]
 
-        if cumulative:
-            counts = self.cumulative_t
-        else:
-            counts = self.counts
-
-        snow_plot.plot_bin(counts=counts,
+        snow_plot.plot_bin(counts=self.counts,
                            x_bin=x_bin,
                            fixed_bin=fixed_bin,
                            fixed_value=fixed_value,
