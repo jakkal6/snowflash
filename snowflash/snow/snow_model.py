@@ -175,3 +175,29 @@ class SnowModel:
                            ax=ax,
                            title=title,
                            data_only=data_only)
+
+    def plot_energy(self,
+                    t_bin=None,
+                    ax=None,
+                    title=True,
+                    data_only=False,
+                    ):
+        """Plot bins for given time
+
+        parameters
+        ----------
+        t_bin : int
+        ax : Axis
+        title : bool
+        data_only : bool
+        """
+        if t_bin is None:
+            counts = self.data['sum_t']
+        else:
+            counts = self.counts.isel(time=t_bin)
+
+        snow_plot.plot_bin(counts=counts,
+                           x_var='energy',
+                           ax=ax,
+                           title=title,
+                           data_only=data_only)
