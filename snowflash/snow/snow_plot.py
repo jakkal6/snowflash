@@ -11,6 +11,8 @@ def plot_bin(counts,
              y_scale=None,
              x_lims=None,
              y_lims=None,
+             x_label=None,
+             y_label=None,
              ax=None,
              legend=True,
              legend_loc=None,
@@ -30,6 +32,8 @@ def plot_bin(counts,
     y_scale : str
     x_lims : [low, high]
     y_lims : [low, high]
+    x_label : str
+    y_label : str
     ax : Axis
     legend : bool
     legend_loc : int or str
@@ -52,6 +56,8 @@ def plot_bin(counts,
                         y_scale=y_scale,
                         x_lims=x_lims,
                         y_lims=y_lims,
+                        x_label=x_label,
+                        y_label=y_label,
                         legend=legend,
                         legend_loc=legend_loc,
                         title=title)

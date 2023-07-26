@@ -4,6 +4,7 @@ import xarray as xr
 
 # snowflash
 from snowflash.snow import snow_tools, snow_plot
+from snowflash.utils.config import Config
 
 
 class SnowModel:
@@ -13,6 +14,7 @@ class SnowModel:
                  detector,
                  mixing,
                  recalc=True,
+                 config=None,
                  ):
         """Collection of SnowGlobes data
 
@@ -23,12 +25,14 @@ class SnowModel:
         detector : str
         mixing : str
         recalc : bool
+        config : str
         """
         self.zams = zams
         self.model_set = model_set
         self.detector = detector
         self.mixing = mixing
         self.recalc = recalc
+        self.config = Config({None: model_set}.get(config, config))
 
         self.data = None
         self.counts = None
@@ -219,6 +223,8 @@ class SnowModel:
         snow_plot.plot_bin(counts=counts,
                            x_var=x_var,
                            ax=ax,
+                           x_label=self.config.ax_label(x_var),
+                           y_label=self.config.ax_label('counts'),
                            title=title,
                            data_only=data_only)
         

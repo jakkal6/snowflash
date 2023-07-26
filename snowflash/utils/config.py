@@ -26,7 +26,7 @@ class Config:
         self.name = name
         self.configs = {'models': load_config(name),
                         'detectors': load_config('detectors'),
-                        'plot': load_config('plotting')
+                        'plot': load_config('plotting'),
                         }
 
         self.paths = self.get_section('models', 'paths')
