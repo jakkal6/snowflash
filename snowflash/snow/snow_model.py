@@ -150,32 +150,28 @@ class SnowModel:
     # ===============================================================
     #                      Plotting
     # ===============================================================
-    def plot_bin(self,
-                 fixed_bin,
-                 fixed_value,
-                 channels=None,
-                 ax=None,
-                 title=True,
-                 data_only=False,
-                 ):
+    def plot_time(self,
+                  e_bin=None,
+                  ax=None,
+                  title=True,
+                  data_only=False,
+                  ):
         """Plot bins for given time
 
         parameters
         ----------
-        fixed_bin :str
-        fixed_value :flt
-        channels : [str]
+        e_bin : int
         ax : Axis
         title : bool
         data_only : bool
         """
-        x_bin = {'energy': 'time', 'time': 'energy'}[fixed_bin]
+        if e_bin is None:
+            counts = self.data['sum_e']
+        else:
+            counts = self.counts.isel(energy=e_bin)
 
-        snow_plot.plot_bin(counts=self.counts,
-                           x_bin=x_bin,
-                           fixed_bin=fixed_bin,
-                           fixed_value=fixed_value,
-                           channels=channels,
+        snow_plot.plot_bin(counts=counts,
+                           x_var='time',
                            ax=ax,
                            title=title,
                            data_only=data_only)

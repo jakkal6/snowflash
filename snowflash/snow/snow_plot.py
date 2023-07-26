@@ -6,10 +6,7 @@ from snowflash.utils import plot
 
 
 def plot_bin(counts,
-             x_bin,
-             fixed_bin=None,
-             fixed_value=None,
-             channels=None,
+             x_var,
              x_scale=None,
              y_scale=None,
              x_lims=None,
@@ -28,10 +25,7 @@ def plot_bin(counts,
     ----------
     counts : xr.Dataset
         counts binned by time and energy for all channels
-    x_bin : str
-    fixed_bin : str
-    fixed_value : flt
-    channels : [str]
+    x_var : str
     x_scale : str
     y_scale : str
     x_lims : [low, high]
@@ -46,24 +40,15 @@ def plot_bin(counts,
     """
     fig, ax = plot.setup_fig_ax(ax=ax, figsize=figsize)
 
-    if channels is None:
-        channels = counts.channel.values
-
-    for channel in channels:
-        if fixed_bin is None:
-            select = {'channel': channel}
-        else:
-            select = {fixed_bin: fixed_value, 'channel': channel}
-
-        ax.step(x=counts[x_bin],
-                y=counts.sel(select),
-                label=channel,
-                color=color,
-                where='mid')
+    ax.step(x=counts[x_var],
+            y=counts,
+            label=counts.channel.values,
+            color=color,
+            where='mid')
 
     if not data_only:
         plot.set_ax_all(ax=ax,
-                        x_var=x_bin,
+                        x_var=x_var,
                         y_var='counts',
                         x_scale=x_scale,
                         y_scale=y_scale,
@@ -71,8 +56,7 @@ def plot_bin(counts,
                         y_lims=y_lims,
                         legend=legend,
                         legend_loc=legend_loc,
-                        title=title,
-                        title_str=f'{fixed_bin} = {fixed_value}')
+                        title=title)
 
     return fig
 
