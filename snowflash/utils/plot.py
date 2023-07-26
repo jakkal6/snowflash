@@ -65,7 +65,6 @@ def check_ax(ax, figsize):
 
 
 def set_ax_all(ax,
-               x_var=None, y_var=None,
                x_scale=None, y_scale=None,
                x_label=None, y_label=None,
                x_lims=None, y_lims=None,
@@ -78,8 +77,6 @@ def set_ax_all(ax,
     parameters
     ----------
     ax : pyplot Axis
-    x_var : str
-    y_var : str
     x_scale : str
     y_scale : str
     x_label : str

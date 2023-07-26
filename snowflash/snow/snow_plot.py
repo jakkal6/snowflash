@@ -48,8 +48,6 @@ def plot_bin(counts,
 
     if not data_only:
         plot.set_ax_all(ax=ax,
-                        x_var=x_var,
-                        y_var='counts',
                         x_scale=x_scale,
                         y_scale=y_scale,
                         x_lims=x_lims,
