@@ -199,6 +199,7 @@ class SnowModel:
     def plot_cumulative(self,
                         var,
                         i_bin=None,
+                        norm=False,
                         ax=None,
                         title=True,
                         data_only=False):
@@ -208,11 +209,21 @@ class SnowModel:
         ----------
         var : str
         i_bin : int
+        norm : bool
         ax : Axis
         title : bool
         data_only : bool
         """
-        self._plot_bins(data=self.data[f'cumulative_{var[0]}'],
+        sum_var = {'time': 'energy', 'energy': 'time'}[var]
+        data = self.data[f'cumulative_{var[0]}'].copy()
+
+        if norm:
+            data *= 1 / data.isel({var: -1})
+
+            if i_bin is None:
+                data *= 1 / len(data[sum_var])
+
+        self._plot_bins(data=data,
                         x_var=var,
                         sel_idx=i_bin,
                         ax=ax,
@@ -226,7 +237,7 @@ class SnowModel:
                    ax=None,
                    title=True,
                    data_only=False):
-        """Plot bins for given time
+        """Plot bins for given time or energy
 
         parameters
         ----------
