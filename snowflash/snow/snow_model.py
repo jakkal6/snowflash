@@ -257,6 +257,7 @@ class SnowModel:
 
         snow_plot.plot_bin(counts=counts,
                            x_var=x_var,
+                           where={'energy': 'mid', 'time': 'post'}[x_var],
                            ax=ax,
                            x_label=self.config.ax_label(x_var),
                            y_label=self.config.ax_label('counts'),

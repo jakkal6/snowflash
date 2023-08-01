@@ -7,6 +7,7 @@ from snowflash.utils import plot
 
 def plot_bin(counts,
              x_var,
+             where='post',
              x_scale=None,
              y_scale=None,
              x_lims=None,
@@ -28,6 +29,7 @@ def plot_bin(counts,
     counts : xr.DataArray
         counts binned by time and energy for all channels
     x_var : str
+    where : str
     x_scale : str
     y_scale : str
     x_lims : [low, high]
@@ -48,7 +50,7 @@ def plot_bin(counts,
             y=counts,
             label=counts.channel.values,
             color=color,
-            where='mid')
+            where=where)
 
     if not data_only:
         plot.set_ax_all(ax=ax,
