@@ -169,7 +169,8 @@ class SnowModel:
         title : bool
         data_only : bool
         """
-        self._plot_bins(x_var='time',
+        self._plot_bins(data=self.counts,
+                        x_var='time',
                         sel_idx=e_bin,
                         ax=ax,
                         title=title,
@@ -190,13 +191,15 @@ class SnowModel:
         title : bool
         data_only : bool
         """
-        self._plot_bins(x_var='energy',
+        self._plot_bins(data=self.counts,
+                        x_var='energy',
                         sel_idx=t_bin,
                         ax=ax,
                         title=title,
                         data_only=data_only)
 
     def _plot_bins(self,
+                   data,
                    x_var,
                    sel_idx,
                    ax=None,
@@ -207,6 +210,7 @@ class SnowModel:
 
         parameters
         ----------
+        data : xr.DataArray
         x_var : str
         sel_idx : int
         ax : Axis
@@ -216,9 +220,9 @@ class SnowModel:
         sel_var = {'time': 'energy', 'energy': 'time'}[x_var]
         
         if sel_idx is None:
-            counts = self.data[f'sum_{sel_var[0]}']
+            counts = data.sum(sel_var)
         else:
-            counts = self.counts.isel({sel_var: sel_idx})
+            counts = data.isel({sel_var: sel_idx})
 
         snow_plot.plot_bin(counts=counts,
                            x_var=x_var,

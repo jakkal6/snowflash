@@ -25,7 +25,7 @@ def plot_bin(counts,
 
     parameters
     ----------
-    counts : xr.Dataset
+    counts : xr.DataArray
         counts binned by time and energy for all channels
     x_var : str
     x_scale : str
