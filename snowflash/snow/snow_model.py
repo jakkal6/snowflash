@@ -158,8 +158,7 @@ class SnowModel:
                   e_bin=None,
                   ax=None,
                   title=True,
-                  data_only=False,
-                  ):
+                  data_only=False):
         """Plot bins for given time
 
         parameters
@@ -180,8 +179,7 @@ class SnowModel:
                     t_bin=None,
                     ax=None,
                     title=True,
-                    data_only=False,
-                    ):
+                    data_only=False):
         """Plot bins for given time
 
         parameters
@@ -198,14 +196,36 @@ class SnowModel:
                         title=title,
                         data_only=data_only)
 
+    def plot_cumulative(self,
+                        var,
+                        i_bin=None,
+                        ax=None,
+                        title=True,
+                        data_only=False):
+        """Plot cumulative counts versus time or energy
+
+        parameters
+        ----------
+        var : str
+        i_bin : int
+        ax : Axis
+        title : bool
+        data_only : bool
+        """
+        self._plot_bins(data=self.data[f'cumulative_{var[0]}'],
+                        x_var=var,
+                        sel_idx=i_bin,
+                        ax=ax,
+                        title=title,
+                        data_only=data_only)
+
     def _plot_bins(self,
                    data,
                    x_var,
                    sel_idx,
                    ax=None,
                    title=True,
-                   data_only=False,
-                   ):
+                   data_only=False):
         """Plot bins for given time
 
         parameters
