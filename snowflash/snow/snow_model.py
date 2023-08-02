@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import xarray as xr
+from scipy.interpolate import interp1d
 
 # snowflash
 from snowflash.snow import snow_tools, snow_plot
@@ -43,6 +44,7 @@ class SnowModel:
         self.sum_t = None
         self.e_tot = None
         self.e_avg = None
+        self.e_percentiles = None
         self.summary = None
 
         self.t_bins = None
@@ -84,6 +86,7 @@ class SnowModel:
                                                  model_set=self.model_set,
                                                  detector=self.detector,
                                                  mixing=self.mixing)
+
             print('Calculating derived variables')
             self.rate = self.counts / np.diff(self.counts['time'])[0]
             self.cumulative_t = self.counts.cumsum('time')
@@ -98,6 +101,7 @@ class SnowModel:
         else:
             # 3D arrays
             self.counts = self.data.counts
+
             print('Extracting derived variables')
             self.rate = self.data.rate
             self.cumulative_t = self.data.cumulative_t
@@ -113,6 +117,7 @@ class SnowModel:
         self.e_bins = self.counts.energy.to_numpy()
         self.channels = self.counts.channel.to_numpy()
 
+        self.get_percentiles()
         self.get_summary()
 
     def get_summary(self):
@@ -128,6 +133,31 @@ class SnowModel:
                                      'frac': counts/counts['all'],
                                      'e_frac': e_tot/e_tot['all'],
                                      })
+
+    def get_percentiles(self):
+        """Calculate energy percentile regions
+        """
+        print('Calculating energy percentiles')
+        e_cumul = self.cumulative_e.sel(channel='all')
+        p_cumul = e_cumul / e_cumul.isel(energy=-1)
+
+        n_tbins = len(self.t_bins)
+        percentiles = {}
+
+        for p in [68, 95, 98]:
+            percentiles[p] = {'lower': np.zeros(n_tbins),
+                              'upper': np.zeros(n_tbins)}
+
+            p_lo = (1 - p/100) / 2
+            p_hi = 1 - p_lo
+
+            for i in range(n_tbins):
+                interp = interp1d(x=p_cumul[i], y=self.e_bins)
+
+                percentiles[p]['lower'][i] = interp(p_lo)
+                percentiles[p]['upper'][i] = interp(p_hi)
+
+        self.e_percentiles = percentiles
 
     def extract_dataset(self):
         """Build Dataset of binned variables
