@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import xarray as xr
+from scipy.interpolate import interp1d
 
 # snowflash
 from snowflash.utils import paths
@@ -249,6 +250,42 @@ def get_cumulative(counts):
         cumulative[i] = cumulative[i-1] + counts[i]
 
     return cumulative
+
+
+def get_energy_percentiles(cumulative_e, percentiles=(68, 95, 98)):
+    """Calculate energy percentile regions
+
+    parameters
+    ----------
+    cumulative_e : xr.DataArray
+    percentiles : [int] or [flt]
+    """
+    e_cumul = cumulative_e.sel(channel='all')
+    p_cumul = e_cumul / e_cumul.isel(energy=-1)
+
+    t_bins = p_cumul.time
+    e_bins = p_cumul.energy
+    n_tbins = len(t_bins)
+
+    energy = np.zeros([len(percentiles), 2, n_tbins])
+
+    for p_idx, p in enumerate(percentiles):
+        p_lo = (1 - p/100) / 2
+        p_hi = 1 - p_lo
+
+        for t_idx in range(n_tbins):
+            interp = interp1d(x=p_cumul[t_idx], y=e_bins)
+
+            energy[p_idx, 0, t_idx] = interp(p_lo)
+            energy[p_idx, 1, t_idx] = interp(p_hi)
+
+    e_percentiles = xr.DataArray(energy,
+                                 dims=['percentile', 'bound', 'time'],
+                                 coords={'percentile': list(percentiles),
+                                         'bound': ['lower', 'upper'],
+                                         'time': t_bins})
+
+    return e_percentiles
 
 
 def get_channel_fractions(tables, channels):
