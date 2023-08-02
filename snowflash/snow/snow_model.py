@@ -134,30 +134,35 @@ class SnowModel:
                                      'e_frac': e_tot/e_tot['all'],
                                      })
 
-    def get_percentiles(self):
+    def get_percentiles(self, percentiles=(68, 95, 98)):
         """Calculate energy percentile regions
+
+        parameters
+        ----------
+        percentiles : [int] or [flt]
         """
-        print('Calculating energy percentiles')
+        print('Calculating energy energy')
         e_cumul = self.cumulative_e.sel(channel='all')
         p_cumul = e_cumul / e_cumul.isel(energy=-1)
 
         n_tbins = len(self.t_bins)
-        percentiles = {}
+        energy = np.zeros([len(percentiles), 2, n_tbins])
 
-        for p in [68, 95, 98]:
-            percentiles[p] = {'lower': np.zeros(n_tbins),
-                              'upper': np.zeros(n_tbins)}
-
+        for i, p in enumerate(percentiles):
             p_lo = (1 - p/100) / 2
             p_hi = 1 - p_lo
 
-            for i in range(n_tbins):
+            for j in range(n_tbins):
                 interp = interp1d(x=p_cumul[i], y=self.e_bins)
 
-                percentiles[p]['lower'][i] = interp(p_lo)
-                percentiles[p]['upper'][i] = interp(p_hi)
+                energy[i, 0, j] = interp(p_lo)
+                energy[i, 1, j] = interp(p_hi)
 
-        self.e_percentiles = percentiles
+        self.e_percentiles = xr.DataArray(energy,
+                                          dims=['percentile', 'bound', 'time'],
+                                          coords={'percentile': list(percentiles),
+                                                  'bound': ['lower', 'upper'],
+                                                  'time': self.t_bins})
 
     def extract_dataset(self):
         """Build Dataset of binned variables
