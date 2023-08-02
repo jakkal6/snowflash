@@ -117,7 +117,7 @@ class SnowModel:
         self.e_bins = self.counts.energy.to_numpy()
         self.channels = self.counts.channel.to_numpy()
 
-        self.get_percentiles()
+        self.get_energy_percentiles()
         self.get_summary()
 
     def get_summary(self):
@@ -134,7 +134,7 @@ class SnowModel:
                                      'e_frac': e_tot/e_tot['all'],
                                      })
 
-    def get_percentiles(self, percentiles=(68, 95, 98)):
+    def get_energy_percentiles(self, percentiles=(68, 95, 98)):
         """Calculate energy percentile regions
 
         parameters
