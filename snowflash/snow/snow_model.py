@@ -44,6 +44,7 @@ class SnowModel:
         self.e_tot = None
         self.e_avg = None
         self.e_percentiles = None
+        self._e_percentiles = None
         self.summary = None
 
         self.t_bins = None
@@ -141,8 +142,17 @@ class SnowModel:
         percentiles : [int] or [flt]
         """
         print('Calculating energy percentiles')
-        self.e_percentiles = snow_tools.get_energy_percentiles(self.cumulative_e,
-                                                               percentiles=percentiles)
+        perc_xr = snow_tools.get_energy_percentiles(self.cumulative_e,
+                                                    percentiles=percentiles)
+
+        perc_pd = pd.DataFrame({'time': self.t_bins})
+
+        for p in perc_xr.percentile:
+            perc_pd[f'{int(p)}_lower'] = perc_xr.sel(percentile=p, bound='lower')
+            perc_pd[f'{int(p)}_upper'] = perc_xr.sel(percentile=p, bound='upper')
+
+        self._e_percentiles = perc_xr
+        self.e_percentiles = perc_pd
 
     def extract_dataset(self):
         """Build Dataset of binned variables
