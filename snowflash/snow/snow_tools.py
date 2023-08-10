@@ -263,8 +263,8 @@ def get_energy_percentiles(cumulative_e, percentiles=(68, 95, 98)):
     e_cumul = cumulative_e.sel(channel='all')
     p_cumul = e_cumul / e_cumul.isel(energy=-1)
 
-    t_bins = p_cumul.time
-    e_bins = p_cumul.energy
+    t_bins = p_cumul['time']
+    e_bins = p_cumul['energy']
     n_tbins = len(t_bins)
 
     energy = np.zeros([len(percentiles), 2, n_tbins])
@@ -275,9 +275,7 @@ def get_energy_percentiles(cumulative_e, percentiles=(68, 95, 98)):
 
         for t_idx in range(n_tbins):
             interp = interp1d(x=p_cumul[t_idx], y=e_bins)
-
-            energy[p_idx, 0, t_idx] = interp(p_lo)
-            energy[p_idx, 1, t_idx] = interp(p_hi)
+            energy[p_idx, :, t_idx] = interp([p_lo, p_hi])
 
     e_percentiles = xr.DataArray(energy,
                                  dims=['percentile', 'bound', 'time'],
