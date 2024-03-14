@@ -32,7 +32,7 @@ class Config:
         self.paths = self.get_section('models', 'paths')
 
         self.model_sets = self.get_param('models', 'flash', 'model_sets')
-        self.run = self.get_param('models', 'flash', 'run')
+        self.run_list = self.get_param('models', 'flash', 'run_list')
         self.model_set_map = self.get_param('models', 'flash', 'model_set_map')
         self.zams_list = self.get_param('models', 'flash', 'zams_list')
 

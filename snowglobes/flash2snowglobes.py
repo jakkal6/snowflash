@@ -32,11 +32,11 @@ snow_run.setup_snowglobes(config.paths['snowglobes'])
 
 for mixing in config.mixing:
     for model_set in config.model_sets:
-        for zams in config.zams_list:
+        for i, zams in enumerate(config.zams_list):
             print('=== Converting flash data ===')
             flash_model = FlashModel(zams=zams,
                                      model_set=model_set,
-                                     run=config.run,
+                                     run=config.run_list[i],
                                      config_name=config_name,
                                      recalc=recalc)
 
